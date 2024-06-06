@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ThemeProvider } from "next-themes";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html suppressHydrationWarning lang="en">
+      <body className={cn(inter.className, "bg-background text-skin-base")}>
+        <ThemeProvider enableColorScheme={false} attribute="class">
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

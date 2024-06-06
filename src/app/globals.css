@@ -2,32 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --color-background: 255, 255, 255;
+    --color-text-base: 0, 0, 0;
+    --color-text-muted: 89, 89, 89;
+    --color-text-inverted: 64, 54, 227;
+    --color-fill: 64, 54, 227;
+    --color-button-accent: 255, 255, 255;
+    --color-button-accent-hover: 238, 242, 255;
+    --color-button-muted: 99, 54, 241;
+    --color-border: 217, 217, 217;
+    --color-input: 255, 255, 255;
+    --color-error: 239, 68, 68;
+  }
+
+  .dark {
+    --color-background: 17, 24, 39;
+    --color-text-base: 255, 255, 255;
+    --color-text-muted: 191, 191, 191;
+    --color-text-inverted: 79, 70, 229;
+    --color-fill: 38, 28, 201;
+    --color-button-accent: 255, 255, 255;
+    --color-button-accent-hover: 106, 98, 234;
+    --color-button-muted: 38, 28, 201;
+    --color-border: 51, 58, 71;
+    --color-input: 29, 36, 50;
+    --color-error: 153, 27, 27;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+/* :root {
+  --color-50: rgb(233, 232, 255);
+  --color-100: rgb(190, 187, 251);
+  --color-200: rgb(148, 143, 241);
+  --color-300: rgb(106, 98, 234);
+  --color-400: rgb(64, 54, 227);
+  --color-500: rgb(38, 28, 201);
+  --color-600: rgb(29, 22, 158);
+  --color-700: rgb(19, 15, 114);
+  --color-800: rgb(10, 8, 70);
+  --color-900: rgb(3, 2, 29);
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+  :root {
+    --color-50: rgb(0, 0, 0);
+    --color-100: rgb(217, 217, 217);
+    --color-200: rgb(191, 191, 191);
+    --color-300: rgb(166, 166, 166);
+    --color-400: #8c8c8c;
+    --color-500: #737373;
+    --color-600: rgb(89, 89, 89);
+    --color-700: #404040;
+    --color-800: #262626;
+    --color-900: #0d0d0d;
+  } */
+/* } */
