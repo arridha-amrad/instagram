@@ -4,6 +4,7 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={cn(inter.className, "bg-background text-skin-base")}>
+        <NextTopLoader />
         <ThemeProvider enableColorScheme={false} attribute="class">
           {children}
         </ThemeProvider>

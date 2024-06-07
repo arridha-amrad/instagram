@@ -3,7 +3,7 @@
 const SvgFacebook = () => {
   return (
     <svg
-      enable-background="new 0 0 32 32"
+      enableBackground="new 0 0 32 32"
       className="w-5 aspect-square"
       id="Layer_1"
       version="1.0"

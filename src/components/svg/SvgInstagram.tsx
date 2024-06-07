@@ -1,14 +1,15 @@
 "use client";
 
-const SvgInstagram = () => {
+import { cn } from "@/lib/utils";
+import { SVGAttributes } from "react";
+
+const SvgInstagram = (props: SVGAttributes<SVGSVGElement>) => {
   return (
     <svg
       enableBackground="new 0 0 56.693 56.693"
-      height="56.693px"
-      width="56.693px"
       id="Layer_1"
       version="1.1"
-      className="fill-skin-primary"
+      className={cn("h-[56px] aspect-square", props.className)}
       viewBox="0 0 56.693 56.693"
       xmlns="http://www.w3.org/2000/svg"
     >
