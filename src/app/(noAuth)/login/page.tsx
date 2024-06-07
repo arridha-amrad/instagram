@@ -20,7 +20,7 @@ const Page = () => {
       </div>
       <main className="min-h-screen w-full flex items-center justify-center flex-col">
         <button>
-          <SvgInstagram />
+          <SvgInstagram className="fill-skin-primary" />
         </button>
         <section className="text-center py-4">
           <h1 className="text-2xl font-semibold text-skin-muted">

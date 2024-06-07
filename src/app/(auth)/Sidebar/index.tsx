@@ -8,6 +8,7 @@ export default function Sidebar() {
   return (
     <div className="w-full space-y-4">
       <SidebarBrand />
+      <div className="h-5" />
       <Link
         className="inline-flex w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 bg-background/50 rounded-md xl:py-2"
         href="/"
