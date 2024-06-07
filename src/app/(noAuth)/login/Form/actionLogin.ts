@@ -1,19 +1,18 @@
 "use server";
 
 import db from "@/lib/drizzle/db";
-import { registrationSchema } from "./validationRegister";
+import { loginSchema } from "./loginSchema";
 import { UsersTable } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import argon from "argon2";
+import { signIn } from "@/auth";
+import { User } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const loginAction = async (prevState: any, formData: FormData) => {
-  const { name, email, username, password } = Object.fromEntries(
-    formData.entries()
-  );
-  const validatedFields = registrationSchema.safeParse({
-    name,
-    email,
-    username,
+  const { identity, password } = Object.fromEntries(formData.entries());
+  const validatedFields = loginSchema.safeParse({
+    identity,
     password,
   });
 
@@ -23,44 +22,46 @@ export const loginAction = async (prevState: any, formData: FormData) => {
     };
   }
 
-  const { email: e, name: n, password: p, username: u } = validatedFields.data;
+  const { identity: id, password: pw } = validatedFields.data;
 
-  const [userWithSameEmail] = await db
+  const [dbUser] = await db
     .select()
     .from(UsersTable)
-    .where(eq(UsersTable.email, e));
+    .where(
+      id.includes("@") ? eq(UsersTable.email, id) : eq(UsersTable.username, id)
+    );
 
-  if (userWithSameEmail) {
+  if (!dbUser) {
     return {
+      message: "User not found",
       type: "error",
-      message: "Email is already taken",
     };
   }
 
-  const [userWithSameUsername] = await db
-    .select()
-    .from(UsersTable)
-    .where(eq(UsersTable.username, u));
-
-  if (userWithSameUsername) {
+  if (!dbUser.password) {
     return {
+      message: "invalid credentials",
       type: "error",
-      message: "Username is already taken",
     };
   }
 
-  const hashedPassword = await argon.hash(p);
+  const isMatch = await argon.verify(dbUser.password, pw);
 
-  await db.insert(UsersTable).values({
-    email: e,
-    name: n,
-    provider: "credentials",
-    username: u,
-    password: hashedPassword,
-  });
+  if (!isMatch) {
+    return {
+      message: "Wrong password",
+      type: "error",
+    };
+  }
 
-  return {
-    message: "Registration is successful",
-    type: "success",
+  const myUser: User = {
+    id: dbUser.id.toString(),
+    name: dbUser.name,
+    email: dbUser.email,
+    image: dbUser.avatar,
+    username: dbUser.username,
   };
+
+  await signIn("credentials", { ...myUser, redirect: false });
+  redirect("/");
 };

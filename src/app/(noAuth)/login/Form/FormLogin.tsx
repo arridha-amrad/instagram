@@ -37,10 +37,12 @@ const FormLogin = () => {
         </p>
       </section>
       <TextInput
-        errorMessage={formState.errors?.name && formState.errors.name[0]}
-        label="Name"
-        name="name"
-        id="name"
+        errorMessage={
+          formState.errors?.identity && formState.errors.identity[0]
+        }
+        label="Username or email"
+        name="identity"
+        id="identity"
       />
       <TextInput
         errorMessage={

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { InputHTMLAttributes } from "react";
 
 type Props = {
@@ -17,7 +18,9 @@ const Checkbox = ({ label, ...props }: Props) => {
         <input
           {...props}
           type="checkbox"
-          className="size-4 bg-background focus:checked:bg-skin-fill rounded checked:bg-skin-fill focus:ring-skin hover:checked:bg-skin-fill outline-none cursor-pointer focus:ring-skin-primary/70 focus:ring-offset-white dark:focus:ring-offset-black border-skin"
+          className={cn(
+            "size-4 bg-skin-input focus:checked:bg-skin-fill rounded checked:bg-skin-fill focus:ring-skin hover:checked:bg-skin-fill outline-none cursor-pointer focus:ring-skin-primary/70 focus:ring-offset-white dark:focus:ring-offset-black border-skin"
+          )}
         />
       </div>
       {label}

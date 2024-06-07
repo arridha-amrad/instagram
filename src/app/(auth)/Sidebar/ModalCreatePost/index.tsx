@@ -1,7 +1,7 @@
 "use client";
 
 import XMarkIcon from "@heroicons/react/20/solid/XMarkIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useCreatePost } from "../CreatePostContext";
 import useMeasure from "react-use-measure";
@@ -10,11 +10,12 @@ import Picker from "./Picker";
 import { cn } from "@/lib/utils";
 import FormCreatePost from "./Form/FormCreatePost";
 import ModalTitle from "./ModalTitle";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 const NewPostModal = () => {
   const [open, setOpen] = useState(false);
-  const { preview, step, setPreview, setStep, setFiles } = useCreatePost();
+  const { preview, step, setPreview, setStep, setFiles, isSubmitSuccessful } =
+    useCreatePost();
   const [ref, { height }] = useMeasure();
 
   const closeModal = () => {
@@ -24,13 +25,21 @@ const NewPostModal = () => {
     setFiles([]);
   };
 
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      closeModal();
+    }
+  }, [isSubmitSuccessful]);
+
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 rounded-md xl:py-2"
+        className="inline-flex
+        hover:bg-skin-fill transition-colors duration-300 ease-linear
+        w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 rounded-md xl:py-2"
       >
-        <PencilIcon className="w-6 aspect-square" />
+        <PencilSquareIcon className="w-6 aspect-square" />
         <span className="xl:inline hidden">New Post</span>
       </button>
       {open &&

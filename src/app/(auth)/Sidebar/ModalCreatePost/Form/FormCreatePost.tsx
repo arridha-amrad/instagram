@@ -5,21 +5,42 @@ import { useCreatePost } from "../../CreatePostContext";
 import ButtonSubmitCreatePost from "./ButtonSubmitCreatePost";
 import { useFormState } from "react-dom";
 import { createPostAction } from "./createPostAction";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { useTheme } from "next-themes";
 
 const initialState = {
   data: {} as any,
+  type: "",
+  message: "",
 };
 
 const FormCreatePost = () => {
-  const { step, files } = useCreatePost();
+  const { step, files, setSubmitSuccessful } = useCreatePost();
+  const { data: session } = useSession();
   const [formState, formAction] = useFormState(createPostAction, initialState);
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    if (formState.type === "success") {
+      toast.success(formState.message, { theme });
+      setSubmitSuccessful(true);
+    }
+    if (formState.type === "error") {
+      toast.error(formState.message, { theme });
+    }
+  }, [formState.type]);
 
   return (
     <form
       className={cn("w-full flex flex-col max-w-sm p-2", step < 1 && "hidden")}
       action={(data) => {
-        files.map((file) => data.append("images", file));
-        formAction(data);
+        if (session?.user.id) {
+          data.append("userId", session.user.id);
+          files.map((file) => data.append("images", file));
+          formAction(data);
+        }
       }}
     >
       <div className="flex-1 space-y-3">

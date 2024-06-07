@@ -11,7 +11,7 @@ const Layout = ({ children }: Props) => {
       <section className="xl:max-w-[250px] py-4 px-1 max-w-[60px] w-full border xl:px-4 border-skin">
         <Sidebar />
       </section>
-      {children}
+      <section className="py-4 px-4">{children}</section>
     </main>
   );
 };

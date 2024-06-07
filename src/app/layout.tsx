@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import NextTopLoader from "nextjs-toploader";
+import { SessionProvider } from "next-auth/react";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +24,12 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body className={cn(inter.className, "bg-background text-skin-base")}>
         <NextTopLoader />
-        <ThemeProvider enableColorScheme={false} attribute="class">
-          {children}
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider enableColorScheme={false} attribute="class">
+            {children}
+          </ThemeProvider>
+          <ToastContainer position="bottom-right" />
+        </SessionProvider>
       </body>
     </html>
   );

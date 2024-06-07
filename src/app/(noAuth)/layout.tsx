@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import ToasWrapper from "./ToasWrapper";
 import SwitchTheme from "@/components/SwitchTheme";
 
 type Props = {
@@ -12,7 +11,7 @@ const Layout = ({ children }: Props) => {
       <div className="fixed bottom-4 right-4">
         <SwitchTheme />
       </div>
-      <ToasWrapper />
+      {/* <ToasWrapper /> */}
     </main>
   );
 };

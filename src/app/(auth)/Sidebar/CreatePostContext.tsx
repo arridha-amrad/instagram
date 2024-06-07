@@ -16,6 +16,8 @@ type State = {
   setFiles: Dispatch<SetStateAction<File[]>>;
   step: number;
   setStep: Dispatch<SetStateAction<number>>;
+  isSubmitSuccessful: boolean;
+  setSubmitSuccessful: Dispatch<SetStateAction<boolean>>;
 };
 
 const Context = createContext<State>({
@@ -25,15 +27,27 @@ const Context = createContext<State>({
   setFiles: () => {},
   setPreview: () => {},
   setStep: () => {},
+  isSubmitSuccessful: false,
+  setSubmitSuccessful: () => {},
 });
 
 export const CreatePostProvider = ({ children }: { children: ReactNode }) => {
   const [preview, setPreview] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [step, setStep] = useState(0);
+  const [isSubmitSuccessful, setSubmitSuccessful] = useState(false);
   return (
     <Context.Provider
-      value={{ files, preview, step, setFiles, setPreview, setStep }}
+      value={{
+        files,
+        preview,
+        step,
+        setFiles,
+        setPreview,
+        setStep,
+        isSubmitSuccessful,
+        setSubmitSuccessful,
+      }}
     >
       {children}
     </Context.Provider>
