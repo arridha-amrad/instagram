@@ -44,3 +44,5 @@ export const fetchPosts = async (userId?: string) => {
 };
 
 export type TPost = Awaited<ReturnType<typeof fetchPosts>>[number];
+
+export type TComment = Pick<TPost, "comments">["comments"][number];

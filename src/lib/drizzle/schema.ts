@@ -113,7 +113,7 @@ export const CommentsTable = pgTable("comments", {
   postId: uuid("post_id")
     .notNull()
     .references(() => PostsTable.id),
-  message: text("message"),
+  message: text("message").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -12,6 +12,7 @@ type Props = {
 
 export default function Posts({ posts }: Props) {
   const { setPosts, posts: ps, isLoadPosts } = usePostStore();
+
   useEffect(() => {
     setPosts(posts);
   }, []);
