@@ -2,8 +2,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import SuggestedUsers from "./SuggestedUsers";
 import UserCard from "./components/UserCard";
-import PostCard from "./components/Post/PostCard";
 import { fetchPosts } from "./postsFetching";
+import Posts from "./Posts";
 
 const Page = async () => {
   const session = await auth();
@@ -18,9 +18,7 @@ const Page = async () => {
   return (
     <section className="flex w-full">
       <section className="flex-1 min-h-screen py-4 max-w-md mx-auto w-full">
-        {posts.map((post) => (
-          <PostCard post={post} key={post.id} />
-        ))}
+        <Posts posts={posts} />
       </section>
       <section className="w-full flex-shrink-0 max-w-xs h-screen min-h-[500px] sticky inset-y-0">
         <div className="h-[100px] flex items-center">

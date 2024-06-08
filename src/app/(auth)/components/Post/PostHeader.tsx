@@ -1,6 +1,7 @@
 import Avatar from "@/components/Avatar";
 import { TPost } from "../../postsFetching";
-
+import Image from "next/image";
+import Default from "@/images/default.jpg";
 type Props = {
   post: TPost;
 };
@@ -8,7 +9,20 @@ type Props = {
 const PostHeader = ({ post }: Props) => {
   return (
     <section className="h-[70px] w-full flex gap-3 items-center">
-      <Avatar url={post.owner.avatar} />
+      {post.owner.avatar ? (
+        <Avatar url={post.owner.avatar} />
+      ) : (
+        <div className="w-12 aspect-square rounded-full border border-skin overflow-hidden">
+          <Image
+            className="object-cover w-full h-full"
+            alt="avatar"
+            width={100}
+            height={100}
+            loading="lazy"
+            src={Default}
+          />
+        </div>
+      )}
       <div>
         <h1 className="font-semibold">{post.owner.username}</h1>
         <p className="text-sm text-skin-muted">{post.location}</p>

@@ -5,11 +5,11 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { likePostAction } from "./likePostAction";
 import { useFormState } from "react-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePostStore } from "@/app/(auth)/PostStore";
 
 type Props = {
   post: TPost;
@@ -20,14 +20,13 @@ const initialState = {
   message: "",
 };
 
-const PostLikeButton = ({ post: { isLiked, id } }: Props) => {
-  console.log({ isLiked });
+const PostLikeButton = ({ post }: Props) => {
+  const { isLiked, id } = post;
   const { theme } = useTheme();
   const { data } = useSession();
-  const router = useRouter();
-  const pathname = usePathname();
-
+  const { likePost } = usePostStore();
   const [formState, formAction] = useFormState(likePostAction, initialState);
+  const [mId, setMId] = useState(0);
 
   useEffect(() => {
     if (formState.type === "error") {
@@ -35,13 +34,17 @@ const PostLikeButton = ({ post: { isLiked, id } }: Props) => {
     }
     if (formState.type === "success") {
       toast.success(formState.message, { theme });
+      likePost(post);
     }
-  }, [formState.type]);
+  }, [mId]);
 
   return (
     <form
       className="h-full inline-flex items-center justify-center"
-      action={formAction}
+      action={(data) => {
+        setMId(new Date().getTime());
+        formAction(data);
+      }}
     >
       <input
         name="userId"
@@ -51,7 +54,7 @@ const PostLikeButton = ({ post: { isLiked, id } }: Props) => {
         readOnly
       />
       <input name="postId" type="text" defaultValue={id} hidden readOnly />
-      <button type="submit">
+      <button disabled={!data?.user.id} type="submit">
         {isLiked ? (
           <Heart className="w-7 aspect-square fill-pink-600" />
         ) : (
