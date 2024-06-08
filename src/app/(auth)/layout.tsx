@@ -7,11 +7,11 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <main className="w-full max-w-[1200px] mx-auto flex min-h-screen">
-      <section className="xl:max-w-[250px] py-4 px-1 max-w-[60px] w-full border xl:px-4 border-skin">
+    <main className="w-full max-w-[1200px] mx-auto flex">
+      <section className="xl:max-w-[250px] border-r border-skin py-4 h-screen min-h-[500px] sticky inset-y-0 px-1 max-w-[60px] w-full xl:px-4">
         <Sidebar />
       </section>
-      <section className="py-4 px-4">{children}</section>
+      <section className="px-4 w-full">{children}</section>
     </main>
   );
 };

@@ -38,6 +38,7 @@ const config: Config = {
       },
       textColor: {
         skin: {
+          primary: withOpacity("--color-fill"),
           error: withOpacity("--color-error"),
           base: withOpacity("--color-text-base"),
           muted: withOpacity("--color-text-muted"),

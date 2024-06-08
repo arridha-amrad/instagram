@@ -54,7 +54,7 @@ const NewPostModal = () => {
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
-            <div className="relative overflow-hidden border-skin rounded-md border">
+            <div className="relative bg-background overflow-hidden border-skin rounded-md border">
               <ModalTitle />
               <div
                 ref={ref}

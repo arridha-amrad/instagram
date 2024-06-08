@@ -1,5 +1,5 @@
 {
-  "id": "fc5a91a2-610a-4541-a045-ea7518265646",
+  "id": "0daa58e9-413c-46cd-921a-3239225d1d0c",
   "prevId": "19a75644-ecc3-48c6-b310-ab4468ab80f6",
   "version": "7",
   "dialect": "postgresql",
@@ -49,7 +49,34 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "comments_user_id_users_id_fk": {
+          "name": "comments_user_id_users_id_fk",
+          "tableFrom": "comments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "comments_post_id_posts_id_fk": {
+          "name": "comments_post_id_posts_id_fk",
+          "tableFrom": "comments",
+          "tableTo": "posts",
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -57,27 +84,54 @@
       "name": "likes",
       "schema": "",
       "columns": {
-        "userId": {
-          "name": "userId",
+        "user_id": {
+          "name": "user_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "postId": {
-          "name": "postId",
+        "post_id": {
+          "name": "post_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "likes_user_id_users_id_fk": {
+          "name": "likes_user_id_users_id_fk",
+          "tableFrom": "likes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "likes_post_id_posts_id_fk": {
+          "name": "likes_post_id_posts_id_fk",
+          "tableFrom": "likes",
+          "tableTo": "posts",
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {
-        "likes_userId_postId_pk": {
-          "name": "likes_userId_postId_pk",
+        "likes_user_id_post_id_pk": {
+          "name": "likes_user_id_post_id_pk",
           "columns": [
-            "userId",
-            "postId"
+            "user_id",
+            "post_id"
           ]
         }
       },
@@ -102,7 +156,7 @@
         },
         "description": {
           "name": "description",
-          "type": "varchar",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -134,7 +188,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "posts_user_id_users_id_fk": {
+          "name": "posts_user_id_users_id_fk",
+          "tableFrom": "posts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

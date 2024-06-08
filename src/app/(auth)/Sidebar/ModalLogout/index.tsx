@@ -26,7 +26,7 @@ const ModalLogout = () => {
         onClick={() => setOpen(true)}
         className="h-[40px] xl:w-fit w-full xl:px-4 flex items-center xl:justify-start justify-center gap-4 transition-colors duration-200 ease-linear rounded-md dark:hover:bg-red-600/20 "
       >
-        <ArrowRightStartOnRectangleIcon className="w-7 aspect-square" />
+        <ArrowRightStartOnRectangleIcon className="w-7 aspect-square stroke-1" />
         <span className="xl:inline hidden">Logout</span>
       </button>
       {open &&

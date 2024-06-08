@@ -58,8 +58,10 @@ export const usersRelations = relations(UsersTable, ({ many }) => ({
 //===========================================================================
 export const PostsTable = pgTable("posts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").notNull(),
-  description: varchar("description"),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => UsersTable.id),
+  description: text("description"),
   location: varchar("location"),
   urls: json("urls").$type<PostContentUrl[]>().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -78,8 +80,12 @@ export const postsRelations = relations(PostsTable, ({ one, many }) => ({
 export const PostLikesTable = pgTable(
   "likes",
   {
-    userId: uuid("userId").notNull(),
-    postId: uuid("postId").notNull(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id),
+    postId: uuid("post_id")
+      .notNull()
+      .references(() => PostsTable.id),
   },
   (table) => {
     return {
@@ -101,8 +107,12 @@ export const likesRelations = relations(PostLikesTable, ({ one }) => ({
 //===========================================================================
 export const CommentsTable = pgTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").notNull(),
-  postId: uuid("post_id").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => UsersTable.id),
+  postId: uuid("post_id")
+    .notNull()
+    .references(() => PostsTable.id),
   message: text("message"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -112,7 +122,6 @@ export const commentsRelations = relations(CommentsTable, ({ one, many }) => ({
     fields: [CommentsTable.userId],
     references: [UsersTable.id],
   }),
-  likes: many(PostLikesTable),
   post: one(PostsTable, {
     fields: [CommentsTable.postId],
     references: [PostsTable.id],

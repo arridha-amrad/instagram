@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={cn(inter.className, "bg-background text-skin-base")}>
-        <NextTopLoader />
+        <NextTopLoader showSpinner={false} color="#2B38C9" />
         <SessionProvider>
           <ThemeProvider enableColorScheme={false} attribute="class">
             {children}
