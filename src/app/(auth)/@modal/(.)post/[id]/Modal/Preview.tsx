@@ -31,14 +31,14 @@ const Preview = ({ height, postId }: Props) => {
   };
 
   return (
-    <div className="relative" style={{ height, width: height }}>
+    <div className="relative" style={{ height }}>
       <Image
         alt="post"
         loading="lazy"
         width={500}
         height={500}
         src={preview[index].url}
-        className="object-cover object-center w-full h-full"
+        className="object-contain object-center w-auto h-full"
       />
       <div className="absolute inset-y-0 flex items-center justify-center right-2">
         <button

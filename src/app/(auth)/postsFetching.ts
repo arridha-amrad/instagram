@@ -1,4 +1,5 @@
 import db from "@/lib/drizzle/db";
+import { sql } from "drizzle-orm";
 
 export const fetchPosts = async (userId?: string) => {
   const posts = await db.query.PostsTable.findMany({

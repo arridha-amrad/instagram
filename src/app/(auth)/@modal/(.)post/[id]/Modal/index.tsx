@@ -8,11 +8,10 @@ import { usePostStore } from "@/app/(auth)/PostStore";
 import Avatar from "./Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import PostLikeButton from "@/app/(auth)/components/Post/PostActions/Like/PostLikeButton";
-import {
-  ChatBubbleLeftIcon,
-  ChatBubbleOvalLeftIcon,
-} from "@heroicons/react/24/outline";
-import Button from "@/components/core/Button";
+import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import CommentForm from "./CommentForm";
+import CommentCard from "./CommentCard";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   id: string;
@@ -46,8 +45,16 @@ const Modal = ({ id }: Props) => {
         onClick={closeModal}
         className="absolute inset-0 bg-background/30 backdrop-blur-sm"
       />
+      <div className="fixed right-2 top-2">
+        <button onClick={closeModal}>
+          <XMarkIcon className="w-7 aspect-square" />
+        </button>
+      </div>
       <div className="relative flex border border-skin">
-        <div ref={ref} className="h-[90vh] aspect-square w-max">
+        <div
+          ref={ref}
+          className="h-[90vh] w-max bg-background border-r border-skin"
+        >
           <Preview postId={id} height={height} />
         </div>
         <div className=" w-[400px] flex flex-col bg-background">
@@ -57,7 +64,7 @@ const Modal = ({ id }: Props) => {
               <h1 className="font-semibold text-sm">{post.owner.username}</h1>
             </div>
           </div>
-          <div className="flex items-start gap-3 px-4 py-2">
+          <section className="flex items-start gap-3 px-4 py-4">
             <div>
               <Avatar url={post.owner.avatar} />
             </div>
@@ -68,25 +75,30 @@ const Modal = ({ id }: Props) => {
               <p className="text-skin-muted text-sm inline">
                 {post.description}
               </p>
-              <div className="py-4">
+              <div className="py-2">
                 <p className="text-xs text-skin-muted font-thin">
                   {formatDistanceToNowStrict(post.createdAt)}
                 </p>
               </div>
             </div>
-          </div>
-          <section className="flex-1 w-full bg-green-500/50 overflow-y-auto">
-            a
           </section>
-          <section>
+          <section
+            id="all_comments"
+            className="flex-1 border-b border-skin space-y-4 px-4 w-full overflow-y-auto"
+          >
+            {post.comments.map((comment) => (
+              <CommentCard comment={comment} key={comment.id} />
+            ))}
+          </section>
+          <section id="post_actions_and_info" className="py-2">
             <div className="w-full px-2 py-2">
-              <div className="flex gap-3 items-center py-2">
+              <div className="flex gap-3 items-center pt-2">
                 <PostLikeButton post={post} />
                 <button>
                   <ChatBubbleOvalLeftIcon className="w-7 aspect-square -scale-x-100" />
                 </button>
               </div>
-              <div className="px-1">
+              <div className="px-1 pt-2">
                 <h1 className="font-semibold">
                   {post.likes}
                   <span className="text-sm pl-1">
@@ -99,15 +111,8 @@ const Modal = ({ id }: Props) => {
               </div>
             </div>
           </section>
-          <section className="flex items-center">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Add comment..."
-                className="w-full flex-1 border-none bg-skin-input focus:ring-0 px-2"
-              />
-            </div>
-            <button className="text-skin-muted px-2 bg-background">Send</button>
+          <section className="" id="comment_form">
+            <CommentForm post={post} />
           </section>
         </div>
       </div>
