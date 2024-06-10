@@ -24,6 +24,7 @@ const Modal = ({ id }: Props) => {
   if (!post) return null;
 
   const [ref, { height, width }] = useMeasure();
+  const [ref2, { height: height2 }] = useMeasure();
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -57,40 +58,44 @@ const Modal = ({ id }: Props) => {
         >
           <Preview postId={id} height={height} />
         </div>
-        <div className=" w-[400px] flex flex-col bg-background">
-          <div className="h-[70px] border-b border-skin flex items-center gap-3 px-4">
-            <Avatar url={post.owner.avatar} />
-            <div>
-              <h1 className="font-semibold text-sm">{post.owner.username}</h1>
-            </div>
-          </div>
-          <section className="flex items-start gap-3 px-4 py-4">
-            <div>
+        <div className=" w-[500px] flex flex-col bg-background">
+          <section id="post_owner" className="border-b border-skin py-2 px-4">
+            <div className="flex items-center gap-3">
               <Avatar url={post.owner.avatar} />
-            </div>
-            <div className="pt-0.5">
-              <h1 className="font-semibold text-sm inline pr-2">
-                {post.owner.username}
-              </h1>
-              <p className="text-skin-muted text-sm inline">
-                {post.description}
-              </p>
-              <div className="py-2">
-                <p className="text-xs text-skin-muted font-thin">
-                  {formatDistanceToNowStrict(post.createdAt)}
-                </p>
+              <div>
+                <h1 className="font-semibold text-sm">{post.owner.username}</h1>
               </div>
             </div>
           </section>
           <section
-            id="all_comments"
-            className="flex-1 border-b border-skin space-y-4 px-4 w-full overflow-y-auto"
+            id="post_with_comments"
+            className="flex flex-col border-b border-skin overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
           >
+            <div className="flex gap-2">
+              <div>
+                <Avatar url={post.owner.avatar} />
+              </div>
+              <div className="pt-0.5">
+                <h1 className="font-semibold text-sm inline pr-2">
+                  {post.owner.username}
+                </h1>
+                <p className="text-skin-muted text-sm inline">
+                  {post.description}
+                </p>
+                <div className="py-2">
+                  <p className="text-xs text-skin-muted">
+                    {formatDistanceToNowStrict(post.createdAt)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {post.comments.map((comment) => (
               <CommentCard comment={comment} key={comment.id} />
             ))}
           </section>
-          <section id="post_actions_and_info" className="py-2">
+
+          <section id="post_actions_and_info">
             <div className="w-full px-2 py-2">
               <div className="flex gap-3 items-center pt-2">
                 <PostLikeButton post={post} />
@@ -111,7 +116,7 @@ const Modal = ({ id }: Props) => {
               </div>
             </div>
           </section>
-          <section className="" id="comment_form">
+          <section id="comment_form">
             <CommentForm post={post} />
           </section>
         </div>

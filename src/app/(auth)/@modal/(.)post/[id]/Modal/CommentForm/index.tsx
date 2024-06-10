@@ -39,7 +39,6 @@ const CommentForm = ({ post }: Props) => {
       if (newComment && user) {
         addComment({
           ...newComment,
-          sumComments: 0,
           owner: {
             id: user.id ?? "",
             email: user.email ?? "",

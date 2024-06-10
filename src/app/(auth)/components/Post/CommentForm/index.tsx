@@ -14,7 +14,7 @@ import Link from "next/link";
 const initialState = {
   message: "",
   type: "",
-  errros: {} as any,
+  errors: {} as any,
   data: {} as any,
 };
 

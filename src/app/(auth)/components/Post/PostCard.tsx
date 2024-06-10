@@ -36,7 +36,7 @@ const PostCard = ({ post }: Props) => {
                 {comment.message}
               </p>
             </div>
-            <button>
+            <button className="pl-2">
               <HeartIcon className="w-4 -4" />
             </button>
           </div>

@@ -13,7 +13,7 @@ const Avatar = ({ url }: Props) => {
         width={50}
         height={50}
         className="object-cover h-full w-full"
-        src={url ? url : DefaultAvatar}
+        src={url && url !== "null" ? url : DefaultAvatar}
       />
     </div>
   );
