@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePostStore } from "./PostStore";
-import { TPost } from "./postsFetching";
+import { TPost } from "../../fetchings/postsFetching";
 import PostCard from "./components/Post/PostCard";
 import MySpinner from "@/components/Spinner";
 

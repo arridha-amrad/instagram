@@ -1,5 +1,5 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { TPost } from "../../postsFetching";
+import { TPost } from "../../../../fetchings/postsFetching";
 import PostImagesCarousel from "../PostImagesCarousel";
 import CommentForm from "./CommentForm";
 import PostActions from "./PostActions";

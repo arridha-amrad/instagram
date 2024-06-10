@@ -6,10 +6,10 @@ import { commentAction } from "./commentAction";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
-import { TPost } from "@/app/(auth)/postsFetching";
 import ButtonSubmitComment from "./ButtonSubmitComment";
 import { usePostStore } from "@/app/(auth)/PostStore";
 import Link from "next/link";
+import { TPost } from "@/fetchings/postsFetching";
 
 const initialState = {
   message: "",

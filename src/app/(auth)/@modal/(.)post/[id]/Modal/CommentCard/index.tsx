@@ -1,7 +1,7 @@
-import { TComment } from "@/app/(auth)/postsFetching";
 import Avatar from "../Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import { HeartIcon } from "@heroicons/react/24/outline";
+import { TComment } from "@/fetchings/postsFetching";
 
 type Props = {
   comment: TComment;

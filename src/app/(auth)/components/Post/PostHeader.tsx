@@ -1,5 +1,5 @@
 import Avatar from "@/components/Avatar";
-import { TPost } from "../../postsFetching";
+import { TPost } from "../../../../fetchings/postsFetching";
 import Image from "next/image";
 import Default from "@/images/default.jpg";
 type Props = {

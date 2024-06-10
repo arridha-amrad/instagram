@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { TComment, TPost } from "./postsFetching";
+import { TComment, TPost } from "../../fetchings/postsFetching";
 
 type State = {
   posts: TPost[];
