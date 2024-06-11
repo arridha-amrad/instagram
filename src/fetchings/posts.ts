@@ -5,151 +5,64 @@ import {
   PostsTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
-import { count, desc, eq, sql } from "drizzle-orm";
-import { COMMENT, OWNER, POST } from "./constants";
+import { and, count, desc, eq, sql } from "drizzle-orm";
+import { OWNER, POST } from "./constants";
+import { TPost } from "./type";
 
 export const fetchPosts = async (userId?: string) => {
-  const posts = db
-    .select({
-      // owner: OWNER,
-      ...POST,
-      sumLikes: sql<number>`${count(PostLikesTable.postId)}`.as("sum_likes"),
-    })
-    .from(PostsTable)
-    .limit(10)
-    .orderBy(desc(PostsTable.createdAt))
-    // .innerJoin(UsersTable, eq(UsersTable.id, PostsTable.userId))
-    .leftJoin(PostLikesTable, eq(PostLikesTable.postId, PostsTable.id))
-    .groupBy(PostLikesTable.postId, PostsTable.id);
-  return posts;
-};
+  const startTime = new Date().getTime();
 
-export const sqPosts = db
-  .select({ ...POST })
-  .from(PostsTable)
-  .orderBy(desc(PostsTable.createdAt))
-  .as("sqPosts");
-
-const totalLikes = async () => {
-  const countLikes = await db
-    .select({
-      postId: PostLikesTable.postId,
-      sumLikes: sql<number>`${count(PostLikesTable.postId)}`,
-    })
-    .from(sqPosts)
-    .leftJoin(PostLikesTable, eq(PostLikesTable.postId, sqPosts.id))
-    .groupBy(PostLikesTable.postId, sqPosts.id);
-
-  const sumLikes = countLikes.reduce<
-    Record<string, (typeof countLikes)[number]>
-  >((acc, curr) => {
-    const postId = curr.postId!;
-    acc[postId] = { ...curr };
-    return acc;
-  }, {});
-
-  return sumLikes;
-};
-
-const totalComments = async () => {
-  const countComments = await db
-    .select({
-      postId: CommentsTable.postId,
-      sumComments: sql<number>`${count(CommentsTable.postId)}`,
-    })
-    .from(sqPosts)
-    .leftJoin(CommentsTable, eq(CommentsTable.postId, sqPosts.id))
-    .groupBy(sqPosts.id, CommentsTable.postId);
-
-  const sumComments = countComments.reduce<
-    Record<string, (typeof countComments)[number]>
-  >((acc, curr) => {
-    const postId = curr.postId!;
-    acc[postId] = { ...curr };
-    return acc;
-  }, {});
-  return sumComments;
-};
-
-const fetchComments = async () => {
-  const getComments = await db
-    .select({
-      ...COMMENT,
-      owner: OWNER,
-    })
-    .from(sqPosts)
-    .leftJoin(CommentsTable, eq(CommentsTable.postId, sqPosts.id))
-    .innerJoin(UsersTable, eq(UsersTable.id, sqPosts.userId));
-
-  const comments = getComments.reduce<
-    Record<string, (typeof getComments)[number][]>
-  >((total, item) => {
-    const postId = item.postId!;
-    if (!total[postId]) {
-      total[postId] = [{ ...item }];
-    } else {
-      total[postId].push({ ...item });
-    }
-    return total;
-  }, {});
-  return comments;
-};
-
-const getPosts = async () => {
   const posts = await db
     .select({
-      id: sqPosts.id,
-      userId: sqPosts.userId,
-      description: sqPosts.description,
-      location: sqPosts.location,
-      urls: sqPosts.urls,
-      createdAt: sqPosts.createdAt,
-      updatedAt: sqPosts.updatedAt,
-      owner: {
-        ...OWNER,
-      },
+      ...POST,
+      owner: OWNER,
+      sumLikes: sql<number>`${count(PostLikesTable.postId)}`.mapWith(Number),
     })
-    .from(sqPosts)
-    .innerJoin(UsersTable, eq(UsersTable.id, sqPosts.userId));
-  return posts;
-};
+    .from(PostsTable)
+    .orderBy(desc(PostsTable.createdAt))
+    .innerJoin(UsersTable, eq(UsersTable.id, PostsTable.userId))
+    .leftJoin(PostLikesTable, eq(PostLikesTable.postId, PostsTable.id))
+    .groupBy(PostsTable.id, UsersTable.id);
 
-export type TPost = Awaited<ReturnType<typeof getPosts>>[number];
-export type TComment = Awaited<
-  ReturnType<typeof fetchComments>
->[number][number];
-export type TSumLikes = number;
-export type TSumComments = number;
+  const placeHolderIsPostLiked = db
+    .select()
+    .from(PostLikesTable)
+    .where(
+      and(
+        eq(PostLikesTable.postId, sql.placeholder("postId")),
+        eq(PostLikesTable.userId, sql.placeholder("userId"))
+      )
+    )
+    .prepare("placeHolderIsPostLiked");
 
-export type TPostComplete = TPost & { comments: TComment[] } & {
-  sumLikes: TSumLikes;
-} & { sumComments: TSumComments };
+  const placeholderSumComments = db
+    .select({
+      sumComment: sql<number>`count(${CommentsTable.id})`.mapWith(Number),
+    })
+    .from(CommentsTable)
+    .where(eq(CommentsTable.postId, sql.placeholder("postId")))
+    .prepare("placeholderSumComments");
 
-export const fetchPosts2 = async () => {
-  const [p, sl, sc, c] = await Promise.all([
-    getPosts(),
-    totalLikes(),
-    totalComments(),
-    fetchComments(),
-  ]);
-
-  const posts: TPostComplete[] = [];
-
-  for (let i = 0; i < p.length; i++) {
-    // @ts-ignore
-    posts[i] = { ...p[i] };
-    posts[i].sumLikes = sl[p[i].id].sumLikes;
-    posts[i].sumComments = sc[p[i].id].sumComments;
-    posts[i].comments = c[p[i].id];
+  const myPosts: TPost[] = [];
+  for (let index = 0; index < posts.length; index++) {
+    const [isLiked] = await placeHolderIsPostLiked.execute({
+      postId: posts[index].id,
+      userId,
+    });
+    const [comments] = await placeholderSumComments.execute({
+      postId: posts[index].id,
+    });
+    myPosts.push({
+      ...posts[index],
+      comments: [],
+      isLiked: !!isLiked,
+      sumComments: comments.sumComment,
+    });
   }
 
-  console.log(JSON.stringify(posts, null, 2));
+  const endTime = new Date().getTime();
+  console.log("fetching posts time : ", endTime - startTime, "ms");
+  // console.log(JSON.stringify(myPosts, null, 2));
 
-  return posts;
-
-  // console.log(JSON.stringify(p, null, 2));
-  // console.log(JSON.stringify(sl, null, 2));
-  // console.log(JSON.stringify(sc, null, 2));
-  // console.log(JSON.stringify(c, null, 2));
-  // return p;
+  return myPosts;
 };

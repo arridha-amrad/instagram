@@ -2,9 +2,14 @@ import db from "@/lib/drizzle/db";
 import { CommentsTable, UsersTable } from "@/lib/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { COMMENT, OWNER } from "./constants";
+import { TComment } from "./type";
 
-export async function fetchComments({ postId }: { postId: string }) {
-  const [comments] = await db
+export async function fetchComments({
+  postId,
+}: {
+  postId: string;
+}): Promise<TComment[]> {
+  const comments = await db
     .select({
       ...COMMENT,
       owner: OWNER,

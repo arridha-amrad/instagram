@@ -1,9 +1,10 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { TPost } from "../../../../fetchings/postsFetching";
+
 import PostImagesCarousel from "../PostImagesCarousel";
 import CommentForm from "./CommentForm";
 import PostActions from "./PostActions";
 import PostHeader from "./PostHeader";
+import { TPost } from "@/fetchings/type";
 
 type Props = {
   post: TPost;
@@ -18,7 +19,7 @@ const PostCard = ({ post }: Props) => {
       <PostActions post={post} />
       <div>
         <h1>
-          {post.likes} {post.likes > 1 ? "likes" : "like"}
+          {post.sumLikes} {post.sumLikes > 1 ? "likes" : "like"}
         </h1>
       </div>
       <section className="line-clamp-2 text-sm">

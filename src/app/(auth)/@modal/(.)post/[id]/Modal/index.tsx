@@ -12,20 +12,25 @@ import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import CommentForm from "./CommentForm";
 import CommentCard from "./CommentCard";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import { TComment } from "@/fetchings/type";
 
 type Props = {
   id: string;
+  comments: TComment[];
 };
 
-const Modal = ({ id }: Props) => {
+const Modal = ({ id, comments }: Props) => {
   const router = useRouter();
-  const { posts } = usePostStore();
+  const { posts, setComment } = usePostStore();
   const post = posts.find((p) => p.id === id);
   if (!post) return null;
 
-  const [ref, { height, width }] = useMeasure();
-  const [ref2, { height: height2 }] = useMeasure();
+  const [ref, { height }] = useMeasure();
   const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    setComment(id, comments);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -69,7 +74,7 @@ const Modal = ({ id }: Props) => {
           </section>
           <section
             id="post_with_comments"
-            className="flex flex-col border-b border-skin overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
+            className="flex bg-skin-input flex-col border-b border-skin overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
           >
             <div className="flex gap-2">
               <div>
@@ -105,9 +110,9 @@ const Modal = ({ id }: Props) => {
               </div>
               <div className="px-1 pt-2">
                 <h1 className="font-semibold">
-                  {post.likes}
+                  {post.sumLikes}
                   <span className="text-sm pl-1">
-                    {post.likes > 1 ? "likes" : "like"}
+                    {post.sumLikes > 1 ? "likes" : "like"}
                   </span>
                 </h1>
                 <p className="text-xs text-skin-muted">

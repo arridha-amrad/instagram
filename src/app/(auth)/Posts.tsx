@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { usePostStore } from "./PostStore";
-import { TPost } from "../../fetchings/postsFetching";
+
 import PostCard from "./components/Post/PostCard";
 import MySpinner from "@/components/Spinner";
+import { TPost } from "@/fetchings/type";
 
 type Props = {
   posts: TPost[];

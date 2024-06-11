@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 import ButtonSubmitComment from "./ButtonSubmitComment";
 import { usePostStore } from "@/app/(auth)/PostStore";
 import Link from "next/link";
-import { TPost } from "@/fetchings/postsFetching";
+import { TPost } from "@/fetchings/type";
 
 const initialState = {
   message: "",
@@ -41,7 +41,6 @@ const CommentForm = ({ post }: Props) => {
           ...newComment,
           owner: {
             id: user.id ?? "",
-            email: user.email ?? "",
             name: user.name ?? "",
             username: user.username ?? "",
             avatar: user.image ?? null,

@@ -1,7 +1,9 @@
 import Avatar from "@/components/Avatar";
-import { TPost } from "../../../../fetchings/postsFetching";
+
 import Image from "next/image";
 import Default from "@/images/default.jpg";
+import { TPost } from "@/fetchings/type";
+import { formatDistanceToNowStrict } from "date-fns";
 type Props = {
   post: TPost;
 };
@@ -28,7 +30,9 @@ const PostHeader = ({ post }: Props) => {
         <p className="text-sm text-skin-muted">{post.location}</p>
       </div>
       <div className="w-1 aspect-square rounded-full bg-neutral-500" />
-      <h2 className="text-skin-muted text-sm">3h</h2>
+      <h2 className="text-skin-muted text-sm">
+        {formatDistanceToNowStrict(post.createdAt)}
+      </h2>
     </section>
   );
 };

@@ -1,6 +1,6 @@
+import { TComment, TPost } from "@/fetchings/type";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { TComment, TPost } from "../../fetchings/postsFetching";
 
 type State = {
   posts: TPost[];
@@ -11,12 +11,20 @@ type Actions = {
   setPosts: (posts: TPost[]) => void;
   likePost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
+  setComment: (postId: string, comments: TComment[]) => void;
 };
 
 export const usePostStore = create<State & Actions>()(
   immer((set) => ({
     posts: [],
     isLoadPosts: true,
+    setComment(postId, comments) {
+      set((state) => {
+        const post = state.posts.find((p) => p.id === postId);
+        if (!post) return;
+        post.comments = comments;
+      });
+    },
     setPosts(posts) {
       set((state) => {
         state.posts = posts;
@@ -29,10 +37,10 @@ export const usePostStore = create<State & Actions>()(
         if (currPost) {
           if (currPost.isLiked) {
             currPost.isLiked = false;
-            currPost.likes -= 1;
+            currPost.sumLikes -= 1;
           } else {
             currPost.isLiked = true;
-            currPost.likes += 1;
+            currPost.sumLikes += 1;
           }
         }
       });
