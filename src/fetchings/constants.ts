@@ -9,6 +9,7 @@ export const OWNER = {
 
 export const COMMENT = {
   id: CommentsTable.id,
+  userId: CommentsTable.userId,
   postId: CommentsTable.postId,
   message: CommentsTable.message,
   createdAt: CommentsTable.createdAt,
