@@ -5,7 +5,10 @@ export type TOwner = Pick<
   "id" | "avatar" | "name" | "username"
 >;
 
-export type TComment = typeof CommentsTable.$inferSelect & { owner: TOwner };
+export type TComment = typeof CommentsTable.$inferSelect & { owner: TOwner } & {
+  isLiked: boolean;
+  sumLikes: number;
+};
 
 export type TPost = typeof PostsTable.$inferSelect & {
   owner: TOwner;

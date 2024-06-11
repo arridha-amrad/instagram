@@ -1,7 +1,8 @@
 import Avatar from "../Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { TComment } from "@/fetchings/postsFetching";
+import { TComment } from "@/fetchings/type";
+import ButtonLikeComment from "./ButtonLikeComment";
 
 type Props = {
   comment: TComment;
@@ -22,9 +23,13 @@ const CommentCard = ({ comment }: Props) => {
           <div>
             <p className="">{formatDistanceToNowStrict(comment.createdAt)}</p>
           </div>
-          <div>
-            <p>1 Like</p>
-          </div>
+          {comment.sumLikes > 0 && (
+            <div>
+              <p>
+                {comment.sumLikes} {comment.sumLikes > 1 ? "Likes" : "Like"}
+              </p>
+            </div>
+          )}
           <div>
             <button>Reply</button>
           </div>
@@ -35,9 +40,7 @@ const CommentCard = ({ comment }: Props) => {
         </div>
       </div>
       <div className="pt-4">
-        <button>
-          <HeartIcon className="w-4 aspect-square" />
-        </button>
+        <ButtonLikeComment comment={comment} />
       </div>
     </article>
   );

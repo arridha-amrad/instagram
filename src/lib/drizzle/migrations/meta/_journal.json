@@ -15,6 +15,13 @@
       "when": 1717782685430,
       "tag": "0001_perpetual_leopardon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1718121815364,
+      "tag": "0002_chief_rafael_vega",
+      "breakpoints": true
     }
   ]
 }

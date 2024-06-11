@@ -12,12 +12,27 @@ type Actions = {
   likePost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
   setComment: (postId: string, comments: TComment[]) => void;
+  likeComment: (postId: string, commentId: string) => void;
 };
 
 export const usePostStore = create<State & Actions>()(
   immer((set) => ({
     posts: [],
     isLoadPosts: true,
+    likeComment(postId, commentId) {
+      set((state) => {
+        const post = state.posts.find((p) => p.id === postId);
+        if (!post) return;
+        const comment = post.comments.find((c) => c.id === commentId);
+        if (!comment) return;
+        if (comment.isLiked) {
+          comment.isLiked = false;
+          comment.sumLikes -= 1;
+        } else {
+          (comment.isLiked = true), (comment.sumLikes += 1);
+        }
+      });
+    },
     setComment(postId, comments) {
       set((state) => {
         const post = state.posts.find((p) => p.id === postId);

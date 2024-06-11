@@ -1,5 +1,6 @@
 import { fetchComments } from "@/fetchings/comments";
 import Modal from "./Modal";
+import { auth } from "@/auth";
 
 type Props = {
   params: {
@@ -8,7 +9,11 @@ type Props = {
 };
 
 const Page = async ({ params }: Props) => {
-  const comments = await fetchComments({ postId: params.id });
+  const session = await auth();
+  const comments = await fetchComments({
+    postId: params.id,
+    userId: session?.user.id,
+  });
   return <Modal comments={comments} id={params.id} />;
 };
 

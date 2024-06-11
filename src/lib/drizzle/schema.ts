@@ -126,4 +126,36 @@ export const commentsRelations = relations(CommentsTable, ({ one, many }) => ({
     fields: [CommentsTable.postId],
     references: [PostsTable.id],
   }),
+  likes: many(CommentLikesTable),
 }));
+
+//===========================================================================
+export const CommentLikesTable = pgTable(
+  "comment_likes",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id),
+    commentId: uuid("comment_id")
+      .notNull()
+      .references(() => CommentsTable.id),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.commentId, table.userId] }),
+    };
+  }
+);
+export const commentLikesRelations = relations(
+  CommentLikesTable,
+  ({ one }) => ({
+    comment: one(CommentsTable, {
+      fields: [CommentLikesTable.commentId],
+      references: [CommentsTable.id],
+    }),
+    user: one(UsersTable, {
+      fields: [CommentLikesTable.userId],
+      references: [UsersTable.id],
+    }),
+  })
+);
