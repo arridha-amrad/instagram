@@ -3,6 +3,9 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { TComment } from "@/fetchings/type";
 import ButtonLikeComment from "./ButtonLikeComment";
 import { useReplySetter } from "@/stores/ReplySetter";
+import ShowReplies from "./ShowReplies";
+import Replies from "./Replies";
+import { useState } from "react";
 
 type Props = {
   comment: TComment;
@@ -10,15 +13,21 @@ type Props = {
 
 const CommentCard = ({ comment }: Props) => {
   const { setCommentTarget } = useReplySetter();
+  const [isShowReplies, setIsShowReplies] = useState(true);
   return (
     <article className="flex items-start gap-2 w-full">
       <div>
         <Avatar url={comment.owner.avatar} />
       </div>
       <div className="flex-1">
-        <div className="pt-0.5 space-x-2 text-sm">
-          <h1 className=" inline font-semibold">{comment.owner.username}</h1>
-          <p className="inline">{comment.message}</p>
+        <div className="flex pt-0.5 w-full">
+          <div className="space-x-2 flex-1 text-sm">
+            <h1 className=" inline font-semibold">{comment.owner.username}</h1>
+            <p className="inline">{comment.message}</p>
+          </div>
+          <div className="">
+            <ButtonLikeComment comment={comment} />
+          </div>
         </div>
         <div className="py-2 flex text-xs text-skin-muted gap-4">
           <div>
@@ -45,13 +54,16 @@ const CommentCard = ({ comment }: Props) => {
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="w-[30px] bg-gray-500 h-0.5" />
-          <button className="text-xs text-skin-muted">See replies</button>
-        </div>
-      </div>
-      <div className="pt-4">
-        <ButtonLikeComment comment={comment} />
+        <ShowReplies
+          isShowReplies={isShowReplies}
+          setIsShowReplies={setIsShowReplies}
+          comment={comment}
+        />
+        {isShowReplies && (
+          <section>
+            <Replies replies={comment.replies} />
+          </section>
+        )}
       </div>
     </article>
   );

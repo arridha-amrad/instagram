@@ -3,14 +3,14 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
 import { likeCommentAction } from "./commentAction";
 import { useSession } from "next-auth/react";
-import { usePostStore } from "@/stores/PostStore";
+import { useCommentsStore } from "@/stores/CommentsStore";
 
 type Props = {
   comment: TComment;
 };
 const ButtonLikeComment = ({ comment }: Props) => {
   const { data } = useSession();
-  const { likeComment: lc } = usePostStore();
+  const { likeComment: lc } = useCommentsStore();
   const likeComment = likeCommentAction.bind(null, {
     commentId: comment.id,
     userId: data?.user.id,
@@ -18,7 +18,7 @@ const ButtonLikeComment = ({ comment }: Props) => {
   return (
     <form
       action={(data) => {
-        lc(comment.postId, comment.id);
+        lc(comment.id);
         likeComment(data);
       }}
     >

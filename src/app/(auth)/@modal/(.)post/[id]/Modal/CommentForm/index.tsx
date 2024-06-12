@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import ButtonSubmitComment from "./ButtonSubmitComment";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useFormState } from "react-dom";
-import { createCommentAction } from "@/actions/createCommentAction";
+import {
+  TCommentSchema,
+  TReplySchema,
+  createCommentAction,
+} from "@/actions/createCommentAction";
 import { toast } from "react-toastify";
 import { TPost } from "@/fetchings/type";
-import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
 import CommentInput from "./CommentInput";
+import { useCommentsStore } from "@/stores/CommentsStore";
 
 type Props = {
   post: TPost;
@@ -19,7 +22,7 @@ const initialState = {
   type: "",
   content: "",
   errros: {} as any,
-  data: {} as any,
+  data: {} as TCommentSchema | TReplySchema,
 };
 
 const CommentForm = ({ post }: Props) => {
@@ -33,7 +36,7 @@ const CommentForm = ({ post }: Props) => {
   const [currId, setCurrId] = useState(0);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
-  const { addComment } = usePostStore();
+  const { addComment, addReply } = useCommentsStore();
 
   const [replyState, setReplyState] = useState({
     userId: "",
@@ -41,14 +44,13 @@ const CommentForm = ({ post }: Props) => {
   });
 
   useEffect(() => {
-    if (commentTarget) {
-      setMessage(`@${commentTarget.username}`);
+    if (commentTarget?.commentId) {
       setReplyState({
         commentId: commentTarget.commentId,
         userId: commentTarget.userId,
       });
     }
-  }, [commentTarget]);
+  }, [commentTarget?.commentId]);
 
   useEffect(() => {
     if (message === "") {
@@ -61,24 +63,37 @@ const CommentForm = ({ post }: Props) => {
 
   useEffect(() => {
     if (formState.type === "success") {
-      toast.success(formState.message, { theme });
-      const actionResult = formState.data;
       const user = data?.user;
-      // if (actionResult && user) {
-      //   if (formState.content === "comment") {
-      //     addComment({
-      //       ...actionResult,
-      //       isLiked: false,
-      //       sumLikes: 0,
-      //       owner: {
-      //         id: user.id ?? "",
-      //         name: user.name ?? "",
-      //         username: user.username ?? "",
-      //         avatar: user.image ?? null,
-      //       },
-      //     });
-      //   }
-      // }
+      if (!user) return;
+      if (formState.content === "comment") {
+        addComment({
+          ...(formState.data as TCommentSchema),
+          isLiked: false,
+          sumRepliesRemaining: 0,
+          sumLikes: 0,
+          replies: [],
+          sumReplies: 0,
+          owner: {
+            id: user.id ?? "",
+            name: user.name ?? "",
+            username: user.username ?? "",
+            avatar: user.image ?? null,
+          },
+        });
+      }
+      if (formState.content === "reply") {
+        addReply({
+          ...(formState.data as TReplySchema),
+          isLiked: false,
+          sumLikes: 0,
+          owner: {
+            avatar: user.image ?? null,
+            id: user.id ?? "",
+            name: user.name ?? "",
+            username: user.username ?? "",
+          },
+        });
+      }
       setMessage("");
     }
     if (formState.type === "error") {

@@ -4,6 +4,9 @@ import db from "@/lib/drizzle/db";
 import { CommentsTable, RepliesTable } from "@/lib/drizzle/schema";
 import { commentSchema } from "@/lib/zod/createCommentSchema";
 
+export type TCommentSchema = typeof CommentsTable.$inferSelect;
+export type TReplySchema = typeof RepliesTable.$inferSelect;
+
 export const createCommentAction = async (
   prevState: any,
   formData: FormData
@@ -42,7 +45,7 @@ export const createCommentAction = async (
         type: "success",
         content: "comment",
         message: "New comment added",
-        data: response,
+        data: response as TCommentSchema,
       };
     }
     const [response] = await db
@@ -58,7 +61,7 @@ export const createCommentAction = async (
       type: "success",
       content: "reply",
       message: "New comment added",
-      data: response,
+      data: response as TReplySchema,
     };
   } catch (err) {
     return {

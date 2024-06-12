@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { devtools } from "zustand/middleware";
 
 type CommentTarget = {
   userId: string;
@@ -7,21 +8,30 @@ type CommentTarget = {
   commentId: string;
 };
 
-type State = {
+interface State {
   commentTarget: CommentTarget | null;
-};
-
-type Actions = {
   setCommentTarget: (data: CommentTarget) => void;
-};
+  reset: () => void;
+}
 
-export const useReplySetter = create<State & Actions>()(
-  immer((set) => ({
-    commentTarget: null,
-    setCommentTarget(data) {
-      set((state) => {
-        state.commentTarget = data;
-      });
-    },
-  }))
+export const useReplySetter = create<State>()(
+  devtools(
+    immer((set) => ({
+      commentTarget: null,
+      setCommentTarget(data: CommentTarget) {
+        set((state: State) => {
+          state.commentTarget = data;
+        });
+      },
+      reset() {
+        set((state: State) => {
+          state.commentTarget = null;
+        });
+      },
+    })),
+    {
+      enabled: process.env.NODE_ENV === "development",
+      anonymousActionType: "reply_setter",
+    }
+  )
 );

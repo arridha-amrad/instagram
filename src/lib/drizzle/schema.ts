@@ -177,7 +177,7 @@ export const RepliesTable = pgTable("replies", {
 export const repliesTableRelations = relations(
   RepliesTable,
   ({ one, many }) => ({
-    user: one(UsersTable, {
+    owner: one(UsersTable, {
       fields: [RepliesTable.userId],
       references: [UsersTable.id],
     }),

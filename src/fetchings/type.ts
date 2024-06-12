@@ -1,4 +1,9 @@
-import { CommentsTable, PostsTable, UsersTable } from "@/lib/drizzle/schema";
+import {
+  CommentsTable,
+  PostsTable,
+  RepliesTable,
+  UsersTable,
+} from "@/lib/drizzle/schema";
 
 export type TOwner = Pick<
   typeof UsersTable.$inferSelect,
@@ -6,6 +11,14 @@ export type TOwner = Pick<
 >;
 
 export type TComment = typeof CommentsTable.$inferSelect & { owner: TOwner } & {
+  isLiked: boolean;
+  sumLikes: number;
+  sumReplies: number;
+  sumRepliesRemaining: number;
+  replies: TReply[];
+};
+
+export type TReply = typeof RepliesTable.$inferSelect & { owner: TOwner } & {
   isLiked: boolean;
   sumLikes: number;
 };

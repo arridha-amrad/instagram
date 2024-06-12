@@ -41,5 +41,4 @@ export const likeCommentAction = async (
       userId,
     });
   }
-  console.log({ commentId, userId });
 };

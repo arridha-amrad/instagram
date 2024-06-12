@@ -33,10 +33,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
     });
   };
   return (
-    <section
-      ref={ref}
-      className="border relative border-skin min-h-[70vh] w-full max-h-[500px]"
-    >
+    <section ref={ref} className="relative min-h-[70vh] w-full max-h-[500px]">
       {isPending && (
         <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
           <MySpinner />

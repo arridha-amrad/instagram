@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Preview from "./Preview";
 import useMeasure from "react-use-measure";
@@ -9,10 +9,12 @@ import { formatDistanceToNowStrict } from "date-fns";
 import PostLikeButton from "@/app/(auth)/components/Post/PostActions/Like/PostLikeButton";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import CommentForm from "./CommentForm";
-import CommentCard from "./CommentCard";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { TComment } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";
+import { useCommentsStore } from "@/stores/CommentsStore";
+import Comments from "./Comments";
+import { useReplySetter } from "@/stores/ReplySetter";
 
 type Props = {
   id: string;
@@ -20,8 +22,11 @@ type Props = {
 };
 
 const Modal = ({ id, comments }: Props) => {
+  const pathname = usePathname();
   const router = useRouter();
-  const { posts, setComment } = usePostStore();
+  const { posts } = usePostStore();
+  const { setComments, comments: cms } = useCommentsStore();
+  const { reset } = useReplySetter();
   const post = posts.find((p) => p.id === id);
   if (!post) return null;
 
@@ -29,7 +34,7 @@ const Modal = ({ id, comments }: Props) => {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
-    setComment(id, comments);
+    setComments(comments);
   }, []);
 
   useEffect(() => {
@@ -43,7 +48,12 @@ const Modal = ({ id, comments }: Props) => {
   const closeModal = () => {
     router.back();
     setOpen(false);
+    reset();
   };
+
+  if (pathname !== `/post/${id}`) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center">
@@ -94,10 +104,7 @@ const Modal = ({ id, comments }: Props) => {
                 </div>
               </div>
             </div>
-
-            {post.comments.map((comment) => (
-              <CommentCard comment={comment} key={comment.id} />
-            ))}
+            <Comments />
           </section>
 
           <section id="post_actions_and_info">

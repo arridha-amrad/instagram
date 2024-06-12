@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ButtonSubmitComment from "./ButtonSubmitComment";
 import { useFormStatus } from "react-dom";
 import MySpinner from "@/components/Spinner";
+import { useReplySetter } from "@/stores/ReplySetter";
 
 type Props = {
   message: string;
@@ -10,6 +11,17 @@ type Props = {
 
 const CommentInput = ({ message, setMessage }: Props) => {
   const { pending } = useFormStatus();
+  const { commentTarget } = useReplySetter();
+
+  useEffect(() => {
+    if (commentTarget?.commentId) {
+      ref.current?.focus();
+      setMessage(`@${commentTarget?.username}`);
+    }
+  }, [commentTarget?.commentId]);
+
+  const ref = useRef<HTMLInputElement | null>(null);
+
   return (
     <div className="relative flex items-center w-full h-full">
       {pending && (
@@ -20,6 +32,7 @@ const CommentInput = ({ message, setMessage }: Props) => {
       <div className="flex-1">
         <fieldset disabled={pending}>
           <input
+            ref={ref}
             value={message}
             name="message"
             onChange={(e) => setMessage(e.target.value)}
