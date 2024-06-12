@@ -7,9 +7,9 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import ButtonSubmitComment from "./ButtonSubmitComment";
-import { usePostStore } from "@/app/(auth)/PostStore";
 import Link from "next/link";
 import { TPost } from "@/fetchings/type";
+import { usePostStore } from "@/stores/PostStore";
 
 const initialState = {
   message: "",
@@ -39,6 +39,8 @@ const CommentForm = ({ post }: Props) => {
       if (newComment && user) {
         addComment({
           ...newComment,
+          isLiked: false,
+          sumLikes: 0,
           owner: {
             id: user.id ?? "",
             name: user.name ?? "",
@@ -56,7 +58,7 @@ const CommentForm = ({ post }: Props) => {
 
   return (
     <section className="py-2">
-      <Link href={`/post/${post.id}`}>
+      <Link scroll={false} href={`/post/${post.id}`}>
         <p className="text-skin-muted text-sm">
           {post.sumComments}&nbsp;{" "}
           {post.sumComments > 1 ? "comments" : "comment"}

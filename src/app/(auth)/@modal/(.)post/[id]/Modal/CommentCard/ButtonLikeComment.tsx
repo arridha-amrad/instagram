@@ -3,7 +3,7 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
 import { likeCommentAction } from "./commentAction";
 import { useSession } from "next-auth/react";
-import { usePostStore } from "@/app/(auth)/PostStore";
+import { usePostStore } from "@/stores/PostStore";
 
 type Props = {
   comment: TComment;

@@ -1,26 +1,25 @@
 "use server";
 
 import db from "@/lib/drizzle/db";
-import { CommentsTable } from "@/lib/drizzle/schema";
+import { CommentsTable, RepliesTable } from "@/lib/drizzle/schema";
 import { commentSchema } from "@/lib/zod/createCommentSchema";
 
 export const createCommentAction = async (
   prevState: any,
   formData: FormData
 ) => {
-  const { userId, postId, message } = Object.fromEntries(
+  const { userId, postId, message, commentId } = Object.fromEntries(
     formData.entries()
   ) as {
     userId: string;
     postId: string;
     message: string;
+    commentId: string | null;
   };
 
   const validatedFields = commentSchema.safeParse({
     message,
   });
-
-  console.log({ message });
 
   if (!validatedFields.success) {
     return {
@@ -29,17 +28,35 @@ export const createCommentAction = async (
   }
 
   try {
+    if (!commentId) {
+      console.log("create comment");
+      const [response] = await db
+        .insert(CommentsTable)
+        .values({
+          postId,
+          userId,
+          message: validatedFields.data.message,
+        })
+        .returning();
+      return {
+        type: "success",
+        content: "comment",
+        message: "New comment added",
+        data: response,
+      };
+    }
     const [response] = await db
-      .insert(CommentsTable)
+      .insert(RepliesTable)
       .values({
-        postId,
+        commentId,
+        message,
         userId,
-        message: validatedFields.data.message,
       })
       .returning();
 
     return {
       type: "success",
+      content: "reply",
       message: "New comment added",
       data: response,
     };

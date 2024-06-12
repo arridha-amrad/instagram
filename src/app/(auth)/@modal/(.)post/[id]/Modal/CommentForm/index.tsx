@@ -4,9 +4,11 @@ import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useFormState } from "react-dom";
 import { createCommentAction } from "@/actions/createCommentAction";
-import { usePostStore } from "@/app/(auth)/PostStore";
 import { toast } from "react-toastify";
 import { TPost } from "@/fetchings/type";
+import { usePostStore } from "@/stores/PostStore";
+import { useReplySetter } from "@/stores/ReplySetter";
+import CommentInput from "./CommentInput";
 
 type Props = {
   post: TPost;
@@ -15,11 +17,13 @@ type Props = {
 const initialState = {
   message: "",
   type: "",
+  content: "",
   errros: {} as any,
   data: {} as any,
 };
 
 const CommentForm = ({ post }: Props) => {
+  const { commentTarget } = useReplySetter();
   const { data } = useSession();
   const { theme } = useTheme();
   const [formState, formAction] = useFormState(
@@ -31,24 +35,50 @@ const CommentForm = ({ post }: Props) => {
   const [message, setMessage] = useState("");
   const { addComment } = usePostStore();
 
+  const [replyState, setReplyState] = useState({
+    userId: "",
+    commentId: "",
+  });
+
+  useEffect(() => {
+    if (commentTarget) {
+      setMessage(`@${commentTarget.username}`);
+      setReplyState({
+        commentId: commentTarget.commentId,
+        userId: commentTarget.userId,
+      });
+    }
+  }, [commentTarget]);
+
+  useEffect(() => {
+    if (message === "") {
+      setReplyState({
+        commentId: "",
+        userId: "",
+      });
+    }
+  }, [message]);
+
   useEffect(() => {
     if (formState.type === "success") {
       toast.success(formState.message, { theme });
-      const newComment = formState.data;
+      const actionResult = formState.data;
       const user = data?.user;
-      if (newComment && user) {
-        addComment({
-          ...newComment,
-          isLiked: false,
-          sumLikes: 0,
-          owner: {
-            id: user.id ?? "",
-            name: user.name ?? "",
-            username: user.username ?? "",
-            avatar: user.image ?? null,
-          },
-        });
-      }
+      // if (actionResult && user) {
+      //   if (formState.content === "comment") {
+      //     addComment({
+      //       ...actionResult,
+      //       isLiked: false,
+      //       sumLikes: 0,
+      //       owner: {
+      //         id: user.id ?? "",
+      //         name: user.name ?? "",
+      //         username: user.username ?? "",
+      //         avatar: user.image ?? null,
+      //       },
+      //     });
+      //   }
+      // }
       setMessage("");
     }
     if (formState.type === "error") {
@@ -64,19 +94,23 @@ const CommentForm = ({ post }: Props) => {
       }}
       className="flex items-center pt-1 h-full"
     >
+      <input
+        readOnly
+        type="text"
+        value={replyState.commentId}
+        name="commentId"
+        hidden
+      />
+      <input
+        readOnly
+        type="text"
+        value={replyState.userId}
+        name="commentUserId"
+        hidden
+      />
       <input defaultValue={post.id} name="postId" readOnly hidden />
       <input defaultValue={data?.user.id} name="userId" readOnly hidden />
-      <div className="flex-1">
-        <input
-          value={message}
-          name="message"
-          onChange={(e) => setMessage(e.target.value)}
-          type="text"
-          placeholder="Add comment..."
-          className="w-full text-sm h-12 flex-1 border-none bg-background focus:ring-0 px-4"
-        />
-      </div>
-      <ButtonSubmitComment message={message} />
+      <CommentInput message={message} setMessage={setMessage} />
     </form>
   );
 };

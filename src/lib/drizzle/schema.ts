@@ -127,6 +127,7 @@ export const commentsRelations = relations(CommentsTable, ({ one, many }) => ({
     references: [PostsTable.id],
   }),
   likes: many(CommentLikesTable),
+  replies: many(RepliesTable),
 }));
 
 //===========================================================================
@@ -159,3 +160,57 @@ export const commentLikesRelations = relations(
     }),
   })
 );
+
+//===========================================================================
+export const RepliesTable = pgTable("replies", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  message: text("message").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => UsersTable.id),
+  commentId: uuid("comment_id")
+    .notNull()
+    .references(() => CommentsTable.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+export const repliesTableRelations = relations(
+  RepliesTable,
+  ({ one, many }) => ({
+    user: one(UsersTable, {
+      fields: [RepliesTable.userId],
+      references: [UsersTable.id],
+    }),
+    comment: one(CommentsTable, {
+      fields: [RepliesTable.commentId],
+      references: [CommentsTable.id],
+    }),
+    likes: many(ReplyLikesTable),
+  })
+);
+
+//===========================================================================
+export const ReplyLikesTable = pgTable(
+  "reply_likes",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id),
+    replyId: uuid("reply_id")
+      .notNull()
+      .references(() => CommentsTable.id),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.replyId, table.userId] }),
+  })
+);
+export const replyLikesRelations = relations(ReplyLikesTable, ({ one }) => ({
+  user: one(UsersTable, {
+    fields: [ReplyLikesTable.userId],
+    references: [UsersTable.id],
+  }),
+  reply: one(RepliesTable, {
+    fields: [ReplyLikesTable.replyId],
+    references: [RepliesTable.id],
+  }),
+}));

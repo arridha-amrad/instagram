@@ -1,6 +1,5 @@
 "use client";
 
-import { TPost } from "@/app/(auth)/postsFetching";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { likePostAction } from "./likePostAction";
@@ -9,7 +8,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
-import { usePostStore } from "@/app/(auth)/PostStore";
+import { TPost } from "@/fetchings/type";
+import { usePostStore } from "@/stores/PostStore";
 
 type Props = {
   post: TPost;

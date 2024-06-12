@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Preview from "./Preview";
 import useMeasure from "react-use-measure";
-import { usePostStore } from "@/app/(auth)/PostStore";
 import Avatar from "./Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import PostLikeButton from "@/app/(auth)/components/Post/PostActions/Like/PostLikeButton";
@@ -13,6 +12,7 @@ import CommentForm from "./CommentForm";
 import CommentCard from "./CommentCard";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { TComment } from "@/fetchings/type";
+import { usePostStore } from "@/stores/PostStore";
 
 type Props = {
   id: string;
@@ -56,7 +56,7 @@ const Modal = ({ id, comments }: Props) => {
           <XMarkIcon className="w-7 aspect-square" />
         </button>
       </div>
-      <div className="relative flex border border-skin">
+      <div className="relative flex">
         <div
           ref={ref}
           className="h-[90vh] w-max bg-background border-r border-skin"
@@ -74,7 +74,7 @@ const Modal = ({ id, comments }: Props) => {
           </section>
           <section
             id="post_with_comments"
-            className="flex flex-col border-b border-skin overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
+            className="flex flex-col overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
           >
             <div className="flex gap-2">
               <div>
@@ -121,7 +121,7 @@ const Modal = ({ id, comments }: Props) => {
               </div>
             </div>
           </section>
-          <section className="border-t border-skin" id="comment_form">
+          <section className="" id="comment_form">
             <CommentForm post={post} />
           </section>
         </div>

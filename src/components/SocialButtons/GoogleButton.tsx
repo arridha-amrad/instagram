@@ -2,10 +2,8 @@
 
 import { signIn } from "next-auth/react";
 import SvgGoogle from "../svg/SvgGoogle";
-import { useRouter } from "next/navigation";
 
 const GoogleButton = () => {
-  const router = useRouter();
   const googleLogin = async () => {
     await signIn("google", { redirect: false, callbackUrl: "/" });
   };

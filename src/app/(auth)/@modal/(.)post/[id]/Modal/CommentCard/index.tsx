@@ -1,14 +1,15 @@
 import Avatar from "../Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
-import { HeartIcon } from "@heroicons/react/24/outline";
 import { TComment } from "@/fetchings/type";
 import ButtonLikeComment from "./ButtonLikeComment";
+import { useReplySetter } from "@/stores/ReplySetter";
 
 type Props = {
   comment: TComment;
 };
 
 const CommentCard = ({ comment }: Props) => {
+  const { setCommentTarget } = useReplySetter();
   return (
     <article className="flex items-start gap-2 w-full">
       <div>
@@ -31,7 +32,17 @@ const CommentCard = ({ comment }: Props) => {
             </div>
           )}
           <div>
-            <button>Reply</button>
+            <button
+              onClick={() => {
+                setCommentTarget({
+                  commentId: comment.id,
+                  userId: comment.owner.id,
+                  username: comment.owner.username,
+                });
+              }}
+            >
+              Reply
+            </button>
           </div>
         </div>
         <div className="flex items-center gap-4">

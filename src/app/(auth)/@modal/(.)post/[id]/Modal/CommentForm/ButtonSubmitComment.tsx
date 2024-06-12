@@ -11,6 +11,7 @@ const ButtonSubmitComment = ({ message }: Props) => {
   const { pending } = useFormStatus();
   return (
     <button
+      disabled={pending || message.length === 0}
       type="submit"
       className={cn(
         "text-sm px-2 bg-background h-full",

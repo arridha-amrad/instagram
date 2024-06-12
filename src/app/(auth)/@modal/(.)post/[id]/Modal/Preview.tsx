@@ -5,7 +5,7 @@ import ChevronRightIcon from "@heroicons/react/20/solid/ChevronRightIcon";
 import ChevronLeftIcon from "@heroicons/react/20/solid/ChevronLeftIcon";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { usePostStore } from "@/app/(auth)/PostStore";
+import { usePostStore } from "@/stores/PostStore";
 
 type Props = {
   height: number;
