@@ -41,7 +41,7 @@ const ModalLogout = () => {
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
-            <div className="relative overflow-hidden border-skin rounded-md border max-w-sm">
+            <div className="relative bg-background overflow-hidden border-skin rounded-md border max-w-sm">
               <section className="p-4 border-b border-skin">
                 <h1 className="font-semibold text-xl text-center">Logout</h1>
               </section>

@@ -9,20 +9,24 @@ type Props = {
 
 const UserCard = ({ name, username, avatar }: Props) => {
   return (
-    <div className="flex justify-between items-center px-4 py-3 w-full">
-      <div className="flex items-start justify-start gap-3">
+    <div className="flex items-center gap-2 px-4 py-3 w-full">
+      <div className="flex flex-1 basis-0 items-start justify-start gap-3">
         <Avatar url={avatar} />
-        <div className="text-sm">
-          <h1 className="font-semibold">{username}</h1>
-          <p className="text-skin-muted">{name}</p>
+        <div className="text-sm max-w-[150px] overflow-hidden">
+          <h1 className="font-semibold text-ellipsis whitespace-pre-line overflow-hidden">
+            {username}
+          </h1>
+          <p className="text-skin-muted text-ellipsis">{name}</p>
         </div>
       </div>
-      <Link
-        className="text-skin-inverted text-sm font-medium"
-        href={`/${username}`}
-      >
-        visit
-      </Link>
+      <div className="">
+        <Link
+          className="text-skin-inverted text-sm font-medium"
+          href={`/${username}`}
+        >
+          visit
+        </Link>
+      </div>
     </div>
   );
 };
