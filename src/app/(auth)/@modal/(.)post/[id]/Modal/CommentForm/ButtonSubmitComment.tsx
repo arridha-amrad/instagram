@@ -13,7 +13,7 @@ const ButtonSubmitComment = ({ message }: Props) => {
     <button
       type="submit"
       className={cn(
-        "text-sm px-2 bg-skin-input h-full",
+        "text-sm px-2 bg-background h-full",
         message.length > 0
           ? "text-skin-inverted font-semibold"
           : "text-skin-muted/50"

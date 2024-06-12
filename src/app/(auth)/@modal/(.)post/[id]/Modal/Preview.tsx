@@ -38,7 +38,7 @@ const Preview = ({ height, postId }: Props) => {
         width={500}
         height={500}
         src={preview[index].url}
-        className="object-contain object-center w-auto h-full max-w-[900px]"
+        className="object-cover object-center w-auto h-full max-w-[700px]"
       />
       <div className="absolute inset-y-0 flex items-center justify-center right-2">
         <button

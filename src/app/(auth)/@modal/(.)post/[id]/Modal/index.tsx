@@ -63,7 +63,7 @@ const Modal = ({ id, comments }: Props) => {
         >
           <Preview postId={id} height={height} />
         </div>
-        <div className=" w-[500px] flex flex-col bg-background">
+        <div className=" w-[400px] flex flex-col bg-background">
           <section id="post_owner" className="border-b border-skin py-2 px-4">
             <div className="flex items-center gap-3">
               <Avatar url={post.owner.avatar} />
@@ -74,7 +74,7 @@ const Modal = ({ id, comments }: Props) => {
           </section>
           <section
             id="post_with_comments"
-            className="flex bg-skin-input flex-col border-b border-skin overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
+            className="flex flex-col border-b border-skin overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
           >
             <div className="flex gap-2">
               <div>
@@ -121,7 +121,7 @@ const Modal = ({ id, comments }: Props) => {
               </div>
             </div>
           </section>
-          <section id="comment_form">
+          <section className="border-t border-skin" id="comment_form">
             <CommentForm post={post} />
           </section>
         </div>

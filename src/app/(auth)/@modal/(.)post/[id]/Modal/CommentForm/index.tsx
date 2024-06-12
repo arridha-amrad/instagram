@@ -1,4 +1,3 @@
-import { TComment, TPost } from "@/app/(auth)/postsFetching";
 import { useEffect, useRef, useState } from "react";
 import ButtonSubmitComment from "./ButtonSubmitComment";
 import { useSession } from "next-auth/react";
@@ -7,6 +6,7 @@ import { useFormState } from "react-dom";
 import { createCommentAction } from "@/actions/createCommentAction";
 import { usePostStore } from "@/app/(auth)/PostStore";
 import { toast } from "react-toastify";
+import { TPost } from "@/fetchings/type";
 
 type Props = {
   post: TPost;
@@ -39,9 +39,10 @@ const CommentForm = ({ post }: Props) => {
       if (newComment && user) {
         addComment({
           ...newComment,
+          isLiked: false,
+          sumLikes: 0,
           owner: {
             id: user.id ?? "",
-            email: user.email ?? "",
             name: user.name ?? "",
             username: user.username ?? "",
             avatar: user.image ?? null,
@@ -72,7 +73,7 @@ const CommentForm = ({ post }: Props) => {
           onChange={(e) => setMessage(e.target.value)}
           type="text"
           placeholder="Add comment..."
-          className="w-full text-sm h-12 flex-1 border-none bg-skin-input focus:ring-0 px-4"
+          className="w-full text-sm h-12 flex-1 border-none bg-background focus:ring-0 px-4"
         />
       </div>
       <ButtonSubmitComment message={message} />
