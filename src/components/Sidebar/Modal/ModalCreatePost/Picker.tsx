@@ -2,7 +2,7 @@
 
 import PhotoIcon from "@heroicons/react/20/solid/PhotoIcon";
 import { ChangeEvent, useRef } from "react";
-import { useCreatePost } from "../CreatePostContext";
+import { useCreatePost } from "./CreatePostContext";
 import Button from "@/components/core/Button";
 
 const Picker = () => {

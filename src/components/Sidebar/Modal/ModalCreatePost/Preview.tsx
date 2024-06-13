@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCreatePost } from "../CreatePostContext";
+import { useCreatePost } from "./CreatePostContext";
 import ChevronRightIcon from "@heroicons/react/20/solid/ChevronRightIcon";
 import ChevronLeftIcon from "@heroicons/react/20/solid/ChevronLeftIcon";
 import { useState } from "react";

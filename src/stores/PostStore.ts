@@ -1,4 +1,4 @@
-import { TPost } from "@/fetchings/type";
+import { TPost, TPostSchema } from "@/fetchings/type";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware";
@@ -11,6 +11,7 @@ type State = {
 type Actions = {
   setPosts: (posts: TPost[]) => void;
   likePost: (post: TPost) => void;
+  addPost: (post: TPost) => void;
 };
 
 export const usePostStore = create<State & Actions>()(
@@ -22,6 +23,11 @@ export const usePostStore = create<State & Actions>()(
         set((state) => {
           state.posts = posts;
           state.isLoadPosts = false;
+        });
+      },
+      addPost(post) {
+        set((state) => {
+          state.posts.unshift(post);
         });
       },
       likePost(post) {
@@ -42,6 +48,6 @@ export const usePostStore = create<State & Actions>()(
     {
       anonymousActionType: "posts_store",
       enabled: process.env.NODE_ENV === "development",
-    }
-  )
+    },
+  ),
 );

@@ -16,7 +16,7 @@ const CommentInput = ({ message, setMessage }: Props) => {
   useEffect(() => {
     if (commentTarget?.commentId) {
       ref.current?.focus();
-      setMessage(`@${commentTarget?.username}`);
+      setMessage(`@${commentTarget?.username} `);
     }
   }, [commentTarget?.commentId]);
 

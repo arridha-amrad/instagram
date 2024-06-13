@@ -10,28 +10,27 @@ type Props = {
 
 const Replies = ({ replies }: Props) => {
   return replies.map((r) => (
-    <div key={r.id} className="flex items-start gap-4 text-sm w-full">
+    <div key={r.id} className="flex items-start gap-2 text-sm w-full">
       <div>
         <Avatar url={r.owner.avatar} />
       </div>
-      <div className="flex-1">
-        <div className="pt-0.5">
-          <h1 className="inline font-semibold">{r.owner.username}</h1>
-          <p className="inline pl-1">
-            {r.message.split(" ").map((s, i) =>
-              s.startsWith("@") ? (
-                <Link
-                  key={i}
-                  className="text-skin-inverted pr-2"
-                  href={`/${s.replace("@", "")}`}
-                >
-                  {s}
-                </Link>
-              ) : (
-                s
-              )
-            )}
-          </p>
+      <div className="flex-1 basis-0">
+        <div className="pt-0.5 text-wrap">
+          <h1 className="inline font-semibold pr-1">{r.owner.username}</h1>
+          <p className="inline text-sm">{r.message}</p>
+          {/* {r.message.split(" ").map((s, i) =>
+            s.startsWith("@") ? (
+              <Link
+                key={i}
+                className="text-skin-inverted pr-2"
+                href={`/${s.replace("@", "")}`}
+              >
+                {s}
+              </Link>
+            ) : (
+              s
+            )
+          )} */}
         </div>
         <div className="py-2 flex text-xs text-skin-muted gap-4">
           <p className="">{formatDistanceToNowStrict(r.createdAt)}</p>
@@ -42,9 +41,11 @@ const Replies = ({ replies }: Props) => {
           )}
         </div>
       </div>
-      <button className="pt-1">
-        <HeartIcon className="w-4 aspect-square" />
-      </button>
+      <div className="pt-1">
+        <button className="w-5 aspect-square">
+          <HeartIcon className="w-4 aspect-square" />
+        </button>
+      </div>
     </div>
   ));
 };

@@ -16,7 +16,6 @@ export const createPostAction = async (prevState: any, formData: FormData) => {
   const location = formData.get("location") as string | null;
   const userId = formData.get("userId") as string;
 
-  // const responses: UploadApiResponse[] = [];
   const urls: PostContentUrl[] = [];
   for (const image of images) {
     const response = await upload(image);
@@ -28,16 +27,18 @@ export const createPostAction = async (prevState: any, formData: FormData) => {
   }
 
   try {
-    await db.transaction(async (tx) => {
-      await tx.insert(PostsTable).values({
+    const [response] = await db
+      .insert(PostsTable)
+      .values({
         userId,
         description,
         location,
         urls,
-      });
-    });
+      })
+      .returning();
+
     return {
-      data: "ok",
+      data: response,
       type: "success",
       message: "New post created successfully",
     };

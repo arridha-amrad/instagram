@@ -7,6 +7,7 @@ import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/16/solid";
 import { useRouter } from "next/navigation";
+import Modal from ".";
 
 const ModalLogout = () => {
   const [open, setOpen] = useState(false);
@@ -31,16 +32,7 @@ const ModalLogout = () => {
       </button>
       {open &&
         createPortal(
-          <div className="fixed inset-0 flex items-center justify-center">
-            <div
-              onClick={closeModal}
-              className="absolute inset-0 bg-background/30 backdrop-blur-sm"
-            />
-            <div className="fixed top-4 right-4">
-              <button onClick={closeModal}>
-                <XMarkIcon className="w-6 h-6" />
-              </button>
-            </div>
+          <Modal closeModal={closeModal}>
             <div className="relative bg-background overflow-hidden border-skin rounded-md border max-w-sm">
               <section className="p-4 border-b border-skin">
                 <h1 className="font-semibold text-xl text-center">Logout</h1>
@@ -61,7 +53,7 @@ const ModalLogout = () => {
                 </Button>
               </section>
             </div>
-          </div>,
+          </Modal>,
           document.body
         )}
     </>

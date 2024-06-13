@@ -1,9 +1,9 @@
 import Link from "next/link";
 import SidebarBrand from "./SidebarBrand";
 import { HomeIcon, UserIcon } from "@heroicons/react/24/outline";
-import NewPostModal from "./ModalCreatePost";
-import { CreatePostProvider } from "./CreatePostContext";
-import Logout from "./ModalLogout";
+import NewPostModal from "./Modal/ModalCreatePost";
+import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
+import Logout from "./Modal/ModalLogout";
 import SwitchTheme from "@/components/SwitchTheme";
 import { auth } from "@/auth";
 
@@ -24,7 +24,6 @@ export default async function Sidebar() {
         <NewPostModal />
       </CreatePostProvider>
       <div className="h-2" />
-
       <Link
         className="inline-flex w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 bg-background/50 rounded-md xl:py-2 hover:bg-skin-fill transition-colors duration-300 ease-linear"
         href={session?.user.username ?? "/"}

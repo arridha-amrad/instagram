@@ -2,7 +2,7 @@ import Image from "next/image";
 import DefaultAvatar from "@/images/default.jpg";
 
 type Props = {
-  url: string | null;
+  url?: string | null;
 };
 
 const Avatar = ({ url }: Props) => {

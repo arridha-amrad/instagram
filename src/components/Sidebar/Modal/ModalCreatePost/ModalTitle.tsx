@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useCreatePost } from "../CreatePostContext";
+import { useCreatePost } from "./CreatePostContext";
 
 const ModalTitle = () => {
   const { step, setStep, preview } = useCreatePost();

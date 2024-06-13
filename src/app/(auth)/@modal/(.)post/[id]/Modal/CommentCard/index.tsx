@@ -19,13 +19,13 @@ const CommentCard = ({ comment }: Props) => {
       <div>
         <Avatar url={comment.owner.avatar} />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         <div className="flex pt-0.5 w-full">
-          <div className="space-x-2 flex-1 text-sm">
+          <div className="space-x-2 flex-1 basis-0 text-sm">
             <h1 className=" inline font-semibold">{comment.owner.username}</h1>
             <p className="inline">{comment.message}</p>
           </div>
-          <div className="">
+          <div className="w-5 aspect-square flex-none">
             <ButtonLikeComment comment={comment} />
           </div>
         </div>

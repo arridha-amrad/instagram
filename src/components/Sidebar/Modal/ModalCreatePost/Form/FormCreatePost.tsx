@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useCreatePost } from "../../CreatePostContext";
+import { useCreatePost } from "../CreatePostContext";
 import ButtonSubmitCreatePost from "./ButtonSubmitCreatePost";
 import { useFormState } from "react-dom";
 import { createPostAction } from "./createPostAction";

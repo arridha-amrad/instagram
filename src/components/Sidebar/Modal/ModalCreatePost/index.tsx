@@ -1,9 +1,8 @@
 "use client";
 
-import XMarkIcon from "@heroicons/react/20/solid/XMarkIcon";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useCreatePost } from "../CreatePostContext";
+import { useCreatePost } from "./CreatePostContext";
 import useMeasure from "react-use-measure";
 import Preview from "./Preview";
 import Picker from "./Picker";
@@ -11,6 +10,7 @@ import { cn } from "@/lib/utils";
 import FormCreatePost from "./Form/FormCreatePost";
 import ModalTitle from "./ModalTitle";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import Modal from "..";
 
 const NewPostModal = () => {
   const [open, setOpen] = useState(false);
@@ -43,32 +43,21 @@ const NewPostModal = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex
-        hover:bg-skin-fill transition-colors duration-300 ease-linear
-        w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 rounded-md xl:py-2"
+        className="inline-flex h-[40px] w-full items-center justify-center gap-4 rounded-md transition-colors duration-300 ease-linear hover:bg-skin-fill xl:w-fit xl:justify-start xl:px-4 xl:py-2"
       >
-        <PencilSquareIcon className="w-6 aspect-square" />
-        <span className="xl:inline hidden">New Post</span>
+        <PencilSquareIcon className="aspect-square w-6" />
+        <span className="hidden xl:inline">New Post</span>
       </button>
       {open &&
         createPortal(
-          <div className="fixed inset-0 flex items-center justify-center">
-            <div
-              onClick={closeModal}
-              className="absolute inset-0 bg-background/30 backdrop-blur-sm"
-            />
-            <div className="fixed top-4 right-4">
-              <button onClick={closeModal}>
-                <XMarkIcon className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="relative bg-background overflow-hidden border-skin rounded-md border">
+          <Modal closeModal={closeModal}>
+            <div className="relative overflow-hidden rounded-md border border-skin bg-background">
               <ModalTitle />
               <div
                 ref={ref}
                 className={cn(
-                  "min-h-[70vh] max-h-[500px] aspect-square",
-                  step >= 1 && "aspect-auto"
+                  "aspect-square max-h-[500px] min-h-[70vh]",
+                  step >= 1 && "aspect-auto",
                 )}
               >
                 {preview.length === 0 ? (
@@ -84,8 +73,8 @@ const NewPostModal = () => {
                 )}
               </div>
             </div>
-          </div>,
-          document.body
+          </Modal>,
+          document.body,
         )}
     </>
   );

@@ -50,7 +50,7 @@ const ShowReplies = ({ comment, isShowReplies, setIsShowReplies }: Props) => {
         setId(new Date().getTime());
         formAction();
       }}
-      className="flex items-center gap-4 py-3"
+      className="flex items-center gap-4 pt-3"
     >
       <div className="w-[30px] bg-gray-500 h-0.5" />
       <ButtonShowReplies sumReplies={comment.sumReplies} />
@@ -70,7 +70,7 @@ const ShowReplies = ({ comment, isShowReplies, setIsShowReplies }: Props) => {
           onClick={() => setIsShowReplies(true)}
           className="text-xs text-skin-muted"
         >
-          View ${comment.sumReplies} replies
+          View {comment.sumReplies} replies
         </button>
       )}
     </div>

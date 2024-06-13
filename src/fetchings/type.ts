@@ -5,12 +5,16 @@ import {
   UsersTable,
 } from "@/lib/drizzle/schema";
 
+export type TPostSchema = typeof PostsTable.$inferSelect;
+export type TCommentSchema = typeof CommentsTable.$inferSelect;
+export type TReplySchema = typeof RepliesTable.$inferSelect;
+
 export type TOwner = Pick<
   typeof UsersTable.$inferSelect,
   "id" | "avatar" | "name" | "username"
 >;
 
-export type TComment = typeof CommentsTable.$inferSelect & { owner: TOwner } & {
+export type TComment = TCommentSchema & { owner: TOwner } & {
   isLiked: boolean;
   sumLikes: number;
   sumReplies: number;
@@ -18,15 +22,15 @@ export type TComment = typeof CommentsTable.$inferSelect & { owner: TOwner } & {
   replies: TReply[];
 };
 
-export type TReply = typeof RepliesTable.$inferSelect & { owner: TOwner } & {
-  isLiked: boolean;
-  sumLikes: number;
-};
-
-export type TPost = typeof PostsTable.$inferSelect & {
+export type TPost = TPostSchema & {
   owner: TOwner;
   comments: TComment[];
   isLiked: boolean;
   sumLikes: number;
   sumComments: number;
+};
+
+export type TReply = TReplySchema & { owner: TOwner } & {
+  isLiked: boolean;
+  sumLikes: number;
 };
