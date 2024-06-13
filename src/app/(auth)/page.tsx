@@ -1,10 +1,10 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import SuggestedUsers from "./SuggestedUsers";
-import Posts from "../../components/Posts";
 import { cache } from "react";
 import { fetchPosts } from "@/fetchings/postsFetching";
 import UserCard from "@/components/UserCard";
+import Posts from "@/components/Posts";
+import SuggestedUsers from "@/components/SuggestedUsers";
 
 const Page = async () => {
   const session = await auth();
@@ -22,7 +22,7 @@ const Page = async () => {
       <section className="mx-auto min-h-screen w-full max-w-md flex-1 py-4">
         <Posts posts={posts} />
       </section>
-      <section className="sticky inset-y-0 h-screen min-h-[500px] w-full max-w-xs flex-shrink-0">
+      <section className="sticky inset-y-0 hidden h-screen min-h-[500px] w-full max-w-xs flex-shrink-0 lg:block">
         <div className="flex h-[100px] items-center">
           <UserCard name={name ?? ""} username={username} avatar={image} />
         </div>

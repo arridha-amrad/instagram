@@ -15,9 +15,9 @@ const Modal = ({ closeModal, children }: Props) => {
         onClick={closeModal}
         className="absolute inset-0 bg-background/30 backdrop-blur-sm"
       />
-      <div className="fixed top-4 right-4">
+      <div className="fixed right-4 top-4">
         <button onClick={closeModal}>
-          <XMarkIcon className="w-6 h-6" />
+          <XMarkIcon className="h-6 w-6" />
         </button>
       </div>
       {children}

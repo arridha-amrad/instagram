@@ -1,5 +1,7 @@
 import { CommentsTable, PostsTable, UsersTable } from "@/lib/drizzle/schema";
 
+export const LIMIT = 10;
+
 export const OWNER = {
   id: UsersTable.id,
   username: UsersTable.username,

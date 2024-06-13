@@ -8,15 +8,15 @@ const ModalTitle = () => {
   return (
     <div
       className={cn(
-        "w-full h-[50px] px-4 bg-background border-b border-skin items-center justify-center flex",
-        preview.length > 0 && "justify-between"
+        "flex h-[50px] w-full items-center justify-center border-b border-skin bg-background px-4",
+        preview.length > 0 && "justify-between",
       )}
     >
       <button
         onClick={() => setStep((val) => (val -= 1))}
         className={cn(
-          "text-skin-inverted font-semibold invisible",
-          step > 0 && "visible"
+          "invisible font-semibold text-skin-inverted",
+          step > 0 && "visible",
         )}
       >
         Back
@@ -25,9 +25,9 @@ const ModalTitle = () => {
       <button
         onClick={() => setStep((val) => (val += 1))}
         className={cn(
-          "text-skin-inverted font-semibold",
+          "font-semibold text-skin-inverted",
           preview.length === 0 && "invisible",
-          step > 0 && "invisible"
+          step > 0 && "invisible",
         )}
       >
         Next

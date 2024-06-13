@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import FormCreatePost from "./Form/FormCreatePost";
 import ModalTitle from "./ModalTitle";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import Modal from "..";
+import Modal from "@/components/core/Modals/Wrapper";
 
 const NewPostModal = () => {
   const [open, setOpen] = useState(false);

@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import XMarkIcon from "@heroicons/react/20/solid/XMarkIcon";
 import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/16/solid";
 import { useRouter } from "next/navigation";
-import Modal from ".";
+import Modal from "@/components/core/Modals/Wrapper";
 
 const ModalLogout = () => {
   const [open, setOpen] = useState(false);
@@ -25,26 +24,26 @@ const ModalLogout = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="h-[40px] xl:w-fit w-full xl:px-4 flex items-center xl:justify-start justify-center gap-4 transition-colors duration-200 ease-linear rounded-md dark:hover:bg-red-600/20 "
+        className="flex h-[40px] w-full items-center justify-center gap-4 rounded-md transition-colors duration-200 ease-linear dark:hover:bg-red-600/20 xl:w-fit xl:justify-start xl:px-4"
       >
-        <ArrowRightStartOnRectangleIcon className="w-7 aspect-square stroke-1" />
-        <span className="xl:inline hidden">Logout</span>
+        <ArrowRightStartOnRectangleIcon className="aspect-square w-7 stroke-1" />
+        <span className="hidden xl:inline">Logout</span>
       </button>
       {open &&
         createPortal(
           <Modal closeModal={closeModal}>
-            <div className="relative bg-background overflow-hidden border-skin rounded-md border max-w-sm">
-              <section className="p-4 border-b border-skin">
-                <h1 className="font-semibold text-xl text-center">Logout</h1>
+            <div className="relative max-w-sm overflow-hidden rounded-md border border-skin bg-background">
+              <section className="border-b border-skin p-4">
+                <h1 className="text-center text-xl font-semibold">Logout</h1>
               </section>
-              <p className="text-sm text-center text-skin-muted px-4 py-8">
+              <p className="px-4 py-8 text-center text-sm text-skin-muted">
                 This action will clear your session. You need to relogin again
                 to use this app. Are you sure?
               </p>
-              <section className="flex justify-end p-4 gap-3">
+              <section className="flex justify-end gap-3 p-4">
                 <button
                   onClick={closeModal}
-                  className="text-sm px-4 py-2 rounded-md border border-skin"
+                  className="rounded-md border border-skin px-4 py-2 text-sm"
                 >
                   Cancel
                 </button>
@@ -54,7 +53,7 @@ const ModalLogout = () => {
               </section>
             </div>
           </Modal>,
-          document.body
+          document.body,
         )}
     </>
   );

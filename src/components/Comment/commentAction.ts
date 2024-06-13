@@ -12,7 +12,7 @@ type Props = {
 
 export const likeCommentAction = async (
   { commentId, userId }: Props,
-  formData: FormData
+  formData: FormData,
 ) => {
   if (!userId) {
     redirect("/login");
@@ -23,8 +23,8 @@ export const likeCommentAction = async (
     .where(
       and(
         eq(CommentLikesTable.userId, userId),
-        eq(CommentLikesTable.commentId, commentId)
-      )
+        eq(CommentLikesTable.commentId, commentId),
+      ),
     );
   if (isLiked) {
     await db
@@ -32,8 +32,8 @@ export const likeCommentAction = async (
       .where(
         and(
           eq(CommentLikesTable.userId, userId),
-          eq(CommentLikesTable.commentId, commentId)
-        )
+          eq(CommentLikesTable.commentId, commentId),
+        ),
       );
   } else {
     await db.insert(CommentLikesTable).values({

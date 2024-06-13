@@ -4,18 +4,21 @@ import db from "@/lib/drizzle/db";
 import { PostLikesTable } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 
-export const likePostAction = async (prevState: any, formData: FormData) => {
-  const { userId, postId } = Object.fromEntries(formData.entries()) as {
-    userId: string;
-    postId: string;
-  };
+type Args = {
+  userId: string;
+  postId: string;
+};
 
+export const likePostAction = async (
+  { postId, userId }: Args,
+  prevState: any,
+) => {
   try {
     let message = "";
     const isLiked = await db.query.PostLikesTable.findFirst({
       where: and(
         eq(PostLikesTable.postId, postId),
-        eq(PostLikesTable.userId, userId)
+        eq(PostLikesTable.userId, userId),
       ),
     });
     if (isLiked) {
@@ -24,8 +27,8 @@ export const likePostAction = async (prevState: any, formData: FormData) => {
         .where(
           and(
             eq(PostLikesTable.postId, postId),
-            eq(PostLikesTable.userId, userId)
-          )
+            eq(PostLikesTable.userId, userId),
+          ),
         );
       message = "dislike";
     } else {

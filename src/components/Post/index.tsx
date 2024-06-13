@@ -1,9 +1,9 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
 
-import PostImagesCarousel from "./PostImagesCarousel";
+import PostCardCarousel from "./PostImagesCarousel";
 import CommentForm from "./CommentForm";
-import PostActions from "./PostActions";
-import PostHeader from "./PostHeader";
+import PostCardActions from "./PostActions";
+import PostCardHeader from "./PostHeader";
 import { TPost } from "@/fetchings/type";
 
 type Props = {
@@ -12,11 +12,10 @@ type Props = {
 
 const PostCard = ({ post }: Props) => {
   return (
-    <article className="w-full pb-10">
-      <PostHeader post={post} />
-      <PostImagesCarousel urls={post.urls} />
-      <div className="h-1" />
-      <PostActions post={post} />
+    <article className="w-full">
+      <PostCardHeader post={post} />
+      <PostCardCarousel urls={post.urls} />
+      <PostCardActions post={post} />
       <section id="post_total_likes">
         <h1>
           {post.sumLikes} {post.sumLikes > 1 ? "likes" : "like"}
@@ -26,7 +25,7 @@ const PostCard = ({ post }: Props) => {
         <h1 className="inline pr-2 font-semibold">{post.owner.username}</h1>
         <p className="inline text-skin-muted">{post.description}</p>
       </section>
-      <section id="post_commments" className="py-2">
+      <section id="post_comments" className="py-2">
         {post.comments.map((comment) => (
           <div className="flex items-start justify-between" key={comment.id}>
             <div>

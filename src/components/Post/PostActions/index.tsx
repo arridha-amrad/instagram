@@ -1,7 +1,7 @@
-import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
-import PostLikeButton from "./Like/PostLikeButton";
-import Link from "next/link";
+import PostLikeButton from "@/components/PostLikeButton";
 import { TPost } from "@/fetchings/type";
+import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 type Props = {
   post: TPost;
@@ -9,10 +9,10 @@ type Props = {
 
 const PostActions = ({ post }: Props) => {
   return (
-    <div className="h-[40px] flex items-center gap-3">
+    <div className="flex h-[50px] items-center gap-3">
       <PostLikeButton post={post} />
       <Link scroll={false} href={`/post/${post.id}`}>
-        <ChatBubbleOvalLeftIcon className="w-7 aspect-square -scale-x-100" />
+        <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
       </Link>
     </div>
   );

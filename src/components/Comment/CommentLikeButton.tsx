@@ -24,9 +24,9 @@ const ButtonLikeComment = ({ comment }: Props) => {
     >
       <button type="submit">
         {comment.isLiked ? (
-          <Heart className="w-4 aspect-square fill-pink-600" />
+          <Heart className="aspect-square w-4 fill-pink-600" />
         ) : (
-          <HeartIcon className="w-4 aspect-square" />
+          <HeartIcon className="aspect-square w-4" />
         )}
       </button>
     </form>

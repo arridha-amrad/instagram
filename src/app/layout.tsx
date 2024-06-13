@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import "react-toastify/dist/ReactToastify.css";
-import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
-import NextTopLoader from "nextjs-toploader";
+import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
+import { Inter } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

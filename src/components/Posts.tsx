@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import PostCard from "./PostCard";
+import Post from "./Post";
 import MySpinner from "@/components/Spinner";
 import { TPost } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";
@@ -25,5 +25,11 @@ export default function Posts({ posts }: Props) {
     );
   }
 
-  return ps.map((post) => <PostCard post={post} key={post.id} />);
+  return (
+    <section className="space-y-6">
+      {ps.map((post) => (
+        <Post post={post} key={post.id} />
+      ))}
+    </section>
+  );
 }

@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useState, useTransition } from "react";
-import useMeasure from "react-use-measure";
 
 type PostContentUrl = {
   type: "image" | "video";
@@ -19,7 +18,6 @@ type Props = {
 
 const PostImagesCarousel = ({ urls }: Props) => {
   const maxIndex = urls.length - 1;
-  const [ref, { height, width }] = useMeasure();
   const [isPending, startTransition] = useTransition();
   const [index, setIndex] = useState(0);
   const next = () => {
@@ -33,7 +31,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
     });
   };
   return (
-    <section ref={ref} className="relative max-h-[500px] min-h-[70vh] w-full">
+    <section className="relative w-full">
       {isPending && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/50">
           <MySpinner />
@@ -52,7 +50,10 @@ const PostImagesCarousel = ({ urls }: Props) => {
         </svg>
       </div>
 
-      <div className="relative overflow-hidden" style={{ height, width }}>
+      <div
+        className="relative overflow-hidden"
+        style={{ width: "100%", aspectRatio: 3 / 4 }}
+      >
         <Image
           className="h-full w-full object-cover"
           src={urls[index].url}

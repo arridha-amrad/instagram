@@ -17,7 +17,7 @@ const ButtonShowReplies = ({ sumReplies }: Props) => {
         See {sumReplies} replies
       </button>
       {pending && (
-        <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80">
           <MySpinner />
         </div>
       )}

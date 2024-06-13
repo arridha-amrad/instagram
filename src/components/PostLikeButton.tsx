@@ -2,7 +2,7 @@
 
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
-import { likePostAction } from "./likePostAction";
+import { likePostAction } from "@/actions/postAction";
 import { useFormState } from "react-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -25,40 +25,34 @@ const PostLikeButton = ({ post }: Props) => {
   const { theme } = useTheme();
   const { data } = useSession();
   const { likePost } = usePostStore();
-  const [formState, formAction] = useFormState(likePostAction, initialState);
-  const [mId, setMId] = useState(0);
 
+  const lp = likePostAction.bind(null, {
+    postId: id,
+    userId: data?.user.id ?? "",
+  });
+
+  const [formState, formAction] = useFormState(lp, initialState);
+  const [mId, setMId] = useState(0);
   useEffect(() => {
     if (formState.type === "error") {
       toast.error(formState.message, { theme });
-    }
-    if (formState.type === "success") {
-      toast.success(formState.message, { theme });
-      likePost(post);
     }
   }, [mId]);
 
   return (
     <form
-      className="h-full inline-flex items-center justify-center"
-      action={(data) => {
+      className="inline-flex h-full items-center justify-center"
+      action={() => {
         setMId(new Date().getTime());
-        formAction(data);
+        likePost(post);
+        formAction();
       }}
     >
-      <input
-        name="userId"
-        type="text"
-        defaultValue={data?.user.id}
-        hidden
-        readOnly
-      />
-      <input name="postId" type="text" defaultValue={id} hidden readOnly />
       <button disabled={!data?.user.id} type="submit">
         {isLiked ? (
-          <Heart className="w-7 aspect-square fill-pink-600" />
+          <Heart className="aspect-square w-7 fill-pink-600" />
         ) : (
-          <HeartIcon className="w-7 aspect-square" />
+          <HeartIcon className="aspect-square w-7" />
         )}
       </button>
     </form>

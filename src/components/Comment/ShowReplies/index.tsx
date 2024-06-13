@@ -1,13 +1,12 @@
-import { TComment } from "@/fetchings/type";
-import { useFormState } from "react-dom";
-import { TReply } from "@/fetchings/type";
-import { getCommentReplies } from "@/actions/getCommentReplies";
-import ButtonShowReplies from "./ButtonShowReplies";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { getCommentReplies } from "@/actions/replyAction";
+import { TComment, TReply } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
-import { toast } from "react-toastify";
-import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
+import ButtonShowReplies from "./ButtonShowReplies";
 
 type Props = {
   comment: TComment;
@@ -52,12 +51,12 @@ const ShowReplies = ({ comment, isShowReplies, setIsShowReplies }: Props) => {
       }}
       className="flex items-center gap-4 pt-3"
     >
-      <div className="w-[30px] bg-gray-500 h-0.5" />
+      <div className="h-0.5 w-[30px] bg-gray-500" />
       <ButtonShowReplies sumReplies={comment.sumReplies} />
     </form>
   ) : (
     <div className="flex items-center gap-4 py-3">
-      <div className="w-[30px] bg-gray-500 h-0.5" />
+      <div className="h-0.5 w-[30px] bg-gray-500" />
       {isShowReplies ? (
         <button
           onClick={() => setIsShowReplies(false)}

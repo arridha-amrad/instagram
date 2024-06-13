@@ -1,11 +1,11 @@
-import Avatar from "../Avatar";
-import { formatDistanceToNowStrict } from "date-fns";
+import Avatar from "@/components/Avatar";
 import { TComment } from "@/fetchings/type";
-import ButtonLikeComment from "./ButtonLikeComment";
 import { useReplySetter } from "@/stores/ReplySetter";
-import ShowReplies from "./ShowReplies";
-import Replies from "./Replies";
+import { formatDistanceToNowStrict } from "date-fns";
 import { useState } from "react";
+import CommentLikeButton from "./CommentLikeButton";
+import Replies from "./Replies";
+import ShowReplies from "./ShowReplies";
 
 type Props = {
   comment: TComment;
@@ -26,7 +26,7 @@ const CommentCard = ({ comment }: Props) => {
             <p className="inline">{comment.message}</p>
           </div>
           <div className="aspect-square w-5 flex-none">
-            <ButtonLikeComment comment={comment} />
+            <CommentLikeButton comment={comment} />
           </div>
         </div>
         <div className="flex gap-4 py-2 text-xs text-skin-muted">

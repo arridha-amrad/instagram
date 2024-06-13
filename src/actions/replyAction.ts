@@ -4,12 +4,10 @@ import { fetchReplies } from "@/fetchings/replies";
 
 export const getCommentReplies = async (
   { commentId, userId }: { commentId: string; userId?: string },
-  prevState: any
+  prevState: any,
 ) => {
   try {
     const replies = await fetchReplies({ commentId, userId });
-    console.log(replies);
-
     return {
       data: replies,
       type: "success",
