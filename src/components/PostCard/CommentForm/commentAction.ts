@@ -6,7 +6,7 @@ import { CommentsTable } from "@/lib/drizzle/schema";
 
 export const commentAction = async (prevState: any, formData: FormData) => {
   const { userId, postId, message } = Object.fromEntries(
-    formData.entries()
+    formData.entries(),
   ) as {
     userId: string;
     postId: string;

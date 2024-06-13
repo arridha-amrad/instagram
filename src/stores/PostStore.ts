@@ -1,4 +1,4 @@
-import { TPost, TPostSchema } from "@/fetchings/type";
+import { TComment, TPost, TPostSchema } from "@/fetchings/type";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware";
@@ -12,6 +12,7 @@ type Actions = {
   setPosts: (posts: TPost[]) => void;
   likePost: (post: TPost) => void;
   addPost: (post: TPost) => void;
+  addComment: (comment: TComment) => void;
 };
 
 export const usePostStore = create<State & Actions>()(
@@ -19,6 +20,14 @@ export const usePostStore = create<State & Actions>()(
     immer((set) => ({
       posts: [],
       isLoadPosts: true,
+      addComment(comment) {
+        set((state) => {
+          const post = state.posts.find((p) => p.id === comment.postId);
+          if (post) {
+            post.comments.unshift(comment);
+          }
+        });
+      },
       setPosts(posts) {
         set((state) => {
           state.posts = posts;

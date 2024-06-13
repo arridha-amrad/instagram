@@ -6,7 +6,7 @@ import Preview from "./Preview";
 import useMeasure from "react-use-measure";
 import Avatar from "./Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
-import PostLikeButton from "@/app/(auth)/components/Post/PostActions/Like/PostLikeButton";
+import PostLikeButton from "@/components/PostCard/PostActions/Like/PostLikeButton";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import CommentForm from "./CommentForm";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -63,38 +63,38 @@ const Modal = ({ id, comments }: Props) => {
       />
       <div className="fixed right-2 top-2">
         <button onClick={closeModal}>
-          <XMarkIcon className="w-7 aspect-square" />
+          <XMarkIcon className="aspect-square w-7" />
         </button>
       </div>
       <div className="relative flex">
         <div
           ref={ref}
-          className="h-[90vh] w-max bg-background border-r border-skin"
+          className="h-[90vh] w-max border-r border-skin bg-background"
         >
           <Preview postId={id} height={height} />
         </div>
-        <div className=" w-[400px] flex flex-col bg-background">
-          <section id="post_owner" className="border-b border-skin py-2 px-4">
+        <div className="flex w-[400px] flex-col bg-background">
+          <section id="post_owner" className="border-b border-skin px-4 py-2">
             <div className="flex items-center gap-3">
               <Avatar url={post.owner.avatar} />
               <div>
-                <h1 className="font-semibold text-sm">{post.owner.username}</h1>
+                <h1 className="text-sm font-semibold">{post.owner.username}</h1>
               </div>
             </div>
           </section>
           <section
             id="post_with_comments"
-            className="flex flex-col overflow-y-auto items-start gap-4 px-4 py-4 flex-1 basis-0"
+            className="flex flex-1 basis-0 flex-col items-start gap-4 overflow-y-auto px-4 py-4"
           >
             <div className="flex gap-2">
               <div>
                 <Avatar url={post.owner.avatar} />
               </div>
               <div className="pt-0.5">
-                <h1 className="font-semibold text-sm inline pr-2">
+                <h1 className="inline pr-2 text-sm font-semibold">
                   {post.owner.username}
                 </h1>
-                <p className="text-skin-muted text-sm inline">
+                <p className="inline text-sm text-skin-muted">
                   {post.description}
                 </p>
                 <div className="py-2">
@@ -109,16 +109,16 @@ const Modal = ({ id, comments }: Props) => {
 
           <section id="post_actions_and_info">
             <div className="w-full px-2 py-2">
-              <div className="flex gap-3 items-center pt-2">
+              <div className="flex items-center gap-3 pt-2">
                 <PostLikeButton post={post} />
                 <button>
-                  <ChatBubbleOvalLeftIcon className="w-7 aspect-square -scale-x-100" />
+                  <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
                 </button>
               </div>
               <div className="px-1 pt-2">
                 <h1 className="font-semibold">
                   {post.sumLikes}
-                  <span className="text-sm pl-1">
+                  <span className="pl-1 text-sm">
                     {post.sumLikes > 1 ? "likes" : "like"}
                   </span>
                 </h1>

@@ -15,21 +15,21 @@ const CommentCard = ({ comment }: Props) => {
   const { setCommentTarget } = useReplySetter();
   const [isShowReplies, setIsShowReplies] = useState(true);
   return (
-    <article className="flex items-start gap-2 w-full">
+    <article className="flex w-full items-start gap-2">
       <div>
         <Avatar url={comment.owner.avatar} />
       </div>
-      <div className="flex-1 w-full">
-        <div className="flex pt-0.5 w-full">
-          <div className="space-x-2 flex-1 basis-0 text-sm">
-            <h1 className=" inline font-semibold">{comment.owner.username}</h1>
+      <div className="w-full flex-1">
+        <div className="flex w-full pt-0.5">
+          <div className="flex-1 basis-0 space-x-2 text-sm">
+            <h1 className="inline font-semibold">{comment.owner.username}</h1>
             <p className="inline">{comment.message}</p>
           </div>
-          <div className="w-5 aspect-square flex-none">
+          <div className="aspect-square w-5 flex-none">
             <ButtonLikeComment comment={comment} />
           </div>
         </div>
-        <div className="py-2 flex text-xs text-skin-muted gap-4">
+        <div className="flex gap-4 py-2 text-xs text-skin-muted">
           <div>
             <p className="">{formatDistanceToNowStrict(comment.createdAt)}</p>
           </div>

@@ -11,7 +11,7 @@ type Props = {
 
 const DummySuggestedUser = ({ name, username, avatar }: Props) => {
   return (
-    <div className="flex justify-between items-center px-4 w-full">
+    <div className="flex w-full items-center justify-between px-4">
       <div className="flex items-start justify-start gap-3">
         <Avatar url={avatar} />
         <div className="text-sm">
@@ -19,7 +19,7 @@ const DummySuggestedUser = ({ name, username, avatar }: Props) => {
           <p className="text-skin-muted">{name}</p>
         </div>
       </div>
-      <button className="text-skin-inverted text-sm font-medium">follow</button>
+      <button className="text-sm font-medium text-skin-inverted">follow</button>
     </div>
   );
 };

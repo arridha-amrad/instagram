@@ -1,6 +1,6 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
 
-import PostImagesCarousel from "../PostImagesCarousel";
+import PostImagesCarousel from "./PostImagesCarousel";
 import CommentForm from "./CommentForm";
 import PostActions from "./PostActions";
 import PostHeader from "./PostHeader";
@@ -23,22 +23,22 @@ const PostCard = ({ post }: Props) => {
         </h1>
       </div>
       <section className="line-clamp-2 text-sm">
-        <h1 className="font-semibold inline pr-2">{post.owner.username}</h1>
-        <p className="text-skin-muted inline">{post.description}</p>
+        <h1 className="inline pr-2 font-semibold">{post.owner.username}</h1>
+        <p className="inline text-skin-muted">{post.description}</p>
       </section>
       <section className="py-2">
         {post.comments.map((comment) => (
-          <div className="flex justify-between items-start" key={comment.id}>
+          <div className="flex items-start justify-between" key={comment.id}>
             <div>
-              <h1 className="text-sm font-semibold inline pr-2">
+              <h1 className="inline pr-2 text-sm font-semibold">
                 {comment.owner.username}
               </h1>
-              <p className="text-sm text-skin-muted inline">
+              <p className="inline text-sm text-skin-muted">
                 {comment.message}
               </p>
             </div>
             <button className="pl-2">
-              <HeartIcon className="w-4 -4" />
+              <HeartIcon className="-4 w-4" />
             </button>
           </div>
         ))}

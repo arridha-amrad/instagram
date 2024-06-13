@@ -10,13 +10,13 @@ type Props = {
 
 const PostHeader = ({ post }: Props) => {
   return (
-    <section className="h-[70px] w-full flex gap-3 items-center">
+    <section className="flex h-[70px] w-full items-center gap-3">
       {post.owner.avatar ? (
         <Avatar url={post.owner.avatar} />
       ) : (
-        <div className="w-12 aspect-square rounded-full border border-skin overflow-hidden">
+        <div className="aspect-square w-12 overflow-hidden rounded-full border border-skin">
           <Image
-            className="object-cover w-full h-full"
+            className="h-full w-full object-cover"
             alt="avatar"
             width={100}
             height={100}
@@ -29,8 +29,8 @@ const PostHeader = ({ post }: Props) => {
         <h1 className="font-semibold">{post.owner.username}</h1>
         <p className="text-sm text-skin-muted">{post.location}</p>
       </div>
-      <div className="w-1 aspect-square rounded-full bg-neutral-500" />
-      <h2 className="text-skin-muted text-sm">
+      <div className="aspect-square w-1 rounded-full bg-neutral-500" />
+      <h2 className="text-sm text-skin-muted">
         {formatDistanceToNowStrict(post.createdAt)}
       </h2>
     </section>

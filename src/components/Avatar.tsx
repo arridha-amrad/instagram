@@ -7,12 +7,12 @@ type Props = {
 
 const Avatar = ({ url }: Props) => {
   return (
-    <div className="w-[40px] aspect-square rounded-full border border-skin overflow-hidden">
+    <div className="aspect-square w-[40px] overflow-hidden rounded-full border border-skin">
       <Image
         alt="avatar"
         width={50}
         height={50}
-        className="object-cover h-full w-full"
+        className="h-full w-full object-cover"
         src={url && url !== "null" ? url : DefaultAvatar}
       />
     </div>

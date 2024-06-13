@@ -2,13 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useFormState } from "react-dom";
-import {
-  TCommentSchema,
-  TReplySchema,
-  createCommentAction,
-} from "@/actions/createCommentAction";
+import { createCommentAction } from "@/actions/commentAction";
 import { toast } from "react-toastify";
-import { TPost } from "@/fetchings/type";
+import { TCommentSchema, TPost, TReplySchema } from "@/fetchings/type";
 import { useReplySetter } from "@/stores/ReplySetter";
 import CommentInput from "./CommentInput";
 import { useCommentsStore } from "@/stores/CommentsStore";
@@ -31,7 +27,7 @@ const CommentForm = ({ post }: Props) => {
   const { theme } = useTheme();
   const [formState, formAction] = useFormState(
     createCommentAction,
-    initialState
+    initialState,
   );
   const [currId, setCurrId] = useState(0);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -107,7 +103,7 @@ const CommentForm = ({ post }: Props) => {
         setCurrId(new Date().getTime());
         formAction(data);
       }}
-      className="flex items-center pt-1 h-full"
+      className="flex h-full items-center pt-1"
     >
       <input
         readOnly

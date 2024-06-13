@@ -2,14 +2,16 @@
 
 import { useSession } from "next-auth/react";
 import { useFormState } from "react-dom";
-import { commentAction } from "./commentAction";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import ButtonSubmitComment from "./ButtonSubmitComment";
 import Link from "next/link";
-import { TPost } from "@/fetchings/type";
+import { TCommentSchema, TPost } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";
+import { commentAction } from "@/actions/commentAction";
+import useAddComment from "@/helpers/useAddComment";
+import setNewCommentOnClient from "@/helpers/useAddComment";
 
 const initialState = {
   message: "",
@@ -25,7 +27,11 @@ type Props = {
 const CommentForm = ({ post }: Props) => {
   const { data } = useSession();
   const { theme } = useTheme();
-  const [formState, formAction] = useFormState(commentAction, initialState);
+  const ca = commentAction.bind(null, {
+    userId: data?.user.id,
+    postId: post.id,
+  });
+  const [formState, formAction] = useFormState(ca, initialState);
   const [currId, setCurrId] = useState(0);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
@@ -33,23 +39,17 @@ const CommentForm = ({ post }: Props) => {
 
   useEffect(() => {
     if (formState.type === "success") {
-      toast.success(formState.message, { theme });
-      const newComment = formState.data;
+      setMessage("");
+      formRef.current?.reset();
+      const newComment = formState.data as TCommentSchema;
       const user = data?.user;
       if (newComment && user) {
-        addComment({
-          ...newComment,
-          isLiked: false,
-          sumLikes: 0,
-          owner: {
-            id: user.id ?? "",
-            name: user.name ?? "",
-            username: user.username ?? "",
-            avatar: user.image ?? null,
-          },
+        setNewCommentOnClient({
+          authUser: user,
+          comment: newComment,
+          setterFn: addComment,
         });
       }
-      setMessage("");
     }
     if (formState.type === "error") {
       toast.error(formState.message, { theme });
@@ -59,7 +59,7 @@ const CommentForm = ({ post }: Props) => {
   return (
     <section className="py-2">
       <Link scroll={false} href={`/post/${post.id}`}>
-        <p className="text-skin-muted text-sm">
+        <p className="text-sm text-skin-muted">
           {post.sumComments}&nbsp;{" "}
           {post.sumComments > 1 ? "comments" : "comment"}
         </p>
@@ -71,16 +71,14 @@ const CommentForm = ({ post }: Props) => {
           setCurrId(new Date().getTime());
           formAction(data);
         }}
-        className="border-b border-skin pb-2 flex gap-4"
+        className="flex gap-4 border-b border-skin pb-2"
       >
-        <input defaultValue={post.id} name="postId" readOnly hidden />
-        <input defaultValue={data?.user.id} name="userId" readOnly hidden />
         <input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           name="message"
           type="text"
-          className="placeholder:text-skin-muted focus:ring-0 px-0 w-full border-none text-sm bg-background flex-1"
+          className="w-full flex-1 border-none bg-background px-0 text-sm placeholder:text-skin-muted focus:ring-0"
           placeholder="Add a comment..."
         />
         {message.length > 0 && <ButtonSubmitComment />}
