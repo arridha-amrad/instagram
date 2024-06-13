@@ -25,6 +25,7 @@ export const usePostStore = create<State & Actions>()(
           const post = state.posts.find((p) => p.id === comment.postId);
           if (post) {
             post.comments.unshift(comment);
+            post.sumComments += 1;
           }
         });
       },

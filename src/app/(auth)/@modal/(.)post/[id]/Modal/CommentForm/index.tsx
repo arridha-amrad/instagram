@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useFormState } from "react-dom";
-import { createCommentAction } from "@/actions/commentAction";
+import { commentAction } from "@/actions/commentAction";
 import { toast } from "react-toastify";
 import { TCommentSchema, TPost, TReplySchema } from "@/fetchings/type";
 import { useReplySetter } from "@/stores/ReplySetter";
 import CommentInput from "./CommentInput";
 import { useCommentsStore } from "@/stores/CommentsStore";
+import setNewCommentOnClient from "@/helpers/setNewCommentOnClient";
+import setNewReplyOnClient from "@/helpers/setNewReplyOnClient";
 
 type Props = {
   post: TPost;
@@ -25,10 +27,7 @@ const CommentForm = ({ post }: Props) => {
   const { commentTarget } = useReplySetter();
   const { data } = useSession();
   const { theme } = useTheme();
-  const [formState, formAction] = useFormState(
-    createCommentAction,
-    initialState,
-  );
+
   const [currId, setCurrId] = useState(0);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
@@ -38,6 +37,14 @@ const CommentForm = ({ post }: Props) => {
     userId: "",
     commentId: "",
   });
+
+  const ca = commentAction.bind(null, {
+    commentId: replyState.commentId,
+    postId: post.id,
+    userId: data?.user.id,
+  });
+
+  const [formState, formAction] = useFormState(ca, initialState);
 
   useEffect(() => {
     if (commentTarget?.commentId) {
@@ -61,41 +68,27 @@ const CommentForm = ({ post }: Props) => {
     if (formState.type === "success") {
       const user = data?.user;
       if (!user) return;
+      setMessage("");
       if (formState.content === "comment") {
-        addComment({
-          ...(formState.data as TCommentSchema),
-          isLiked: false,
-          sumRepliesRemaining: 0,
-          sumLikes: 0,
-          replies: [],
-          sumReplies: 0,
-          owner: {
-            id: user.id ?? "",
-            name: user.name ?? "",
-            username: user.username ?? "",
-            avatar: user.image ?? null,
-          },
+        setNewCommentOnClient({
+          authUser: user,
+          comment: formState.data as TCommentSchema,
+          setterFn: addComment,
         });
       }
       if (formState.content === "reply") {
-        addReply({
-          ...(formState.data as TReplySchema),
-          isLiked: false,
-          sumLikes: 0,
-          owner: {
-            avatar: user.image ?? null,
-            id: user.id ?? "",
-            name: user.name ?? "",
-            username: user.username ?? "",
-          },
+        setNewReplyOnClient({
+          authUser: user,
+          reply: formState.data as TReplySchema,
+          setterFn: addReply,
         });
       }
-      setMessage("");
     }
     if (formState.type === "error") {
       toast.error(formState.message, { theme });
     }
   }, [currId]);
+
   return (
     <form
       ref={formRef}
@@ -105,22 +98,6 @@ const CommentForm = ({ post }: Props) => {
       }}
       className="flex h-full items-center pt-1"
     >
-      <input
-        readOnly
-        type="text"
-        value={replyState.commentId}
-        name="commentId"
-        hidden
-      />
-      <input
-        readOnly
-        type="text"
-        value={replyState.userId}
-        name="commentUserId"
-        hidden
-      />
-      <input defaultValue={post.id} name="postId" readOnly hidden />
-      <input defaultValue={data?.user.id} name="userId" readOnly hidden />
       <CommentInput message={message} setMessage={setMessage} />
     </form>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import PostCard from "../../components/PostCard";
+import PostCard from "./PostCard";
 import MySpinner from "@/components/Spinner";
 import { TPost } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";

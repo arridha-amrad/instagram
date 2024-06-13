@@ -38,28 +38,28 @@ const Preview = ({ height, postId }: Props) => {
         width={500}
         height={500}
         src={preview[index].url}
-        className="object-cover object-center w-auto h-full max-w-[700px]"
+        className="h-full w-auto max-w-[700px] object-cover object-center"
       />
-      <div className="absolute inset-y-0 flex items-center justify-center right-2">
+      <div className="absolute inset-y-0 right-2 flex items-center justify-center">
         <button
           onClick={next}
           className={cn(
-            "w-6 bg-background/50 hover:bg-background/60 aspect-square rounded-full inline-flex items-center justify-center",
-            index === preview.length - 1 && "hidden"
+            "inline-flex aspect-square w-6 items-center justify-center rounded-full bg-background/50 hover:bg-background/60",
+            index === preview.length - 1 && "hidden",
           )}
         >
-          <ChevronRightIcon className="w-4 aspect-square" />
+          <ChevronRightIcon className="aspect-square w-4" />
         </button>
       </div>
-      <div className="absolute inset-y-0 flex items-center justify-center left-2">
+      <div className="absolute inset-y-0 left-2 flex items-center justify-center">
         <button
           onClick={prev}
           className={cn(
-            "w-6 bg-background/50 hover:bg-background/60 aspect-square rounded-full inline-flex items-center justify-center",
-            index === 0 && "hidden"
+            "inline-flex aspect-square w-6 items-center justify-center rounded-full bg-background/50 hover:bg-background/60",
+            index === 0 && "hidden",
           )}
         >
-          <ChevronLeftIcon className="w-4 aspect-square" />
+          <ChevronLeftIcon className="aspect-square w-4" />
         </button>
       </div>
     </div>

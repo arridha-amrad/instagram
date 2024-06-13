@@ -33,16 +33,16 @@ const PostImagesCarousel = ({ urls }: Props) => {
     });
   };
   return (
-    <section ref={ref} className="relative min-h-[70vh] w-full max-h-[500px]">
+    <section ref={ref} className="relative max-h-[500px] min-h-[70vh] w-full">
       {isPending && (
-        <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
           <MySpinner />
         </div>
       )}
 
-      <div className="absolute animate-pulse inset-0 flex items-center justify-center bg-gray-300 rounded dark:bg-gray-700">
+      <div className="absolute inset-0 flex animate-pulse items-center justify-center rounded bg-gray-300 dark:bg-gray-700">
         <svg
-          className="w-10 h-10 text-gray-200 dark:text-gray-600"
+          className="h-10 w-10 text-gray-200 dark:text-gray-600"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -52,9 +52,9 @@ const PostImagesCarousel = ({ urls }: Props) => {
         </svg>
       </div>
 
-      <div className="overflow-hidden relative" style={{ height, width }}>
+      <div className="relative overflow-hidden" style={{ height, width }}>
         <Image
-          className="object-cover w-full h-full"
+          className="h-full w-full object-cover"
           src={urls[index].url}
           width={500}
           height={500}
@@ -65,27 +65,27 @@ const PostImagesCarousel = ({ urls }: Props) => {
       <div
         className={cn(
           "absolute inset-y-0 right-2 flex items-center justify-center",
-          index >= maxIndex && "hidden"
+          index >= maxIndex && "hidden",
         )}
       >
         <button
           onClick={next}
-          className="rounded-full w-7 aspect-square bg-border/70 inline-flex items-center justify-center"
+          className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
         >
-          <ChevronRightIcon className="w-4 aspect-square" />
+          <ChevronRightIcon className="aspect-square w-4" />
         </button>
       </div>
       <div
         className={cn(
           "absolute inset-y-0 left-2 flex items-center justify-center",
-          index <= 0 && "hidden"
+          index <= 0 && "hidden",
         )}
       >
         <button
           onClick={prev}
-          className="rounded-full w-7 aspect-square bg-border/70 inline-flex items-center justify-center"
+          className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
         >
-          <ChevronLeftIcon className="w-4 aspect-square" />
+          <ChevronLeftIcon className="aspect-square w-4" />
         </button>
       </div>
     </section>

@@ -17,16 +17,16 @@ const PostCard = ({ post }: Props) => {
       <PostImagesCarousel urls={post.urls} />
       <div className="h-1" />
       <PostActions post={post} />
-      <div>
+      <section id="post_total_likes">
         <h1>
           {post.sumLikes} {post.sumLikes > 1 ? "likes" : "like"}
         </h1>
-      </div>
-      <section className="line-clamp-2 text-sm">
+      </section>
+      <section id="post_description" className="line-clamp-2 text-sm">
         <h1 className="inline pr-2 font-semibold">{post.owner.username}</h1>
         <p className="inline text-skin-muted">{post.description}</p>
       </section>
-      <section className="py-2">
+      <section id="post_commments" className="py-2">
         {post.comments.map((comment) => (
           <div className="flex items-start justify-between" key={comment.id}>
             <div>

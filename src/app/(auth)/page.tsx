@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import SuggestedUsers from "./SuggestedUsers";
-import Posts from "./Posts";
+import Posts from "../../components/Posts";
 import { cache } from "react";
 import { fetchPosts } from "@/fetchings/postsFetching";
 import UserCard from "@/components/UserCard";

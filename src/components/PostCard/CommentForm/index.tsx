@@ -1,17 +1,16 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { useTheme } from "next-themes";
-import ButtonSubmitComment from "./ButtonSubmitComment";
-import Link from "next/link";
-import { TCommentSchema, TPost } from "@/fetchings/type";
-import { usePostStore } from "@/stores/PostStore";
 import { commentAction } from "@/actions/commentAction";
-import useAddComment from "@/helpers/useAddComment";
-import setNewCommentOnClient from "@/helpers/useAddComment";
+import { TCommentSchema, TPost } from "@/fetchings/type";
+import setNewCommentOnClient from "@/helpers/setNewCommentOnClient";
+import { usePostStore } from "@/stores/PostStore";
+import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
+import ButtonSubmitComment from "./ButtonSubmitComment";
 
 const initialState = {
   message: "",
