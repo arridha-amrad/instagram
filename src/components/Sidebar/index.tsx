@@ -1,44 +1,43 @@
 import Link from "next/link";
 import SidebarBrand from "./SidebarBrand";
-import { HomeIcon, UserIcon } from "@heroicons/react/24/outline";
+import { HomeIcon } from "@heroicons/react/24/outline";
 import NewPostModal from "./Modal/ModalCreatePost";
 import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
 import Logout from "./Modal/ModalLogout";
 import SwitchTheme from "@/components/SwitchTheme";
 import { auth } from "@/auth";
+import Image from "next/image";
+import DefaultAvatar from "@/images/default.jpg";
+import { className } from "./styles";
+import Avatar from "../Avatar";
 
 export default async function Sidebar() {
   const session = await auth();
   return (
-    <div className="w-full flex flex-col h-full">
+    <div className="flex h-full w-full flex-col">
       <SidebarBrand />
-      <Link
-        className="inline-flex w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 bg-background/50 rounded-md xl:py-2 hover:bg-skin-fill transition-colors duration-300 ease-linear"
-        href="/"
-      >
-        <HomeIcon className="w-7 aspect-square" />
-        <span className="xl:inline hidden">Home</span>
+      <div className="h-4" />
+      <Link className={`${className.button}`} href="/">
+        <div className={`${className.iconContainer}`}>
+          <HomeIcon />
+        </div>
+        <span className="hidden xl:inline">Home</span>
       </Link>
       <div className="h-2" />
       <CreatePostProvider>
         <NewPostModal />
       </CreatePostProvider>
       <div className="h-2" />
-      <Link
-        className="inline-flex w-full xl:w-fit h-[40px] justify-center xl:justify-start items-center gap-4 xl:px-4 bg-background/50 rounded-md xl:py-2 hover:bg-skin-fill transition-colors duration-300 ease-linear"
-        href={session?.user.username ?? "/"}
-      >
-        <UserIcon className="w-7 aspect-square" />
-        <span className="xl:inline hidden">Profile</span>
+      <Link className={className.button} href={session?.user.username ?? "/"}>
+        <Avatar className="w-8" />
+        <span className="hidden xl:inline">Profile</span>
       </Link>
       <div className="flex-1" />
       <Logout />
       <div className="h-4" />
-      <div className="h-px w-full dark:bg-neutral-700" />
-      <div className="h-4" />
-      <div className="flex xl:px-4 items-center gap-4">
+      <div className="flex w-full items-center justify-start gap-2">
         <SwitchTheme />
-        <span className="xl:inline hidden">Dark Mode</span>
+        <span className="hidden xl:inline">Dark Mode</span>
       </div>
     </div>
   );

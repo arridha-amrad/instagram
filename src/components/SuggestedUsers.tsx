@@ -37,7 +37,7 @@ const users = [
 const SuggestedUsers = () => {
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between px-4 pb-4">
         <h1 className="text-sm font-semibold text-skin-muted">
           Suggested for you
         </h1>

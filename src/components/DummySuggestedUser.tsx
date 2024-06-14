@@ -1,7 +1,6 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
-import Image from "next/image";
 
 type Props = {
   avatar: string;

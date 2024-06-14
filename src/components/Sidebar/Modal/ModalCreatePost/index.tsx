@@ -11,6 +11,7 @@ import FormCreatePost from "./Form/FormCreatePost";
 import ModalTitle from "./ModalTitle";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Modal from "@/components/core/Modals/Wrapper";
+import { className } from "../../styles";
 
 const NewPostModal = () => {
   const [open, setOpen] = useState(false);
@@ -41,11 +42,10 @@ const NewPostModal = () => {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex h-[40px] w-full items-center justify-center gap-4 rounded-md transition-colors duration-300 ease-linear hover:bg-skin-fill xl:w-fit xl:justify-start xl:px-4 xl:py-2"
-      >
-        <PencilSquareIcon className="aspect-square w-6" />
+      <button onClick={() => setOpen(true)} className={className.button}>
+        <div className={className.iconContainer}>
+          <PencilSquareIcon />
+        </div>
         <span className="hidden xl:inline">New Post</span>
       </button>
       {open &&

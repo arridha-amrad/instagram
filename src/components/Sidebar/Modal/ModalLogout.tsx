@@ -4,9 +4,10 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
-import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/16/solid";
+import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/core/Modals/Wrapper";
+import { className } from "../styles";
 
 const ModalLogout = () => {
   const [open, setOpen] = useState(false);
@@ -22,11 +23,10 @@ const ModalLogout = () => {
   };
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="flex h-[40px] w-full items-center justify-center gap-4 rounded-md transition-colors duration-200 ease-linear dark:hover:bg-red-600/20 xl:w-fit xl:justify-start xl:px-4"
-      >
-        <ArrowRightStartOnRectangleIcon className="aspect-square w-7 stroke-1" />
+      <button onClick={() => setOpen(true)} className={className.button}>
+        <div className={className.iconContainer}>
+          <ArrowRightStartOnRectangleIcon />
+        </div>
         <span className="hidden xl:inline">Logout</span>
       </button>
       {open &&

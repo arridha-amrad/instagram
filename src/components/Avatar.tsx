@@ -1,13 +1,20 @@
 import Image from "next/image";
 import DefaultAvatar from "@/images/default.jpg";
+import { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 type Props = {
   url?: string | null;
-};
+} & HTMLAttributes<HTMLDivElement>;
 
-const Avatar = ({ url }: Props) => {
+const Avatar = ({ url, ...props }: Props) => {
   return (
-    <div className="aspect-square w-[40px] overflow-hidden rounded-full border border-skin">
+    <div
+      className={cn(
+        "aspect-square w-[40px] overflow-hidden rounded-full border border-skin",
+        props.className,
+      )}
+    >
       <Image
         alt="avatar"
         width={50}

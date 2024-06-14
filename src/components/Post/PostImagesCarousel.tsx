@@ -55,7 +55,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
         style={{ width: "100%", aspectRatio: 3 / 4 }}
       >
         <Image
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-center"
           src={urls[index].url}
           width={500}
           height={500}

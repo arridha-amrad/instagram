@@ -1,14 +1,16 @@
 "use client";
 
+import setNewPostOnClient from "@/helpers/setNewPostOnClient";
 import { cn } from "@/lib/utils";
+import { usePostStore } from "@/stores/PostStore";
+import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
 import { useCreatePost } from "../CreatePostContext";
 import ButtonSubmitCreatePost from "./ButtonSubmitCreatePost";
-import { useFormState } from "react-dom";
 import { createPostAction } from "./createPostAction";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { useTheme } from "next-themes";
 
 const initialState = {
   data: {} as any,
@@ -21,11 +23,19 @@ const FormCreatePost = () => {
   const { data: session } = useSession();
   const [formState, formAction] = useFormState(createPostAction, initialState);
   const { theme } = useTheme();
+  const { addPost } = usePostStore();
 
   useEffect(() => {
     if (formState.type === "success") {
       toast.success(formState.message, { theme });
       setSubmitSuccessful(true);
+      const authUser = session?.user;
+      if (!authUser) return;
+      setNewPostOnClient({
+        authUser,
+        post: formState.data,
+        setterFn: addPost,
+      });
     }
     if (formState.type === "error") {
       toast.error(formState.message, { theme });
@@ -34,7 +44,7 @@ const FormCreatePost = () => {
 
   return (
     <form
-      className={cn("w-full flex flex-col max-w-sm p-2", step < 1 && "hidden")}
+      className={cn("flex w-full max-w-sm flex-col p-2", step < 1 && "hidden")}
       action={(data) => {
         if (session?.user.id) {
           data.append("userId", session.user.id);
@@ -47,13 +57,13 @@ const FormCreatePost = () => {
         <textarea
           name="description"
           placeholder="how you describe this post?"
-          className="mt-2 w-full resize-none bg-skin-input focus:ring focus:ring-skin-primary focus:border-transparent rounded-lg border-transparent align-top shadow-sm sm:text-sm"
+          className="mt-2 w-full resize-none rounded-lg border-transparent bg-skin-input align-top shadow-sm focus:border-transparent focus:ring focus:ring-skin-primary sm:text-sm"
           rows={5}
         ></textarea>
         <input
           name="location"
           placeholder="location"
-          className="w-full h-10 focus:ring focus:ring-skin-primary text-sm rounded-md bg-skin-input focus:border-transparent border-transparent"
+          className="h-10 w-full rounded-md border-transparent bg-skin-input text-sm focus:border-transparent focus:ring focus:ring-skin-primary"
         />
       </div>
       <ButtonSubmitCreatePost />
