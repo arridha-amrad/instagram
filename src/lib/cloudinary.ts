@@ -12,14 +12,22 @@ export const upload = async (file: File) => {
   const data = await new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
-        { folder: "instagram", transformation: { quality: 85 } },
+        {
+          folder: "instagram",
+          transformation: [
+            { quality: 80 },
+            { if: "width > 600" },
+            { width: 600, crop: "scale" },
+            { if: "end" },
+          ],
+        },
         (err, result) => {
           if (err) {
             reject(err);
             return;
           }
           resolve(result);
-        }
+        },
       )
       .end(buffer);
   });

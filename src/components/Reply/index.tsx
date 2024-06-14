@@ -7,15 +7,13 @@ type Props = {
   reply: TReply;
 };
 
-const Reply = ({
-  reply: {
-    id,
+const Reply = ({ reply }: Props) => {
+  const {
     owner: { avatar, username },
     sumLikes,
     createdAt,
     message,
-  },
-}: Props) => {
+  } = reply;
   return (
     <div className="flex w-full items-start gap-2 text-sm">
       <div>
@@ -36,7 +34,7 @@ const Reply = ({
         </div>
       </div>
       <div className="pt-1">
-        <ButtonLikeReply />
+        <ButtonLikeReply reply={reply} />
       </div>
     </div>
   );

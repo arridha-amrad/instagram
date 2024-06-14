@@ -12,6 +12,7 @@ type Actions = {
   addComment: (comment: TComment) => void;
   addReply: (reply: TReply) => void;
   likeComment: (commentId: string) => void;
+  likeReply: (reply: TReply) => void;
   setReplies: (commentId: string, replies: TReply[]) => void;
 };
 
@@ -19,6 +20,23 @@ export const useCommentsStore = create<State & Actions>()(
   devtools(
     immer((set) => ({
       comments: [],
+      likeReply(reply) {
+        set((state) => {
+          const comment = state.comments.find((c) => c.id === reply.commentId);
+          if (comment) {
+            const rp = comment.replies.find((r) => r.id === reply.id);
+            if (rp) {
+              if (rp.isLiked) {
+                rp.isLiked = false;
+                rp.sumLikes -= 1;
+              } else {
+                rp.isLiked = true;
+                rp.sumLikes += 1;
+              }
+            }
+          }
+        });
+      },
       setReplies(commentId, replies) {
         set((state) => {
           const comment = state.comments.find((c) => c.id === commentId);
@@ -65,6 +83,6 @@ export const useCommentsStore = create<State & Actions>()(
     {
       enabled: process.env.NODE_ENV === "development",
       anonymousActionType: "comments_store",
-    }
-  )
+    },
+  ),
 );

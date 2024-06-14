@@ -44,10 +44,10 @@ export const UsersTable = pgTable(
       uniqueEmail: uniqueIndex("emailIndex").on(table.email),
       uniqueEmailAndProvider: unique("emailAndProvider").on(
         table.email,
-        table.provider
+        table.provider,
       ),
     };
-  }
+  },
 );
 export const usersRelations = relations(UsersTable, ({ many }) => ({
   posts: many(PostsTable),
@@ -91,7 +91,7 @@ export const PostLikesTable = pgTable(
     return {
       pk: primaryKey({ columns: [table.userId, table.postId] }),
     };
-  }
+  },
 );
 export const likesRelations = relations(PostLikesTable, ({ one }) => ({
   post: one(PostsTable, {
@@ -145,7 +145,7 @@ export const CommentLikesTable = pgTable(
     return {
       pk: primaryKey({ columns: [table.commentId, table.userId] }),
     };
-  }
+  },
 );
 export const commentLikesRelations = relations(
   CommentLikesTable,
@@ -158,7 +158,7 @@ export const commentLikesRelations = relations(
       fields: [CommentLikesTable.userId],
       references: [UsersTable.id],
     }),
-  })
+  }),
 );
 
 //===========================================================================
@@ -186,7 +186,7 @@ export const repliesTableRelations = relations(
       references: [CommentsTable.id],
     }),
     likes: many(ReplyLikesTable),
-  })
+  }),
 );
 
 //===========================================================================
@@ -198,11 +198,11 @@ export const ReplyLikesTable = pgTable(
       .references(() => UsersTable.id),
     replyId: uuid("reply_id")
       .notNull()
-      .references(() => CommentsTable.id),
+      .references(() => RepliesTable.id),
   },
   (table) => ({
     pk: primaryKey({ columns: [table.replyId, table.userId] }),
-  })
+  }),
 );
 export const replyLikesRelations = relations(ReplyLikesTable, ({ one }) => ({
   user: one(UsersTable, {
