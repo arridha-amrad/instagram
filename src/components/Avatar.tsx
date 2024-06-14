@@ -17,8 +17,8 @@ const Avatar = ({ url, ...props }: Props) => {
     >
       <Image
         alt="avatar"
-        width={50}
-        height={50}
+        width={300}
+        height={300}
         className="h-full w-full object-cover"
         src={url && url !== "null" ? url : DefaultAvatar}
       />

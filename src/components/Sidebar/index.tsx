@@ -29,7 +29,7 @@ export default async function Sidebar() {
       </CreatePostProvider>
       <div className="h-2" />
       <Link className={className.button} href={session?.user.username ?? "/"}>
-        <Avatar className="w-8" />
+        <Avatar url={session?.user.image} className="w-8" />
         <span className="hidden xl:inline">Profile</span>
       </Link>
       <div className="flex-1" />

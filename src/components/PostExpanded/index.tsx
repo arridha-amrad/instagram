@@ -35,9 +35,7 @@ const PostExpanded = ({ post }: Props) => {
           <PostDescription post={post} />
           <Comments />
         </section>
-
         <Actions post={post} />
-
         <section className="" id="comment_form">
           <CommentForm post={post} />
         </section>

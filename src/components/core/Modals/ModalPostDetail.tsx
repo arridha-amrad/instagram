@@ -24,10 +24,11 @@ const ModalPostExpanded = ({ id, comments }: Props) => {
 
   if (!post) return null;
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setComments(comments);
+    setOpen(true);
   }, []);
 
   useEffect(() => {

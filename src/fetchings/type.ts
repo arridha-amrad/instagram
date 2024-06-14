@@ -14,6 +14,8 @@ export type TOwner = Pick<
   "id" | "avatar" | "name" | "username"
 >;
 
+export type TProfile = TOwner & { sumPosts: number };
+
 export type TComment = TCommentSchema & { owner: TOwner } & {
   isLiked: boolean;
   sumLikes: number;
