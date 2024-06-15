@@ -28,7 +28,10 @@ export default async function Sidebar() {
         <NewPostModal />
       </CreatePostProvider>
       <div className="h-2" />
-      <Link className={className.button} href={session?.user.username ?? "/"}>
+      <Link
+        className={className.button}
+        href={`/${session?.user.username}` ?? "/"}
+      >
         <Avatar url={session?.user.image} className="w-8" />
         <span className="hidden xl:inline">Profile</span>
       </Link>

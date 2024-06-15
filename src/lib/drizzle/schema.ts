@@ -25,6 +25,63 @@ type PostContentUrl = {
   publicId: string;
 };
 
+//===========================================================================
+export const FollowersTable = pgTable(
+  "followers",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id),
+    toId: uuid("to_id")
+      .notNull()
+      .references(() => UsersTable.id),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.userId, table.toId] }),
+    };
+  },
+);
+export const FollowersRelation = relations(FollowersTable, ({ one }) => ({
+  user: one(UsersTable, {
+    fields: [FollowersTable.userId],
+    references: [UsersTable.id],
+  }),
+  toUser: one(UsersTable, {
+    fields: [FollowersTable.toId],
+    references: [UsersTable.id],
+  }),
+}));
+
+//===========================================================================
+export const FollowingsTable = pgTable(
+  "followings",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id),
+    toId: uuid("to_id")
+      .notNull()
+      .references(() => UsersTable.id),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.userId, table.toId] }),
+    };
+  },
+);
+export const FollowingsRelation = relations(FollowingsTable, ({ one }) => ({
+  user: one(UsersTable, {
+    fields: [FollowingsTable.userId],
+    references: [UsersTable.id],
+  }),
+  toUser: one(UsersTable, {
+    fields: [FollowingsTable.toId],
+    references: [UsersTable.id],
+  }),
+}));
+
+//===========================================================================
 export const UsersTable = pgTable(
   "users",
   {
@@ -53,6 +110,8 @@ export const usersRelations = relations(UsersTable, ({ many }) => ({
   posts: many(PostsTable),
   likes: many(PostLikesTable),
   comments: many(CommentsTable),
+  followers: many(FollowersTable),
+  followings: many(FollowingsTable),
 }));
 
 //===========================================================================
