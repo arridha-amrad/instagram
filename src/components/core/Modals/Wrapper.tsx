@@ -2,6 +2,7 @@
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   closeModal: VoidFunction;
@@ -9,7 +10,7 @@ type Props = {
 };
 
 const Modal = ({ closeModal, children }: Props) => {
-  return (
+  return createPortal(
     <div className="fixed inset-0 flex items-center justify-center">
       <div
         onClick={closeModal}
@@ -21,7 +22,8 @@ const Modal = ({ closeModal, children }: Props) => {
         </button>
       </div>
       {children}
-    </div>
+    </div>,
+    document.body,
   );
 };
 

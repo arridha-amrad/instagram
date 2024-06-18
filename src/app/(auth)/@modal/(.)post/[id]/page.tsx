@@ -1,6 +1,6 @@
 import { fetchComments } from "@/fetchings/comments";
 import { auth } from "@/auth";
-import ModalPostExpanded from "@/components/core/Modals/ModalPostDetail";
+import Modal from "./Modal";
 
 type Props = {
   params: {
@@ -10,11 +10,12 @@ type Props = {
 
 const Page = async ({ params }: Props) => {
   const session = await auth();
+
   const comments = await fetchComments({
     postId: params.id,
     userId: session?.user.id,
   });
-  return <ModalPostExpanded comments={comments} id={params.id} />;
+  return <Modal comments={comments} postId={params.id} />;
 };
 
 export default Page;

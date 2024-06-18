@@ -24,24 +24,22 @@ const ModalPostExpanded = ({ id, comments }: Props) => {
 
   if (!post) return null;
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     setComments(comments);
-    setOpen(true);
   }, []);
 
-  useEffect(() => {
-    if (open) {
-      document.documentElement.classList.add("overflow-y-hidden", "pr-4");
-    } else {
-      document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (open) {
+  //     document.documentElement.classList.add("overflow-y-hidden", "pr-4");
+  //   } else {
+  //     document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
+  //   }
+  // }, [open]);
 
   const closeModal = () => {
     router.back();
-    setOpen(false);
     reset();
   };
 

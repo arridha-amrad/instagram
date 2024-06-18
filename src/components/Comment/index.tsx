@@ -14,14 +14,15 @@ type Props = {
 const CommentCard = ({ comment }: Props) => {
   const { setCommentTarget } = useReplySetter();
   const [isShowReplies, setIsShowReplies] = useState(true);
+
   return (
     <article className="flex w-full items-start gap-2">
       <div>
         <Avatar url={comment.owner.avatar} />
       </div>
-      <div className="w-full flex-1">
+      <div className="flex-1 basis-0 overflow-hidden">
         <div className="flex w-full pt-0.5">
-          <div className="flex-1 basis-0 space-x-2 text-sm">
+          <div className="flex-1 space-x-2 break-words text-sm">
             <h1 className="inline font-semibold">{comment.owner.username}</h1>
             <p className="inline">{comment.message}</p>
           </div>

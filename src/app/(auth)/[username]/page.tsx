@@ -91,6 +91,7 @@ const Page = async ({ params }: Props) => {
         {posts.map((post) => (
           <Link
             key={post.id}
+            scroll={false}
             href={`/post/${post.id}`}
             className="relative aspect-square overflow-hidden rounded-md"
           >

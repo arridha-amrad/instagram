@@ -7,7 +7,7 @@ type Props = {
 
 const PostOwner = ({ post }: Props) => {
   return (
-    <section id="post_owner" className="border-b border-skin px-4 py-2">
+    <section id="post_owner" className="px-4 py-2">
       <div className="flex items-center gap-3">
         <Avatar url={post.owner.avatar} />
         <div>

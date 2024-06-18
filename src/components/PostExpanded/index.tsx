@@ -15,7 +15,7 @@ const PostExpanded = ({ post }: Props) => {
   const [ref, { height }] = useMeasure();
 
   return (
-    <>
+    <div className="flex">
       <section
         id="post_carousel"
         ref={ref}
@@ -40,7 +40,7 @@ const PostExpanded = ({ post }: Props) => {
           <CommentForm post={post} />
         </section>
       </section>
-    </>
+    </div>
   );
 };
 

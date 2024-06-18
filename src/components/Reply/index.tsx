@@ -22,7 +22,7 @@ const Reply = ({ reply }: Props) => {
       <div className="flex-1 basis-0">
         <div className="text-wrap pt-0.5">
           <h1 className="inline pr-1 font-semibold">{username}</h1>
-          <p className="inline text-sm">{message}</p>
+          <p className="inline break-all text-sm">{message}</p>
         </div>
         <div className="flex gap-4 py-2 text-xs text-skin-muted">
           <p className="">{formatDistanceToNowStrict(createdAt)}</p>
