@@ -12,8 +12,7 @@ const Textarea = ({ label, ...props }: Props) => {
       name="asf"
       {...props}
       id={props.id}
-      placeholder="how you describe this post?"
-      className="mt-2 w-full resize-none bg-skin-input focus:ring focus:ring-skin-primary focus:border-transparent rounded-lg border-transparent align-top shadow-sm sm:text-sm"
+      className="mt-2 w-full resize-none rounded-lg border-transparent bg-skin-input align-top shadow-sm focus:border-transparent focus:ring focus:ring-skin-primary sm:text-sm"
       rows={5}
     ></textarea>
   );

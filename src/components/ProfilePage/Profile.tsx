@@ -4,6 +4,7 @@ import { TProfile } from "@/fetchings/type";
 import { CogIcon } from "@heroicons/react/24/outline";
 import FormFollow from "./Follow/FomFollow";
 import { auth } from "@/auth";
+import EditProfile from "./EditProfile";
 
 type Props = {
   user: TProfile;
@@ -14,7 +15,7 @@ export default async function Profile({ user: u }: Props) {
   const isAuthUser = data?.user.id === u?.id;
 
   return (
-    <section className="flex flex-col gap-4 sm:flex-row">
+    <section className="flex flex-col gap-4 sm:flex-row sm:items-center">
       <div className="flex flex-1 items-center justify-start sm:justify-center">
         <AvatarProfile avatar={u?.avatar} />
       </div>
@@ -24,7 +25,7 @@ export default async function Profile({ user: u }: Props) {
             <h1 className="text-lg">{u?.username}</h1>
           </div>
           {isAuthUser ? (
-            <Button>Edit Profile</Button>
+            <EditProfile />
           ) : (
             <FormFollow
               authId={data?.user.id ?? ""}

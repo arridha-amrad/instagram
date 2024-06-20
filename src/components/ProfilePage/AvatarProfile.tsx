@@ -1,7 +1,7 @@
 "use client";
 
 import Avatar from "../Avatar";
-import { useEffect, useRef, useState } from "react";
+import { HTMLAttributes, useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { changeAvatar } from "./changeAvatar";
 import { toast } from "react-toastify";
@@ -10,10 +10,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import UploadIndicator from "./UploadIndicator";
 import Picker from "./Picker";
+import { cn } from "@/lib/utils";
 
 type Props = {
   avatar?: string | null;
-};
+} & HTMLAttributes<HTMLDivElement>;
 
 const initialState = {
   type: "",
@@ -21,7 +22,7 @@ const initialState = {
   data: {} as any,
 };
 
-const AvatarProfile = ({ avatar }: Props) => {
+const AvatarProfile = ({ avatar, ...props }: Props) => {
   const { data, update } = useSession();
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [preview, setPreview] = useState("");
@@ -74,7 +75,7 @@ const AvatarProfile = ({ avatar }: Props) => {
       <Picker setIsSubmit={setIsSubmit} />
       <Avatar
         url={!!preview ? preview : avatar}
-        className="w-[100px] xl:w-[150px]"
+        className={cn("w-24 lg:w-40", props.className)}
       />
       <button hidden type="submit" ref={btnRef}></button>
     </form>
