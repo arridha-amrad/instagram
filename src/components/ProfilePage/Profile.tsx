@@ -1,4 +1,4 @@
-import AvatarProfile from "@/components/Profile/AvatarProfile";
+import AvatarProfile from "@/components/ProfilePage/AvatarProfile";
 import Button from "@/components/core/Button";
 import { TProfile } from "@/fetchings/type";
 import { CogIcon } from "@heroicons/react/24/outline";

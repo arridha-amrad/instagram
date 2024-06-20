@@ -1,4 +1,4 @@
-import { TComment, TPost, TPostSchema } from "@/fetchings/type";
+import { TComment, TPost } from "@/fetchings/type";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware";

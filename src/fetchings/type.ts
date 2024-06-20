@@ -4,6 +4,7 @@ import {
   RepliesTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
+import { fetchUserPosts } from "./postsFetching";
 
 export type TPostSchema = typeof PostsTable.$inferSelect;
 export type TCommentSchema = typeof CommentsTable.$inferSelect;
@@ -36,3 +37,5 @@ export type TReply = TReplySchema & { owner: TOwner } & {
   isLiked: boolean;
   sumLikes: number;
 };
+
+export type TUserPost = Awaited<ReturnType<typeof fetchUserPosts>>[number];
