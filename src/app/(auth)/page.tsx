@@ -8,6 +8,8 @@ import SuggestedUsers from "@/components/SuggestedUsers";
 
 const Page = async () => {
   const session = await auth();
+  console.log(session?.user);
+
   if (!session) {
     redirect("/login");
   }

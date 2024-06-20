@@ -1,10 +1,11 @@
 import AvatarProfile from "@/components/ProfilePage/AvatarProfile";
-import Button from "@/components/core/Button";
 import { TProfile } from "@/fetchings/type";
 import { CogIcon } from "@heroicons/react/24/outline";
 import FormFollow from "./Follow/FomFollow";
 import { auth } from "@/auth";
-import EditProfile from "./EditProfile";
+import EditProfile from "./FormEditProfile";
+import SvgMale from "../svg/SvgMale";
+import SvgFemale from "../svg/SvgFemale";
 
 type Props = {
   user: TProfile;
@@ -22,10 +23,10 @@ export default async function Profile({ user: u }: Props) {
       <div className="flex-[2] space-y-4">
         <div className="flex items-center gap-6">
           <div>
-            <h1 className="text-lg">{u?.username}</h1>
+            <h1 className="text-xl">{u?.username}</h1>
           </div>
           {isAuthUser ? (
-            <EditProfile />
+            <EditProfile user={u} />
           ) : (
             <FormFollow
               authId={data?.user.id ?? ""}
@@ -50,8 +51,31 @@ export default async function Profile({ user: u }: Props) {
             Followings
           </div>
         </div>
-        <div>
-          <h1 className="font-semibold">{u?.username}</h1>
+        <div className="text-sm">
+          <div className="flex items-center gap-1">
+            <h1 className="font-medium">{u?.name}</h1>
+
+            {u?.userInfo?.gender === "male" && (
+              <SvgMale className="fill-blue-500" />
+            )}
+
+            {u?.userInfo?.gender === "female" && (
+              <SvgFemale className="fill-pink-500" />
+            )}
+          </div>
+          <div className="font-medium text-skin-muted">
+            {u?.userInfo?.occupation}
+          </div>
+          <div>{u?.userInfo?.bio}</div>
+          <div>
+            <a
+              target="_blank"
+              className="font-semibold text-blue-500"
+              href="https://www.google.com"
+            >
+              {u?.userInfo?.website}
+            </a>
+          </div>
         </div>
       </div>
     </section>

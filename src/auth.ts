@@ -8,10 +8,9 @@ import { UsersTable } from "./lib/drizzle/schema";
 import db from "./lib/drizzle/db";
 
 const createToken = (token: JWT, user: User) => {
-  const { email, id, image, name, username } = user;
+  const { id, image, name, username } = user;
   return {
     ...token,
-    email,
     name,
     picture: image,
     sub: id,
@@ -62,7 +61,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           .insert(UsersTable)
           .values({
             email: em,
-            username: `${em.split("@")[0]}${new Date().getTime()}`,
+            username: `${em.split("@")[0]}`,
             avatar: image,
             name,
             password: "",
@@ -70,8 +69,8 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
               account?.provider === "google"
                 ? "google"
                 : account?.provider === "github"
-                ? "github"
-                : "facebook",
+                  ? "github"
+                  : "facebook",
           })
           .onConflictDoNothing();
         return true;
@@ -113,7 +112,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         id: token.sub as string,
         name: token.name as string,
         username: token.username as string,
-        email: token.email as string,
         image: token.picture as string,
       } as User;
       return session;

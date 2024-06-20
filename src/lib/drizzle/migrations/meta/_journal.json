@@ -43,6 +43,13 @@
       "when": 1718875811701,
       "tag": "0005_red_power_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1718894826000,
+      "tag": "0006_nifty_dorian_gray",
+      "breakpoints": true
     }
   ]
 }

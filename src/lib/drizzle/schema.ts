@@ -5,6 +5,7 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
+  serial,
   text,
   timestamp,
   unique,
@@ -20,6 +21,8 @@ export const providerEnum = pgEnum("provider_enum", [
   "facebook",
 ]);
 
+export const genderEnum = pgEnum("gender_enum", ["male", "female"]);
+
 type PostContentUrl = {
   type: "image" | "video";
   url: string;
@@ -27,32 +30,28 @@ type PostContentUrl = {
 };
 
 //===========================================================================
-// export const FollowersTable = pgTable(
-//   "followers",
-//   {
-//     userId: uuid("user_id")
-//       .notNull()
-//       .references(() => UsersTable.id),
-//     toId: uuid("to_id")
-//       .notNull()
-//       .references(() => UsersTable.id),
-//   },
-//   (table) => {
-//     return {
-//       pk: primaryKey({ columns: [table.userId, table.toId] }),
-//     };
-//   },
-// );
-// export const FollowersRelation = relations(FollowersTable, ({ one }) => ({
-//   user: one(UsersTable, {
-//     fields: [FollowersTable.userId],
-//     references: [UsersTable.id],
-//   }),
-//   toUser: one(UsersTable, {
-//     fields: [FollowersTable.toId],
-//     references: [UsersTable.id],
-//   }),
-// }));
+export const UserInfoTable = pgTable(
+  "user_info",
+  {
+    id: serial("id").primaryKey(),
+    userId: uuid("user_id")
+      .references(() => UsersTable.id)
+      .notNull(),
+    website: varchar("website"),
+    occupation: varchar("occupation"),
+    bio: text("bio"),
+    gender: genderEnum("gender"),
+  },
+  (table) => ({
+    uniqueUser: uniqueIndex("userIndex").on(table.userId),
+  }),
+);
+export const UserInfoRelation = relations(UserInfoTable, ({ one }) => ({
+  user: one(UsersTable, {
+    fields: [UserInfoTable.userId],
+    references: [UsersTable.id],
+  }),
+}));
 
 //===========================================================================
 export const FollowingsTable = pgTable(
@@ -111,7 +110,8 @@ export const UsersTable = pgTable(
     };
   },
 );
-export const usersRelations = relations(UsersTable, ({ many }) => ({
+export const usersRelations = relations(UsersTable, ({ many, one }) => ({
+  userInfo: one(UserInfoTable),
   posts: many(PostsTable),
   likes: many(PostLikesTable),
   comments: many(CommentsTable),

@@ -1,7 +1,14 @@
 "use client";
 
 import Avatar from "../Avatar";
-import { HTMLAttributes, useEffect, useRef, useState } from "react";
+import {
+  HTMLAttributes,
+  Ref,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useFormState } from "react-dom";
 import { changeAvatar } from "./changeAvatar";
 import { toast } from "react-toastify";
@@ -22,7 +29,10 @@ const initialState = {
   data: {} as any,
 };
 
-const AvatarProfile = ({ avatar, ...props }: Props) => {
+const AvatarProfile = (
+  { avatar, ...props }: Props,
+  ref: Ref<HTMLInputElement>,
+) => {
   const { data, update } = useSession();
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [preview, setPreview] = useState("");
@@ -50,7 +60,7 @@ const AvatarProfile = ({ avatar, ...props }: Props) => {
           username: user.username,
           image: user.image,
           name: user.name,
-        }).then((res) => {
+        }).then(() => {
           router.refresh();
         });
       }
@@ -72,7 +82,7 @@ const AvatarProfile = ({ avatar, ...props }: Props) => {
       className="group relative cursor-pointer"
     >
       <UploadIndicator />
-      <Picker setIsSubmit={setIsSubmit} />
+      <Picker ref={ref} setIsSubmit={setIsSubmit} />
       <Avatar
         url={!!preview ? preview : avatar}
         className={cn("w-24 lg:w-40", props.className)}
@@ -82,4 +92,4 @@ const AvatarProfile = ({ avatar, ...props }: Props) => {
   );
 };
 
-export default AvatarProfile;
+export default forwardRef(AvatarProfile);

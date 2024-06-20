@@ -1,14 +1,22 @@
 "use client";
 
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  Ref,
+  SetStateAction,
+  forwardRef,
+  useRef,
+} from "react";
 import { useFormStatus } from "react-dom";
+import mergeRefs from "merge-refs";
 
 type Props = {
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
 };
 
-const Picker = ({ setIsSubmit }: Props) => {
+const Picker = ({ setIsSubmit }: Props, ref: Ref<HTMLInputElement>) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const onChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -30,11 +38,11 @@ const Picker = ({ setIsSubmit }: Props) => {
         name="image"
         onChange={onChangeFileInput}
         hidden
-        ref={inputRef}
+        ref={mergeRefs(inputRef, ref)}
         type="file"
       />
     </div>
   );
 };
 
-export default Picker;
+export default forwardRef(Picker);

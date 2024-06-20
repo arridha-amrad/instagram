@@ -4,6 +4,7 @@ import { upload } from "@/lib/cloudinary";
 import db from "@/lib/drizzle/db";
 import { UsersTable } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 
 export const changeAvatar = async (
   userId: string,
@@ -28,6 +29,7 @@ export const changeAvatar = async (
         username: UsersTable.username,
         email: UsersTable.email,
       });
+    revalidateTag("fetch-user");
     return {
       type: "success",
       message: "",

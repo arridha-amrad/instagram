@@ -27,6 +27,7 @@ const getUser = async ({
     with: {
       followers: true,
       followings: true,
+      userInfo: true,
     },
     columns: {
       id: true,
@@ -58,6 +59,7 @@ const getUser = async ({
       return null;
     }
   });
+
   console.log({ user });
 
   return user;

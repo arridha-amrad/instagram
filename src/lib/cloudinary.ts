@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 const defaultTransformation: TransformationOptions = [
-  { quality: 80 },
+  { quality: 90 },
   { if: "width > 600" },
   { width: 600, crop: "scale" },
   { if: "end" },

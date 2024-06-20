@@ -2,6 +2,7 @@ import {
   CommentsTable,
   PostsTable,
   RepliesTable,
+  UserInfoTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
 import { fetchUser } from "./user";
@@ -37,3 +38,4 @@ export type TReply = TReplySchema & { owner: TOwner } & {
 };
 
 export type TProfile = Awaited<ReturnType<typeof fetchUser>>;
+export type TUserInfo = typeof UserInfoTable.$inferSelect;
