@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import ButtonSubmitComment from "./ButtonSubmitComment";
+import { usePostDetailStore } from "@/lib/zustand/postDetailPage/usePostDetailState";
 
 const initialState = {
   message: "",
@@ -35,6 +36,7 @@ const CommentForm = ({ post }: Props) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { addComment } = usePostStore();
+  const { setPost } = usePostDetailStore();
 
   useEffect(() => {
     if (formState.type === "success") {
@@ -57,7 +59,11 @@ const CommentForm = ({ post }: Props) => {
 
   return (
     <section className="py-2">
-      <Link scroll={false} href={`/post/${post.id}`}>
+      <Link
+        onClick={() => setPost(post)}
+        scroll={false}
+        href={`/post/${post.id}`}
+      >
         <p className="text-sm text-skin-muted">
           {post.sumComments}&nbsp;{" "}
           {post.sumComments > 1 ? "comments" : "comment"}

@@ -32,6 +32,6 @@ export const useReplySetter = create<State>()(
     {
       enabled: process.env.NODE_ENV === "development",
       anonymousActionType: "reply_setter",
-    }
-  )
+    },
+  ),
 );

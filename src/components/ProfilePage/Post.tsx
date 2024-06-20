@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import {
   ChatBubbleOvalLeftIcon,
@@ -6,20 +5,16 @@ import {
   HeartIcon,
 } from "@heroicons/react/24/outline";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
-import { TUserPost } from "@/fetchings/type";
+import { TPost } from "@/fetchings/type";
+import PostLink from "./PostLink";
 
 type Props = {
-  post: TUserPost;
+  post: TPost;
 };
 
 const Post = ({ post }: Props) => {
   return (
-    <Link
-      key={post.id}
-      scroll={false}
-      href={`/post/${post.id}`}
-      className="relative aspect-square overflow-hidden rounded-md"
-    >
+    <PostLink post={post}>
       <Image
         src={post.urls[0].url}
         alt="post_image"
@@ -48,7 +43,7 @@ const Post = ({ post }: Props) => {
           </div>
         </div>
       </div>
-    </Link>
+    </PostLink>
   );
 };
 

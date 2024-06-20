@@ -1,15 +1,13 @@
+import { auth } from "@/auth";
+import SwitchTheme from "@/components/SwitchTheme";
+import { HomeIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import SidebarBrand from "./SidebarBrand";
-import { HomeIcon } from "@heroicons/react/24/outline";
+import Avatar from "../Avatar";
 import NewPostModal from "./Modal/ModalCreatePost";
 import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
 import Logout from "./Modal/ModalLogout";
-import SwitchTheme from "@/components/SwitchTheme";
-import { auth } from "@/auth";
-import Image from "next/image";
-import DefaultAvatar from "@/images/default.jpg";
+import SidebarBrand from "./SidebarBrand";
 import { className } from "./styles";
-import Avatar from "../Avatar";
 
 export default async function Sidebar() {
   const session = await auth();
@@ -22,6 +20,12 @@ export default async function Sidebar() {
           <HomeIcon />
         </div>
         <span className="hidden xl:inline">Home</span>
+      </Link>
+      <Link className={`${className.button}`} href="/">
+        <div className={`${className.iconContainer}`}>
+          <MagnifyingGlassIcon />
+        </div>
+        <span className="hidden xl:inline">Search</span>
       </Link>
       <div className="h-2" />
       <CreatePostProvider>

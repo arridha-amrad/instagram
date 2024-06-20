@@ -10,12 +10,11 @@ type Props = {
 
 const Page = async ({ params }: Props) => {
   const session = await auth();
-
   const comments = await fetchComments({
     postId: params.id,
     userId: session?.user.id,
   });
-  return <Modal comments={comments} postId={params.id} />;
+  return <Modal comments={comments} />;
 };
 
 export default Page;

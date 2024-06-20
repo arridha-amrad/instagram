@@ -1,27 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import ChevronRightIcon from "@heroicons/react/20/solid/ChevronRightIcon";
-import ChevronLeftIcon from "@heroicons/react/20/solid/ChevronLeftIcon";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { usePostStore } from "@/stores/PostStore";
+import ChevronLeftIcon from "@heroicons/react/20/solid/ChevronLeftIcon";
+import ChevronRightIcon from "@heroicons/react/20/solid/ChevronRightIcon";
+import Image from "next/image";
+import { useState } from "react";
 
 type Props = {
   height: number;
-  postId: string;
+  urls: string[];
 };
 
-const Preview = ({ height, postId }: Props) => {
-  const { posts } = usePostStore();
-  const post = posts.find((p) => p.id === postId);
-
-  if (!post) {
-    return null;
-  }
-
-  const preview = post.urls;
-
+const Carousel = ({ height, urls }: Props) => {
   const [index, setIndex] = useState(0);
   const next = () => {
     setIndex((val) => (val += 1));
@@ -37,7 +27,7 @@ const Preview = ({ height, postId }: Props) => {
         loading="lazy"
         width={500}
         height={500}
-        src={preview[index].url}
+        src={urls[index]}
         className="h-full w-auto max-w-[700px] object-cover object-center"
       />
       <div className="absolute inset-y-0 right-2 flex items-center justify-center">
@@ -45,7 +35,7 @@ const Preview = ({ height, postId }: Props) => {
           onClick={next}
           className={cn(
             "inline-flex aspect-square w-6 items-center justify-center rounded-full bg-background/50 hover:bg-background/60",
-            index === preview.length - 1 && "hidden",
+            index === urls.length - 1 && "hidden",
           )}
         >
           <ChevronRightIcon className="aspect-square w-4" />
@@ -66,4 +56,4 @@ const Preview = ({ height, postId }: Props) => {
   );
 };
 
-export default Preview;
+export default Carousel;

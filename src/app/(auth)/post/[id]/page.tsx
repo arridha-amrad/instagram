@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
 import { fetchPost } from "@/fetchings/fetchPost";
-import PostDetail from "./PostDetail";
-import { redirect } from "next/navigation";
 import { TPost } from "@/fetchings/type";
+import { redirect } from "next/navigation";
+import PostDetail from "./PostDetail";
 
 type Props = {
   params: {

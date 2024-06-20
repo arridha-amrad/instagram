@@ -1,11 +1,13 @@
+"use client";
+
 import { TPost } from "@/fetchings/type";
-import Preview from "./Carousel";
-import PostOwner from "./Owner";
-import PostDescription from "./Description";
-import Comments from "./Comments";
-import Actions from "./Actions";
-import CommentForm from "./CommentForm";
 import useMeasure from "react-use-measure";
+import Actions from "./Actions";
+import Preview from "./Carousel";
+import CommentForm from "./CommentForm";
+import Comments from "./Comments";
+import PostDescription from "./Description";
+import PostOwner from "./Owner";
 
 type Props = {
   post: TPost;
@@ -13,6 +15,7 @@ type Props = {
 
 const PostExpanded = ({ post }: Props) => {
   const [ref, { height }] = useMeasure();
+  const urls = post.urls.map(({ url }) => url);
 
   return (
     <div className="flex">
@@ -21,7 +24,7 @@ const PostExpanded = ({ post }: Props) => {
         ref={ref}
         className="h-[90vh] w-max border-r border-skin bg-background"
       >
-        <Preview postId={post.id} height={height} />
+        <Preview urls={urls} height={height} />
       </section>
       <section
         id="post_detail"

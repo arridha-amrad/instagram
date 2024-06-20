@@ -2,38 +2,38 @@
 
 import PostExpanded from "@/components/PostExpanded";
 import { TComment } from "@/fetchings/type";
+import { usePostDetailStore } from "@/lib/zustand/postDetailPage/usePostDetailState";
 import { useCommentsStore } from "@/stores/CommentsStore";
-import { usePostStore } from "@/stores/PostStore";
+import { useReplySetter } from "@/stores/ReplySetter";
 import { useRouter } from "next/navigation";
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {
   comments: TComment[];
-  postId: string;
 };
 
-const Modal = ({ comments, postId }: Props) => {
+const Modal = ({ comments }: Props) => {
   const router = useRouter();
+  const { reset } = useReplySetter();
+  const { post } = usePostDetailStore();
   const { setComments } = useCommentsStore();
-  const { posts } = usePostStore();
-  const post = posts.find((p) => p.id === postId);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setComments(comments);
     document.documentElement.classList.add("overflow-y-hidden", "pr-4");
   }, []);
 
+  const closeModal = () => {
+    router.back();
+    document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
+    reset();
+  };
+
   return createPortal(
     <section className="fixed inset-0 flex items-center justify-center">
       <div
-        onClick={() => {
-          router.back();
-          document.documentElement.classList.remove(
-            "overflow-y-hidden",
-            "pr-4",
-          );
-        }}
+        onClick={closeModal}
         className="absolute inset-0 bg-background/50 backdrop-blur"
       />
       <div className="relative">

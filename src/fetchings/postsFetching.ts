@@ -1,5 +1,5 @@
 import db from "@/lib/drizzle/db";
-import { TComment } from "./type";
+import { TComment, TPost } from "./type";
 
 export const fetchPosts = async (userId?: string) => {
   const posts = await db.query.PostsTable.findMany({
@@ -33,9 +33,18 @@ export const fetchPosts = async (userId?: string) => {
   return posts;
 };
 
-export const fetchUserPosts = async (userId: string) => {
+export const fetchUserPosts = async (userId: string): Promise<TPost[]> => {
   const posts = await db.query.PostsTable.findMany({
     with: {
+      owner: {
+        columns: {
+          avatar: true,
+          email: true,
+          id: true,
+          name: true,
+          username: true,
+        },
+      },
       comments: {
         columns: {
           id: true,
@@ -55,6 +64,7 @@ export const fetchUserPosts = async (userId: string) => {
       sumComments: data.comments.length,
       isLiked: !!data.likes.find((like) => like.userId === userId),
       sumLikes: data.likes.length,
+      comments: [],
     }));
   });
   return posts;
