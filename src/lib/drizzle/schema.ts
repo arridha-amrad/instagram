@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  index,
   json,
   pgEnum,
   pgTable,
@@ -26,47 +27,49 @@ type PostContentUrl = {
 };
 
 //===========================================================================
-export const FollowersTable = pgTable(
-  "followers",
-  {
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => UsersTable.id),
-    toId: uuid("to_id")
-      .notNull()
-      .references(() => UsersTable.id),
-  },
-  (table) => {
-    return {
-      pk: primaryKey({ columns: [table.userId, table.toId] }),
-    };
-  },
-);
-export const FollowersRelation = relations(FollowersTable, ({ one }) => ({
-  user: one(UsersTable, {
-    fields: [FollowersTable.userId],
-    references: [UsersTable.id],
-  }),
-  toUser: one(UsersTable, {
-    fields: [FollowersTable.toId],
-    references: [UsersTable.id],
-  }),
-}));
+// export const FollowersTable = pgTable(
+//   "followers",
+//   {
+//     userId: uuid("user_id")
+//       .notNull()
+//       .references(() => UsersTable.id),
+//     toId: uuid("to_id")
+//       .notNull()
+//       .references(() => UsersTable.id),
+//   },
+//   (table) => {
+//     return {
+//       pk: primaryKey({ columns: [table.userId, table.toId] }),
+//     };
+//   },
+// );
+// export const FollowersRelation = relations(FollowersTable, ({ one }) => ({
+//   user: one(UsersTable, {
+//     fields: [FollowersTable.userId],
+//     references: [UsersTable.id],
+//   }),
+//   toUser: one(UsersTable, {
+//     fields: [FollowersTable.toId],
+//     references: [UsersTable.id],
+//   }),
+// }));
 
 //===========================================================================
 export const FollowingsTable = pgTable(
-  "followings",
+  "followings_table",
   {
     userId: uuid("user_id")
       .notNull()
-      .references(() => UsersTable.id),
-    toId: uuid("to_id")
+      .references(() => UsersTable.id, { onDelete: "cascade" }),
+    followId: uuid("follow_id")
       .notNull()
-      .references(() => UsersTable.id),
+      .references(() => UsersTable.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      pk: primaryKey({ columns: [table.userId, table.toId] }),
+      pk: primaryKey({ columns: [table.userId, table.followId] }),
+      user: index("relations_user_idx").on(table.userId),
+      follow: index("relations_follow_idx").on(table.followId),
     };
   },
 );
@@ -74,10 +77,12 @@ export const FollowingsRelation = relations(FollowingsTable, ({ one }) => ({
   user: one(UsersTable, {
     fields: [FollowingsTable.userId],
     references: [UsersTable.id],
+    relationName: "followings",
   }),
-  toUser: one(UsersTable, {
-    fields: [FollowingsTable.toId],
+  follow: one(UsersTable, {
+    fields: [FollowingsTable.followId],
     references: [UsersTable.id],
+    relationName: "followers",
   }),
 }));
 
@@ -110,8 +115,8 @@ export const usersRelations = relations(UsersTable, ({ many }) => ({
   posts: many(PostsTable),
   likes: many(PostLikesTable),
   comments: many(CommentsTable),
-  followers: many(FollowersTable),
-  followings: many(FollowingsTable),
+  followers: many(FollowingsTable, { relationName: "followers" }),
+  followings: many(FollowingsTable, { relationName: "followings" }),
 }));
 
 //===========================================================================

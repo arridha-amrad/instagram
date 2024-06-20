@@ -1,9 +1,7 @@
-import { TProfile } from "@/fetchings/type";
-import db from "@/lib/drizzle/db";
-import { PostsTable } from "@/lib/drizzle/schema";
-import { eq, sql } from "drizzle-orm";
 import Profile from "@/components/ProfilePage/Profile";
 import Posts from "@/components/ProfilePage/Posts";
+import { fetchUser } from "@/fetchings/user";
+import { auth } from "@/auth";
 
 type Props = {
   params: {
@@ -11,35 +9,12 @@ type Props = {
   };
 };
 
-const fetchUser = async (username: string) => {
-  let myUser: TProfile | null = null;
-  const user = await db.query.UsersTable.findFirst({
-    columns: {
-      id: true,
-      avatar: true,
-      name: true,
-      username: true,
-    },
-    where(fields, operators) {
-      return operators.eq(fields.username, username);
-    },
-  });
-
-  if (user) {
-    const [{ sumPosts }] = await db
-      .select({
-        sumPosts: sql<number>`count(${PostsTable.id})`,
-      })
-      .from(PostsTable)
-      .where(eq(PostsTable.userId, user.id));
-
-    myUser = { ...user, sumPosts };
-  }
-  return myUser;
-};
-
 const Page = async ({ params }: Props) => {
-  const user = await fetchUser(params.username);
+  const session = await auth();
+  const user = await fetchUser({
+    username: params.username,
+    authUserId: session?.user.id,
+  });
 
   if (!user) {
     return (
@@ -52,7 +27,7 @@ const Page = async ({ params }: Props) => {
   return (
     <main className="w-full py-4">
       <Profile user={user} />
-      <Posts userId={user.id} />
+      {user.id && <Posts userId={user.id} />}
     </main>
   );
 };

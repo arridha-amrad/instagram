@@ -30,7 +30,7 @@ export const usePostDetailStore = create<State & Action>()(
       },
     })),
     {
-      anonymousActionType: "posts_store",
+      anonymousActionType: "post_detail_store",
       enabled: process.env.NODE_ENV === "development",
     },
   ),
