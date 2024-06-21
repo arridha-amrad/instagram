@@ -50,6 +50,13 @@
       "when": 1718894826000,
       "tag": "0006_nifty_dorian_gray",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1718962840174,
+      "tag": "0007_black_dakota_north",
+      "breakpoints": true
     }
   ]
 }

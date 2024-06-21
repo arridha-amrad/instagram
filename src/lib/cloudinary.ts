@@ -18,8 +18,8 @@ const defaultTransformation: TransformationOptions = [
 ];
 
 const avatarTransformation: TransformationOptions = [
-  { quality: 80 },
-  { gravity: "face", width: 250, height: 250, crop: "thumb" },
+  { quality: 90 },
+  { gravity: "auto:face", width: 250, height: 250, crop: "thumb" },
   { radius: "max" },
 ];
 

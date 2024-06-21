@@ -30,6 +30,36 @@ type PostContentUrl = {
 };
 
 //===========================================================================
+export const SearchUsersTable = pgTable(
+  "search_users",
+  {
+    userId: uuid("user_id")
+      .references(() => UsersTable.id)
+      .notNull(),
+    searchId: uuid("search_id")
+      .references(() => UsersTable.id)
+      .notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.searchId, table.userId] }),
+    user: index("relations_search_users_user_idx").on(table.userId),
+    search: index("relations_search_users_search_idx").on(table.searchId),
+  }),
+);
+export const SearchUsersRelation = relations(SearchUsersTable, ({ one }) => ({
+  user: one(UsersTable, {
+    fields: [SearchUsersTable.userId],
+    references: [UsersTable.id],
+    relationName: "searchedBy",
+  }),
+  searchUser: one(UsersTable, {
+    fields: [SearchUsersTable.searchId],
+    references: [UsersTable.id],
+    relationName: "searchFor",
+  }),
+}));
+
+//===========================================================================
 export const UserInfoTable = pgTable(
   "user_info",
   {
@@ -117,6 +147,7 @@ export const usersRelations = relations(UsersTable, ({ many, one }) => ({
   comments: many(CommentsTable),
   followers: many(FollowingsTable, { relationName: "followers" }),
   followings: many(FollowingsTable, { relationName: "followings" }),
+  searchUsers: many(SearchUsersTable, { relationName: "searchFor" }),
 }));
 
 //===========================================================================

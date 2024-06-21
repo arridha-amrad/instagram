@@ -8,6 +8,7 @@ import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
 import Logout from "./Modal/ModalLogout";
 import SidebarBrand from "./SidebarBrand";
 import { className } from "./styles";
+import ButtonSearchUser from "./Search/ButtonSearchUser";
 
 export default async function Sidebar() {
   const session = await auth();
@@ -21,12 +22,8 @@ export default async function Sidebar() {
         </div>
         <span className="hidden xl:inline">Home</span>
       </Link>
-      <Link className={`${className.button}`} href="/">
-        <div className={`${className.iconContainer}`}>
-          <MagnifyingGlassIcon />
-        </div>
-        <span className="hidden xl:inline">Search</span>
-      </Link>
+      <div className="h-2" />
+      <ButtonSearchUser />
       <div className="h-2" />
       <CreatePostProvider>
         <NewPostModal />

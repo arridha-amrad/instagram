@@ -66,7 +66,7 @@ export default async function Profile({ user: u }: Props) {
           <div className="font-medium text-skin-muted">
             {u?.userInfo?.occupation}
           </div>
-          <div>{u?.userInfo?.bio}</div>
+          <div className="whitespace-pre-line">{u?.userInfo?.bio}</div>
           <div>
             <a
               target="_blank"
