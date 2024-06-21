@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce";
 const SearchInput = () => {
   const { pending } = useFormStatus();
   const [text, setText] = useState("");
-  const [value] = useDebounce(text, 1000);
+  const [value] = useDebounce(text, 500);
 
   const btnRef = useRef<HTMLButtonElement | null>(null);
 

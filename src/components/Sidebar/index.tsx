@@ -9,9 +9,18 @@ import Logout from "./Modal/ModalLogout";
 import SidebarBrand from "./SidebarBrand";
 import { className } from "./styles";
 import ButtonSearchUser from "./Search/ButtonSearchUser";
+import { fetchSearchHistories } from "@/fetchings/user";
+import Histories from "./Search/Histories";
 
 export default async function Sidebar() {
   const session = await auth();
+  if (!session) {
+    return null;
+  }
+  const searchHistories = await fetchSearchHistories({
+    userId: session.user.id ?? "",
+  });
+
   return (
     <div className="flex h-full w-full flex-col">
       <SidebarBrand />
@@ -23,7 +32,9 @@ export default async function Sidebar() {
         <span className="hidden xl:inline">Home</span>
       </Link>
       <div className="h-2" />
-      <ButtonSearchUser />
+      <ButtonSearchUser>
+        <Histories histories={searchHistories} />
+      </ButtonSearchUser>
       <div className="h-2" />
       <CreatePostProvider>
         <NewPostModal />

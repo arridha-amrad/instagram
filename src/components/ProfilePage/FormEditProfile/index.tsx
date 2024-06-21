@@ -2,16 +2,16 @@
 
 import Button from "@/components/core/Button";
 import Wrapper from "@/components/core/Modals/Wrapper";
-import { useEffect, useRef, useState } from "react";
-import AvatarProfile from "../AvatarProfile";
 import { TProfile } from "@/fetchings/type";
-import Inputs from "./Inputs";
-import { signOut, useSession } from "next-auth/react";
-import { editProfile } from "./action";
-import { useFormState } from "react-dom";
-import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
+import AvatarProfile from "../AvatarProfile";
+import Inputs from "./Inputs";
+import { editProfile } from "./action";
 
 type Props = {
   user: TProfile;
@@ -46,8 +46,6 @@ const EditProfile = ({ user }: Props) => {
 
   useEffect(() => {
     if (state.type === "success") {
-      console.log(state.message);
-
       const { name } = state.data;
       toast.success(state.message, { theme });
       update({

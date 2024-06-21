@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import EditProfile from "./FormEditProfile";
 import SvgMale from "../svg/SvgMale";
 import SvgFemale from "../svg/SvgFemale";
+import Avatar from "../Avatar";
 
 type Props = {
   user: TProfile;
@@ -18,7 +19,11 @@ export default async function Profile({ user: u }: Props) {
   return (
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center">
       <div className="flex flex-1 items-center justify-start sm:justify-center">
-        <AvatarProfile avatar={u?.avatar} />
+        {isAuthUser ? (
+          <AvatarProfile avatar={u?.avatar} />
+        ) : (
+          <Avatar className="w-24 lg:w-40" url={u?.avatar} />
+        )}
       </div>
       <div className="flex-[2] space-y-4">
         <div className="flex items-center gap-6">
@@ -51,7 +56,7 @@ export default async function Profile({ user: u }: Props) {
             Followings
           </div>
         </div>
-        <div className="text-sm">
+        <div className="spacey-2 text-sm">
           <div className="flex items-center gap-1">
             <h1 className="font-medium">{u?.name}</h1>
 
