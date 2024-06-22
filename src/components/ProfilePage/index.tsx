@@ -1,12 +1,12 @@
 import AvatarProfile from "@/components/ProfilePage/AvatarProfile";
 import { TProfile } from "@/fetchings/type";
-import { CogIcon } from "@heroicons/react/24/outline";
 import FormFollow from "./Follow/FomFollow";
 import { auth } from "@/auth";
 import EditProfile from "./FormEditProfile";
 import SvgMale from "../svg/SvgMale";
 import SvgFemale from "../svg/SvgFemale";
 import Avatar from "../Avatar";
+import Settings from "./Settings";
 
 type Props = {
   user: TProfile;
@@ -39,9 +39,7 @@ export default async function Profile({ user: u }: Props) {
               userId={u?.id ?? ""}
             />
           )}
-          <button>
-            <CogIcon className="aspect-square w-6" />
-          </button>
+          <Settings />
         </div>
         <div className="flex items-center gap-10">
           <div>

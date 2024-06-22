@@ -1,4 +1,4 @@
-import Profile from "@/components/ProfilePage/Profile";
+import Profile from "@/components/ProfilePage";
 import Posts from "@/components/ProfilePage/Posts";
 import { fetchUser } from "@/fetchings/user";
 import { auth } from "@/auth";
