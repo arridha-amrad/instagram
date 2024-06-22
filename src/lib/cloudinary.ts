@@ -12,15 +12,14 @@ cloudinary.config({
 
 const defaultTransformation: TransformationOptions = [
   { quality: 90 },
-  { if: "width > 600" },
-  { width: 600, crop: "scale" },
+  { if: "width > 1000" },
+  { width: 1000, crop: "scale" },
   { if: "end" },
 ];
 
 const avatarTransformation: TransformationOptions = [
   { quality: 90 },
-  { gravity: "auto:face", width: 250, height: 250, crop: "thumb" },
-  { radius: "max" },
+  { width: 250, height: 250, crop: "thumb" },
 ];
 
 export const upload = async (file: File, isAvatar?: boolean) => {

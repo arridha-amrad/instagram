@@ -4,6 +4,7 @@ import Modal from "@/components/core/Modals/Wrapper";
 import { CogIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
+import Logout from "./Logout";
 
 const Settings = () => {
   const [open, setOpen] = useState(false);
@@ -33,9 +34,11 @@ const Settings = () => {
               Change Password
             </Link>
             <div className="h-px w-full bg-border" />
-            <button className="py-3">Logout</button>
+            <Logout />
             <div className="h-px w-full bg-border" />
-            <button className="py-3">Cancel</button>
+            <button onClick={closeModal} className="py-3">
+              Cancel
+            </button>
           </div>
         </Modal>
       )}

@@ -11,7 +11,7 @@ const Avatar = ({ url, ...props }: Props) => {
   return (
     <div
       className={cn(
-        "aspect-square w-[40px] overflow-hidden rounded-full border border-skin",
+        "aspect-square w-[40px] overflow-hidden rounded-full",
         props.className,
       )}
     >
