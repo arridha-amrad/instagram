@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import { className } from "../styles";
-import { useSession } from "next-auth/react";
 import Avatar from "@/components/Avatar";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { User } from "next-auth";
 
-const LinkProfile = () => {
-  const { data: session } = useSession();
-  const href = `/${session?.user.username}`;
+type Props = {
+  user: User;
+};
+
+const LinkProfile = ({ user }: Props) => {
+  const href = `/${user.username}`;
   const pathname = usePathname();
   const isActive = href === pathname;
   return (
-    <Link
-      className={className.button}
-      href={`/${session?.user.username}` ?? "/"}
-    >
-      <Avatar url={session?.user.image} className="w-8" />
+    <Link className={className.button} href={`/${user.username}` ?? "/"}>
+      <Avatar url={user.image} className="w-8" />
       <span className={cn("hidden xl:inline", isActive && "font-semibold")}>
         Profile
       </span>

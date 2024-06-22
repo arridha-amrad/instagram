@@ -6,7 +6,7 @@ import { TUserInfo } from "@/fetchings/type";
 import { useFormStatus } from "react-dom";
 
 type Props = {
-  closeModal: VoidFunction;
+  closeModal?: VoidFunction;
   userInfo?: TUserInfo | null;
   name: string;
   username: string;
@@ -75,6 +75,7 @@ const Inputs = ({ closeModal, name, userInfo, username }: Props) => {
           <textarea
             name="bio"
             id="bio"
+            rows={4}
             defaultValue={userInfo?.bio ?? ""}
             className="mt-1.5 w-full resize-none rounded-md border border-skin bg-skin-input outline-none focus:border-transparent focus:ring focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-black"
           ></textarea>
@@ -99,9 +100,11 @@ const Inputs = ({ closeModal, name, userInfo, username }: Props) => {
           </select>
         </div>
         <div className="flex items-center gap-3 self-end">
-          <Button onClick={closeModal} className="h-10 w-24 bg-skin-input">
-            Cancel
-          </Button>
+          {closeModal && (
+            <Button onClick={closeModal} className="h-10 w-24 bg-skin-input">
+              Cancel
+            </Button>
+          )}
           <Button type="submit" className="h-10 w-24" disabled={pending}>
             {pending ? <MySpinner /> : "Save"}
           </Button>

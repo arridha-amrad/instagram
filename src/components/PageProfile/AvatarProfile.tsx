@@ -85,7 +85,7 @@ const AvatarProfile = (
       <Picker ref={ref} setIsSubmit={setIsSubmit} />
       <Avatar
         url={!!preview ? preview : avatar}
-        className={cn("w-24 lg:w-40", props.className)}
+        className={cn("w-24 sm:w-40", props.className)}
       />
       <button hidden type="submit" ref={btnRef}></button>
     </form>

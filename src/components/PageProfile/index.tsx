@@ -1,11 +1,12 @@
+import { auth } from "@/auth";
 import AvatarProfile from "@/components/PageProfile/AvatarProfile";
 import { TProfile } from "@/fetchings/type";
-import FormFollow from "./Follow/FomFollow";
-import { auth } from "@/auth";
-import EditProfile from "./FormEditProfile";
-import SvgMale from "../svg/SvgMale";
-import SvgFemale from "../svg/SvgFemale";
+import Link from "next/link";
 import Avatar from "../Avatar";
+import Button from "../core/Button";
+import SvgFemale from "../svg/SvgFemale";
+import SvgMale from "../svg/SvgMale";
+import FormFollow from "./Follow/FomFollow";
 import Settings from "./Settings";
 
 type Props = {
@@ -31,7 +32,12 @@ export default async function Profile({ user: u }: Props) {
             <h1 className="text-xl">{u?.username}</h1>
           </div>
           {isAuthUser ? (
-            <EditProfile user={u} />
+            <>
+              <Link href="/settings">
+                <Button>Edit Profile</Button>
+              </Link>
+              <Settings />
+            </>
           ) : (
             <FormFollow
               authId={data?.user.id ?? ""}
@@ -39,7 +45,6 @@ export default async function Profile({ user: u }: Props) {
               userId={u?.id ?? ""}
             />
           )}
-          <Settings />
         </div>
         <div className="flex items-center gap-10">
           <div>

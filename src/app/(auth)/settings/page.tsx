@@ -1,20 +1,25 @@
-import Button from "@/components/core/Button";
-import TextInput from "@/components/core/TextInput";
+import { auth } from "@/auth";
+import FormEditProfile from "@/components/PageSettings/FormEditProfile";
 
-const Page = () => {
+import { fetchUser } from "@/fetchings/user";
+import { redirect } from "next/navigation";
+
+const Page = async () => {
+  const session = await auth();
+  if (!session) {
+    redirect("/login?cbUrl=settings");
+  }
+  const profile = await fetchUser({
+    username: session.user.username,
+    authUserId: session.user.id,
+  });
   return (
     <div className="w-full pl-14">
       <div>
         <h1 className="text-xl font-semibold">Edit profile</h1>
       </div>
       <div className="h-6" />
-      <form className="flex w-full max-w-md flex-col gap-4" action="">
-        <TextInput label="Current password" />
-        <TextInput label="New password" />
-        <div className="self-start pt-4">
-          <Button className="h-10 w-24">Update</Button>
-        </div>
-      </form>
+      <FormEditProfile user={profile} />
     </div>
   );
 };

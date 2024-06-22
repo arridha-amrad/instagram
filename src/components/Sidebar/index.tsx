@@ -36,7 +36,7 @@ export default async function Sidebar() {
       </CreatePostProvider>
       <div className="h-2" />
       <LinkSettings />
-      <LinkProfile />
+      <LinkProfile user={session.user} />
       <div className="flex-1" />
       <Logout />
       <div className="h-4" />
