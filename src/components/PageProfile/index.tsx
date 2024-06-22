@@ -1,4 +1,4 @@
-import AvatarProfile from "@/components/ProfilePage/AvatarProfile";
+import AvatarProfile from "@/components/PageProfile/AvatarProfile";
 import { TProfile } from "@/fetchings/type";
 import FormFollow from "./Follow/FomFollow";
 import { auth } from "@/auth";

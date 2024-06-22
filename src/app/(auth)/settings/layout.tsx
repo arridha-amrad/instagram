@@ -1,3 +1,6 @@
+import LinkChangePassword from "@/components/PageSettings/Links/LinkChangePassword";
+import LinkChangeUsername from "@/components/PageSettings/Links/LinkChangeUsername";
+import LinkEditProfile from "@/components/PageSettings/Links/LinkEditProfile";
 import SvgMeta from "@/components/svg/SvgMeta";
 import {
   DocumentTextIcon,
@@ -26,30 +29,9 @@ export default async function Layout({ children }: Props) {
             How you use nextgram
           </h1>
           <div className="h-2" />
-          <Link
-            style={{ width: 320 - 70 }}
-            href="/settings"
-            className="flex h-12 items-center gap-3 rounded-md px-4 hover:bg-skin-fill/50"
-          >
-            <UserCircleIcon className="square w-7" />
-            <span className="text-sm">Edit Profile</span>
-          </Link>
-          <Link
-            style={{ width: 320 - 70 }}
-            href="/settings/change-username"
-            className="flex h-12 items-center gap-3 rounded-md px-4 hover:bg-skin-fill/50"
-          >
-            <UserIcon className="square w-7" />
-            <span className="text-sm">Change Username</span>
-          </Link>
-          <Link
-            style={{ width: 320 - 70 }}
-            href="/settings/change-password"
-            className="flex h-12 items-center gap-3 rounded-md px-4 hover:bg-skin-fill/50"
-          >
-            <LockClosedIcon className="square w-7" />
-            <span className="text-sm">Change Password</span>
-          </Link>
+          <LinkEditProfile />
+          <LinkChangeUsername />
+          <LinkChangePassword />
         </div>
       </section>
       <section className="flex-1 basis-0">{children}</section>

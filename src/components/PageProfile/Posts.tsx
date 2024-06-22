@@ -1,4 +1,4 @@
-import Post from "@/components/ProfilePage/Post";
+import Post from "@/components/PageProfile/Post";
 import { fetchUserPosts } from "@/fetchings/postsFetching";
 
 type Props = {

@@ -1,5 +1,5 @@
-import Profile from "@/components/ProfilePage";
-import Posts from "@/components/ProfilePage/Posts";
+import Profile from "@/components/PageProfile";
+import Posts from "@/components/PageProfile/Posts";
 import { fetchUser } from "@/fetchings/user";
 import { auth } from "@/auth";
 
