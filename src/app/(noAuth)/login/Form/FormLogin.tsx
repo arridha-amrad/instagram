@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { loginAction } from "./actionLogin";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 const initialState = {
   errors: {} as any,
@@ -16,7 +17,9 @@ const initialState = {
 
 const FormLogin = () => {
   const [isShow, setShow] = useState(false);
-  const [formState, formAction] = useFormState(loginAction, initialState);
+  const params = useSearchParams();
+  const la = loginAction.bind(null, { cbUrl: params.get("cbUrl") });
+  const [formState, formAction] = useFormState(la, initialState);
   const formRef = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
@@ -30,7 +33,7 @@ const FormLogin = () => {
       <section className="text-sm">
         <p
           className={cn(
-            formState.type === "success" ? "text-green-500" : "text-red-500"
+            formState.type === "success" ? "text-green-500" : "text-red-500",
           )}
         >
           {formState.message}

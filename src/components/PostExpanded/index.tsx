@@ -14,7 +14,7 @@ type Props = {
 };
 
 const PostExpanded = ({ post }: Props) => {
-  const [ref, { height }] = useMeasure();
+  const [ref, { height, width }] = useMeasure();
   const urls = post.urls.map(({ url }) => url);
 
   return (

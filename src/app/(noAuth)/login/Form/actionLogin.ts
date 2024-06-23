@@ -9,7 +9,11 @@ import { signIn } from "@/auth";
 import { User } from "next-auth";
 import { redirect } from "next/navigation";
 
-export const loginAction = async (prevState: any, formData: FormData) => {
+export const loginAction = async (
+  { cbUrl }: { cbUrl: string | null },
+  prevState: any,
+  formData: FormData,
+) => {
   const { identity, password } = Object.fromEntries(formData.entries());
   const validatedFields = loginSchema.safeParse({
     identity,
@@ -28,7 +32,7 @@ export const loginAction = async (prevState: any, formData: FormData) => {
     .select()
     .from(UsersTable)
     .where(
-      id.includes("@") ? eq(UsersTable.email, id) : eq(UsersTable.username, id)
+      id.includes("@") ? eq(UsersTable.email, id) : eq(UsersTable.username, id),
     );
 
   if (!dbUser) {
@@ -63,5 +67,10 @@ export const loginAction = async (prevState: any, formData: FormData) => {
   };
 
   await signIn("credentials", { ...myUser, redirect: false });
-  redirect("/");
+
+  if (cbUrl) {
+    redirect(`${cbUrl}`);
+  } else {
+    redirect("/");
+  }
 };

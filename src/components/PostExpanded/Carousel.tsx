@@ -25,8 +25,8 @@ const Carousel = ({ height, urls }: Props) => {
       <Image
         alt="post"
         loading="lazy"
-        width={500}
-        height={500}
+        width={1000}
+        height={1000}
         src={urls[index]}
         className="h-full w-auto max-w-[700px] object-cover object-center"
       />

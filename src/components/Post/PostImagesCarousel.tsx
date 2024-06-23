@@ -1,10 +1,10 @@
 "use client";
 
-import MySpinner from "@/components/Spinner";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { useState, useTransition } from "react";
+import { useEffect, useState } from "react";
+import useMeasure from "react-use-measure";
 
 type PostContentUrl = {
   type: "image" | "video";
@@ -18,26 +18,26 @@ type Props = {
 
 const PostImagesCarousel = ({ urls }: Props) => {
   const maxIndex = urls.length - 1;
-  const [isPending, startTransition] = useTransition();
+
+  const [ref, { height, width }] = useMeasure();
+  const [position, setPosition] = useState(0);
+
   const [index, setIndex] = useState(0);
-  const next = () => {
-    startTransition(() => {
-      setIndex((val) => (val += 1));
-    });
+
+  const toRight = () => {
+    setIndex((val) => (val === length - 1 ? length - 1 : (val += 1)));
   };
-  const prev = () => {
-    startTransition(() => {
-      setIndex((val) => (val -= 1));
-    });
+
+  const toLeft = () => {
+    setIndex((val) => (val === 0 ? 0 : (val -= 1)));
   };
+
+  useEffect(() => {
+    setPosition(-1 * index * width);
+  }, [index]);
+
   return (
     <section className="relative w-full">
-      {isPending && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
-          <MySpinner />
-        </div>
-      )}
-
       <div className="absolute inset-0 flex animate-pulse items-center justify-center rounded bg-gray-300 dark:bg-gray-700">
         <svg
           className="h-10 w-10 text-gray-200 dark:text-gray-600"
@@ -51,17 +51,29 @@ const PostImagesCarousel = ({ urls }: Props) => {
       </div>
 
       <div
+        ref={ref}
         className="relative overflow-hidden"
         style={{ width: "100%", aspectRatio: 3 / 4 }}
       >
-        <Image
-          className="h-full w-full object-cover object-center"
-          src={urls[index].url}
-          width={500}
-          height={500}
-          alt="post"
-          loading="lazy"
-        />
+        <div
+          style={{
+            translate: `${position}px 0px`,
+          }}
+          className={`absolute left-0 top-0 flex transition-all duration-500 ease-in`}
+        >
+          {urls.map((url, i) => (
+            <div key={i} style={{ height, width }}>
+              <Image
+                loading="lazy"
+                src={url.url}
+                alt="post"
+                width={1000}
+                height={1000}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
       </div>
       <div
         className={cn(
@@ -70,7 +82,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
         )}
       >
         <button
-          onClick={next}
+          onClick={toRight}
           className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
         >
           <ChevronRightIcon className="aspect-square w-4" />
@@ -83,7 +95,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
         )}
       >
         <button
-          onClick={prev}
+          onClick={toLeft}
           className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
         >
           <ChevronLeftIcon className="aspect-square w-4" />

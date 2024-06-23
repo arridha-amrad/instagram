@@ -2,6 +2,7 @@
 
 import follow from "@/actions/user/follow";
 import ButtonFollowSubmit from "./ButtonFollowSubmit";
+import { usePathname } from "next/navigation";
 
 type Props = {
   authId: string;
@@ -10,7 +11,8 @@ type Props = {
 };
 
 const FormFollow = ({ authId, userId, isFollow }: Props) => {
-  const fa = follow.bind(null, { authId, userId });
+  const pathname = usePathname();
+  const fa = follow.bind(null, { authId, userId, pathname });
 
   return (
     <form action={fa}>
