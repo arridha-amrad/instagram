@@ -1,49 +1,53 @@
-"use server";
-
-import Link from "next/link";
-import FormRegister from "./Form/FormRegister";
-import GoogleButton from "@/components/SocialButtons/GoogleButton";
-import GithubButton from "@/components/SocialButtons/GithubButton";
 import FacebookButton from "@/components/SocialButtons/FacebookButton";
+import GithubButton from "@/components/SocialButtons/GithubButton";
+import GoogleButton from "@/components/SocialButtons/GoogleButton";
 import SvgInstagram from "@/components/svg/SvgInstagram";
+import Link from "next/link";
+import FormRegister from "./FormRegister";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Instagram | Register",
+  description: "Create an instagram account",
+};
 
 const Page = () => {
   return (
     <section className="flex">
-      <div className="max-w-sm lg:block hidden w-full relative">
-        <div className="absolute dark:bg-black/50 bg-black/20 inset-0" />
+      <div className="relative hidden w-full max-w-sm lg:block">
+        <div className="absolute inset-0 bg-black/20 dark:bg-black/50" />
         <img
           src="https://images.unsplash.com/photo-1620600574091-386cc6a3ed4d?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="bg"
-          className="object-cover w-full h-full object-center"
+          className="h-full w-full object-cover object-center"
         />
       </div>
-      <main className="min-h-screen w-full flex items-center justify-center flex-col">
+      <main className="flex min-h-screen w-full flex-col items-center justify-center">
         <button>
           <SvgInstagram className="fill-skin-primary" />
         </button>
-        <section className="text-center py-4">
+        <section className="py-4 text-center">
           <h1 className="text-2xl font-semibold text-skin-muted">
             Create new account
           </h1>
         </section>
-        <section className="max-w-sm w-full">
+        <section className="w-full max-w-sm">
           <FormRegister />
         </section>
-        <section className="py-6 w-full max-w-sm">
+        <section className="w-full max-w-sm py-6">
           <span className="relative flex justify-center">
-            <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-slate-400 dark:via-slate-500 to-transparent opacity-75"></div>
-            <span className="relative text-skin-muted z-10 bg-background px-6">
+            <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-slate-400 to-transparent opacity-75 dark:via-slate-500"></div>
+            <span className="relative z-10 bg-background px-6 text-skin-muted">
               Or
             </span>
           </span>
         </section>
-        <section className="max-w-sm w-full flex items-center justify-center gap-2">
+        <section className="flex w-full max-w-sm items-center justify-center gap-2">
           <GoogleButton />
           <GithubButton />
           <FacebookButton />
         </section>
-        <section className="text-sm pt-8">
+        <section className="pt-8 text-sm">
           <span>Already have an account ? </span>
           <Link className="text-skin-inverted" href="/login">
             login

@@ -1,14 +1,13 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { cache } from "react";
-import { fetchPosts } from "@/fetchings/postsFetching";
-import UserCard from "@/components/UserCard";
 import Posts from "@/components/Posts";
 import SuggestedUsers from "@/components/SuggestedUsers";
+import UserCard from "@/components/UserCard";
+import { fetchPosts } from "@/fetchings/postsFetching";
+import { redirect } from "next/navigation";
+import { cache } from "react";
 
 const Page = async () => {
   const session = await auth();
-  console.log(session?.user);
 
   if (!session) {
     redirect("/login");

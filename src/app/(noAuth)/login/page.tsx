@@ -1,12 +1,16 @@
-"use server";
-
-import Link from "next/link";
-import FormLogin from "./Form/FormLogin";
-import GoogleButton from "@/components/SocialButtons/GoogleButton";
-import GithubButton from "@/components/SocialButtons/GithubButton";
 import FacebookButton from "@/components/SocialButtons/FacebookButton";
+import GithubButton from "@/components/SocialButtons/GithubButton";
+import GoogleButton from "@/components/SocialButtons/GoogleButton";
 import SvgInstagram from "@/components/svg/SvgInstagram";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
+import FormLogin from "./FormLogin";
+
+export const metadata: Metadata = {
+  title: "Instagram | Login",
+  description: "Login into your instagram account",
+};
 
 const Page = () => {
   return (

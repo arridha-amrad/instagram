@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import Post from "./Post";
 import MySpinner from "@/components/Spinner";
 import { TPost } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";
+import { useEffect } from "react";
+import Post from "./Post";
 
 type Props = {
   posts: TPost[];

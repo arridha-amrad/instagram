@@ -2,21 +2,24 @@
 
 import { cn } from "@/lib/utils";
 import { ButtonHTMLAttributes, ReactNode } from "react";
+import MySpinner from "../Spinner";
 
 type Props = {
   children: ReactNode;
+  isLoading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button = ({ children, ...props }: Props) => {
+const Button = ({ children, isLoading = false, ...props }: Props) => {
   return (
     <button
       {...props}
+      disabled={isLoading}
       className={cn(
-        "px-3 py-2 gap-2 leading-5 disabled:brightness-125 duration-200 transition-all ease-linear font-medium rounded-md bg-skin-fill text-sm text-white",
-        props.className
+        "gap-2 rounded-md bg-skin-fill px-3 py-2 text-sm font-medium leading-5 text-white transition-all duration-200 ease-linear disabled:brightness-125",
+        props.className,
       )}
     >
-      {children}
+      {isLoading ? <MySpinner /> : children}
     </button>
   );
 };

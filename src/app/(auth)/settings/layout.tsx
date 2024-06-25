@@ -4,9 +4,7 @@ import LinkEditProfile from "@/components/PageSettings/Links/LinkEditProfile";
 import SvgMeta from "@/components/svg/SvgMeta";
 import {
   DocumentTextIcon,
-  LockClosedIcon,
   ShieldCheckIcon,
-  UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
