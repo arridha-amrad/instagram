@@ -5,19 +5,22 @@ import { TComment } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {
   comments: TComment[];
+  currPathname: string;
 };
 
-const Modal = ({ comments }: Props) => {
+const Modal = ({ comments, currPathname }: Props) => {
   const router = useRouter();
   const { reset } = useReplySetter();
   const { post } = usePostStore();
   const { setComments } = useCommentsStore();
+
+  const pathname = usePathname();
 
   useEffect(() => {
     setComments(comments);
@@ -29,6 +32,11 @@ const Modal = ({ comments }: Props) => {
     document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
     reset();
   };
+
+  if (pathname !== currPathname) {
+    document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
+    return null;
+  }
 
   return createPortal(
     <section className="fixed inset-0 flex items-center justify-center">

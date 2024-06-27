@@ -10,6 +10,8 @@ type CommentTarget = {
 
 interface State {
   commentTarget: CommentTarget | null;
+  isFocusToCommentForm: boolean;
+  setFocusToCommentForm: (isFocus: boolean) => void;
   setCommentTarget: (data: CommentTarget) => void;
   reset: () => void;
 }
@@ -18,6 +20,12 @@ export const useReplySetter = create<State>()(
   devtools(
     immer((set) => ({
       commentTarget: null,
+      isFocusToCommentForm: false,
+      setFocusToCommentForm(isFocus) {
+        set((state) => {
+          state.isFocusToCommentForm = isFocus;
+        });
+      },
       setCommentTarget(data: CommentTarget) {
         set((state: State) => {
           state.commentTarget = data;
@@ -31,7 +39,7 @@ export const useReplySetter = create<State>()(
     })),
     {
       enabled: process.env.NODE_ENV === "development",
-      anonymousActionType: "reply_setter",
+      anonymousActionType: "useReplySetter",
     },
   ),
 );

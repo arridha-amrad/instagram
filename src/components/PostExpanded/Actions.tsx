@@ -1,6 +1,6 @@
 import { TPost } from "@/fetchings/type";
 import { formatDistanceToNowStrict } from "date-fns";
-
+import { useReplySetter } from "@/stores/ReplySetter";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import PostLikeButton from "../ButtonLikePost";
 
@@ -8,12 +8,13 @@ type Props = {
   post: TPost;
 };
 const Actions = ({ post }: Props) => {
+  const { setFocusToCommentForm } = useReplySetter();
   return (
     <section id="post_actions_and_info">
       <div className="w-full px-4 py-2">
         <div className="flex items-center gap-3 pt-2">
           <PostLikeButton post={post} />
-          <button>
+          <button onClick={() => setFocusToCommentForm(true)}>
             <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
           </button>
         </div>

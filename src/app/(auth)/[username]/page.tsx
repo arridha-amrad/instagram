@@ -2,12 +2,24 @@ import Profile from "@/components/PageProfile";
 import Posts from "@/components/PageProfile/Posts";
 import { fetchUser } from "@/fetchings/user";
 import { auth } from "@/auth";
+import { Metadata } from "next";
 
 type Props = {
   params: {
     username: string;
   };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const user = await fetchUser({
+    username: params.username,
+  });
+
+  return {
+    title: `${user?.name} (@${params.username}) • Instagram`,
+    description: `${params.username} instagram profile page`,
+  };
+}
 
 const Page = async ({ params }: Props) => {
   const session = await auth();

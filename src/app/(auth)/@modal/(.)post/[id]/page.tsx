@@ -14,7 +14,7 @@ const Page = async ({ params }: Props) => {
     postId: params.id,
     userId: session?.user.id,
   });
-  return <Modal comments={comments} />;
+  return <Modal currPathname={`/post/${params.id}`} comments={comments} />;
 };
 
 export default Page;

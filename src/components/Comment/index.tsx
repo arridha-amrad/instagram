@@ -6,6 +6,7 @@ import { useState } from "react";
 import CommentLikeButton from "./CommentLikeButton";
 import Replies from "./Replies";
 import ShowReplies from "./ShowReplies";
+import Link from "next/link";
 
 type Props = {
   comment: TComment;
@@ -23,7 +24,12 @@ const CommentCard = ({ comment }: Props) => {
       <div className="flex-1 basis-0 overflow-hidden">
         <div className="flex w-full pt-0.5">
           <div className="flex-1 space-x-2 break-words text-sm">
-            <h1 className="inline font-semibold">{comment.owner.username}</h1>
+            <Link
+              href={`/${comment.owner.username}`}
+              className="inline font-semibold"
+            >
+              {comment.owner.username}
+            </Link>
             <p className="inline">{comment.message}</p>
           </div>
           <div className="aspect-square w-5 flex-none">

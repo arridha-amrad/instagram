@@ -21,24 +21,32 @@ const CommentInput = ({ message, setMessage }: Props) => {
   }, [commentTarget?.commentId]);
 
   const ref = useRef<HTMLInputElement | null>(null);
+  const { setFocusToCommentForm, isFocusToCommentForm } = useReplySetter();
+
+  useEffect(() => {
+    if (isFocusToCommentForm) {
+      ref.current?.focus();
+    }
+  }, [isFocusToCommentForm]);
 
   return (
-    <div className="relative flex items-center w-full h-full">
+    <div className="relative flex h-full w-full items-center">
       {pending && (
-        <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80">
           <MySpinner />
         </div>
       )}
-      <div className="flex-1">
+      <div className="flex-1 px-2">
         <fieldset disabled={pending}>
           <input
+            onBlur={() => setFocusToCommentForm(false)}
             ref={ref}
             value={message}
             name="message"
             onChange={(e) => setMessage(e.target.value)}
             type="text"
             placeholder="Add comment..."
-            className="w-full text-sm h-12 flex-1 border-none bg-background focus:ring-0 px-4"
+            className="h-12 w-full flex-1 rounded-md border-none bg-background px-4 text-sm focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
           />
         </fieldset>
       </div>
