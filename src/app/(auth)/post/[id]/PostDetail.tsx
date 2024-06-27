@@ -1,27 +1,28 @@
 "use client";
 
 import PostExpanded from "@/components/PostExpanded";
-import { TPost } from "@/fetchings/type";
+import { TComment } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useEffect } from "react";
 
 type Props = {
-  post: TPost;
+  comments: TComment[];
 };
 
-const PostDetail = ({ post }: Props) => {
+const PostDetail = ({ comments }: Props) => {
   const { setComments } = useCommentsStore();
-  const { setPosts, posts } = usePostStore();
+  const { posts } = usePostStore();
+
   useEffect(() => {
-    setComments(post.comments);
-    setPosts([post]);
-  }, []);
-  const myPost = posts[0];
-  if (!myPost) return null;
+    setComments(comments);
+  }, [comments]);
+
+  if (!posts[0]) return null;
+
   return (
     <div className="mx-6 flex flex-1 basis-0 border border-skin">
-      <PostExpanded post={myPost} />
+      <PostExpanded post={posts[0]} />
     </div>
   );
 };

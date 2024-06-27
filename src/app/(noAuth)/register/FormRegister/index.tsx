@@ -6,7 +6,7 @@ import TextInput from "@/components/core/TextInput";
 import { cn } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useRef, useState } from "react";
-import { registerAction } from "./action-register";
+import { registerAction } from "./actionRegister";
 
 const FormRegister = () => {
   const [isShow, setShow] = useState(false);

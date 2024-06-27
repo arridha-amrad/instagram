@@ -1,7 +1,8 @@
 import { TPost } from "@/fetchings/type";
 import { formatDistanceToNowStrict } from "date-fns";
-import PostLikeButton from "../PostLikeButton";
+
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import PostLikeButton from "../ButtonLikePost";
 
 type Props = {
   post: TPost;

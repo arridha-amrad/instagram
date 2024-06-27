@@ -82,7 +82,8 @@ export const useCommentsStore = create<State & Actions>()(
     })),
     {
       enabled: process.env.NODE_ENV === "development",
-      anonymousActionType: "comments_store",
+      anonymousActionType: "useCommentStore",
+      name: "Comments",
     },
   ),
 );

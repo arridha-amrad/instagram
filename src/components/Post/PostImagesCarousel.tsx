@@ -18,10 +18,8 @@ type Props = {
 
 const PostImagesCarousel = ({ urls }: Props) => {
   const maxIndex = urls.length - 1;
-
   const [ref, { height, width }] = useMeasure();
   const [position, setPosition] = useState(0);
-
   const [index, setIndex] = useState(0);
 
   const toRight = () => {

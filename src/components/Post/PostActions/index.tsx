@@ -1,6 +1,6 @@
-import PostLikeButton from "@/components/PostLikeButton";
+import ButtonLikePost from "@/components/ButtonLikePost";
 import { TPost } from "@/fetchings/type";
-import { usePostDetailStore } from "@/lib/zustand/postDetailPage/usePostDetailState";
+import { usePostStore } from "@/stores/PostStore";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
@@ -9,12 +9,12 @@ type Props = {
 };
 
 const PostActions = ({ post }: Props) => {
-  const { setPost } = usePostDetailStore();
+  const { setPosts } = usePostStore();
   return (
     <div className="flex h-[50px] items-center gap-3">
-      <PostLikeButton post={post} />
+      <ButtonLikePost post={post} />
       <Link
-        onClick={() => setPost(post)}
+        onClick={() => setPosts([post])}
         scroll={false}
         href={`/post/${post.id}`}
       >

@@ -10,7 +10,7 @@ type State = {
 
 type Actions = {
   setPosts: (posts: TPost[]) => void;
-  likePost: (post: TPost) => void;
+  likePost: (postId: string) => void;
   addPost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
 };
@@ -40,9 +40,9 @@ export const usePostStore = create<State & Actions>()(
           state.posts.unshift(post);
         });
       },
-      likePost(post) {
+      likePost(postId) {
         set((state) => {
-          const currPost = state.posts.find((p) => p.id === post.id);
+          const currPost = state.posts.find((p) => p.id === postId);
           if (currPost) {
             if (currPost.isLiked) {
               currPost.isLiked = false;
@@ -56,7 +56,8 @@ export const usePostStore = create<State & Actions>()(
       },
     })),
     {
-      anonymousActionType: "posts_store",
+      anonymousActionType: "usePostStore",
+      name: "Posts",
       enabled: process.env.NODE_ENV === "development",
     },
   ),

@@ -6,13 +6,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import FormLogin from "./FormLogin";
+import { auth } from "@/auth";
+import { RedirectType, redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Instagram | Login",
   description: "Login into your instagram account",
 };
 
-const Page = () => {
+const Page = async () => {
+  const session = await auth();
+  if (session) {
+    redirect("/", RedirectType.replace);
+  }
   return (
     <section className="flex">
       <div className="relative hidden w-full max-w-sm lg:block">

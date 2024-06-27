@@ -3,20 +3,25 @@ import Posts from "@/components/Posts";
 import SuggestedUsers from "@/components/SuggestedUsers";
 import UserCard from "@/components/UserCard";
 import { fetchPosts } from "@/fetchings/postsFetching";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { cache } from "react";
+
+export const metadata: Metadata = {
+  title: "Instagram",
+  description: "Home",
+};
 
 const Page = async () => {
   const session = await auth();
-
   if (!session) {
     redirect("/login");
   }
+
   const {
     user: { username, name, image, id },
   } = session;
 
-  const posts = await cache(fetchPosts)(id);
+  const posts = await fetchPosts(id);
 
   return (
     <section className="flex w-full">

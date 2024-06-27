@@ -6,7 +6,7 @@ import TextInput from "@/components/core/TextInput";
 import { useAction } from "next-safe-action/hooks";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { loginAction } from "./action-login";
+import { loginAction } from "./actionLogin";
 
 const FormLogin = () => {
   const [isShow, setShow] = useState(false);

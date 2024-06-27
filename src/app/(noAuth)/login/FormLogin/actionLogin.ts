@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 import argon from "argon2";
 import { signIn } from "@/auth";
 import { User } from "next-auth";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { actionClient } from "@/lib/safe-action";
@@ -30,8 +29,6 @@ export const loginAction = actionClient
       parsedInput: { identity, password },
       bindArgsParsedInputs: [cbUrl],
     }) => {
-      console.log({ identity, password, cbUrl });
-
       try {
         const [dbUser] = await db
           .select()
@@ -70,13 +67,10 @@ export const loginAction = actionClient
           username: dbUser.username,
         };
 
-        await signIn("credentials", { ...myUser, redirect: false });
-
-        if (cbUrl) {
-          redirect(`${cbUrl}`);
-        } else {
-          redirect("/");
-        }
+        await signIn("credentials", {
+          ...myUser,
+          redirectTo: cbUrl ? cbUrl : "/",
+        });
       } catch (err) {
         throw err;
       }

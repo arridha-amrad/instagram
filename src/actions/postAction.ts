@@ -13,6 +13,8 @@ export const likePostAction = async (
   { postId, userId }: Args,
   prevState: any,
 ) => {
+  console.log({ postId, userId });
+
   try {
     let message = "";
     const isLiked = await db.query.PostLikesTable.findFirst({

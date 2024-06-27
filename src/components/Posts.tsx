@@ -2,20 +2,20 @@
 
 import MySpinner from "@/components/Spinner";
 import { TPost } from "@/fetchings/type";
-import { usePostStore } from "@/stores/PostStore";
 import { useEffect } from "react";
 import Post from "./Post";
+import { usePostStore } from "@/stores/PostStore";
 
 type Props = {
   posts: TPost[];
 };
 
 export default function Posts({ posts }: Props) {
-  const { setPosts, posts: ps, isLoadPosts } = usePostStore();
+  const { isLoadPosts, posts: ps, setPosts } = usePostStore();
 
   useEffect(() => {
     setPosts(posts);
-  }, []);
+  }, [posts]);
 
   if (isLoadPosts) {
     return (
