@@ -1,7 +1,7 @@
 "use client";
 
 import { TPost } from "@/fetchings/type";
-import { usePostDetailStore } from "@/lib/zustand/postDetailPage/usePostDetailState";
+import { usePostStore } from "@/stores/PostStore";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const PostLink = ({ children, post }: Props) => {
-  const { setPost } = usePostDetailStore();
+  const { setPost } = usePostStore();
   return (
     <Link
       onClick={() => setPost(post)}

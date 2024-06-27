@@ -5,11 +5,13 @@ import { devtools } from "zustand/middleware";
 
 type State = {
   posts: TPost[];
+  post: TPost | null;
   isLoadPosts: boolean;
 };
 
 type Actions = {
   setPosts: (posts: TPost[]) => void;
+  setPost: (post: TPost) => void;
   likePost: (postId: string) => void;
   addPost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
@@ -19,6 +21,12 @@ export const usePostStore = create<State & Actions>()(
   devtools(
     immer((set) => ({
       posts: [],
+      post: null,
+      setPost(post) {
+        set((state) => {
+          state.post = post;
+        });
+      },
       isLoadPosts: true,
       addComment(comment) {
         set((state) => {
@@ -50,6 +58,15 @@ export const usePostStore = create<State & Actions>()(
             } else {
               currPost.isLiked = true;
               currPost.sumLikes += 1;
+            }
+          }
+          if (postId === state.post?.id) {
+            if (state.post.isLiked) {
+              state.post.isLiked = false;
+              state.post.sumLikes -= 1;
+            } else {
+              state.post.isLiked = true;
+              state.post.sumLikes += 1;
             }
           }
         });

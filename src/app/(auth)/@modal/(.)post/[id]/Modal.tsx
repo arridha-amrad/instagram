@@ -2,7 +2,6 @@
 
 import PostExpanded from "@/components/PostExpanded";
 import { TComment } from "@/fetchings/type";
-import { usePostDetailStore } from "@/lib/zustand/postDetailPage/usePostDetailState";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
@@ -17,7 +16,7 @@ type Props = {
 const Modal = ({ comments }: Props) => {
   const router = useRouter();
   const { reset } = useReplySetter();
-  const { posts } = usePostStore();
+  const { post } = usePostStore();
   const { setComments } = useCommentsStore();
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const Modal = ({ comments }: Props) => {
         className="absolute inset-0 bg-background/50 backdrop-blur"
       />
       <div className="relative">
-        {!posts[0] ? <p>Post not found</p> : <PostExpanded post={posts[0]} />}
+        {!post ? <p>Post not found</p> : <PostExpanded post={post} />}
       </div>
     </section>,
     document.body,

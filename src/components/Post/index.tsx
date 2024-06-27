@@ -5,12 +5,15 @@ import CommentForm from "./CommentForm";
 import PostCardActions from "./PostActions";
 import PostCardHeader from "./PostHeader";
 import { TPost } from "@/fetchings/type";
+import Link from "next/link";
+import { usePostStore } from "@/stores/PostStore";
 
 type Props = {
   post: TPost;
 };
 
 const PostCard = ({ post }: Props) => {
+  const { setPost } = usePostStore();
   return (
     <article className="w-full">
       <PostCardHeader post={post} />
@@ -42,6 +45,18 @@ const PostCard = ({ post }: Props) => {
           </div>
         ))}
       </section>
+      <div>
+        <Link
+          onClick={() => setPost(post)}
+          scroll={false}
+          href={`/post/${post.id}`}
+        >
+          <p className="text-sm text-skin-muted">
+            {post.sumComments}&nbsp;{" "}
+            {post.sumComments > 1 ? "comments" : "comment"}
+          </p>
+        </Link>
+      </div>
       <CommentForm post={post} />
     </article>
   );

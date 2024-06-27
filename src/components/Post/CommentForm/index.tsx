@@ -6,12 +6,10 @@ import setNewCommentOnClient from "@/helpers/setNewCommentOnClient";
 import { usePostStore } from "@/stores/PostStore";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import ButtonSubmitComment from "./ButtonSubmitComment";
-import { usePostDetailStore } from "@/lib/zustand/postDetailPage/usePostDetailState";
 
 const initialState = {
   message: "",
@@ -36,7 +34,6 @@ const CommentForm = ({ post }: Props) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { addComment } = usePostStore();
-  const { setPost } = usePostDetailStore();
 
   useEffect(() => {
     if (formState.type === "success") {
@@ -58,37 +55,24 @@ const CommentForm = ({ post }: Props) => {
   }, [currId]);
 
   return (
-    <section className="py-2">
-      <Link
-        onClick={() => setPost(post)}
-        scroll={false}
-        href={`/post/${post.id}`}
-      >
-        <p className="text-sm text-skin-muted">
-          {post.sumComments}&nbsp;{" "}
-          {post.sumComments > 1 ? "comments" : "comment"}
-        </p>
-      </Link>
-
-      <form
-        ref={formRef}
-        action={(data) => {
-          setCurrId(new Date().getTime());
-          formAction(data);
-        }}
-        className="flex gap-4 border-b border-skin pb-2"
-      >
-        <input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          name="message"
-          type="text"
-          className="w-full flex-1 border-none bg-background px-0 text-sm placeholder:text-skin-muted focus:ring-0"
-          placeholder="Add a comment..."
-        />
-        {message.length > 0 && <ButtonSubmitComment />}
-      </form>
-    </section>
+    <form
+      ref={formRef}
+      action={(data) => {
+        setCurrId(new Date().getTime());
+        formAction(data);
+      }}
+      className="flex gap-4 border-b border-skin pb-2"
+    >
+      <input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        name="message"
+        type="text"
+        className="w-full flex-1 border-none bg-background px-0 text-sm placeholder:text-skin-muted focus:ring-0"
+        placeholder="Add a comment..."
+      />
+      {message.length > 0 && <ButtonSubmitComment />}
+    </form>
   );
 };
 

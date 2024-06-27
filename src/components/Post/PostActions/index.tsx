@@ -9,12 +9,12 @@ type Props = {
 };
 
 const PostActions = ({ post }: Props) => {
-  const { setPosts } = usePostStore();
+  const { setPost } = usePostStore();
   return (
     <div className="flex h-[50px] items-center gap-3">
       <ButtonLikePost post={post} />
       <Link
-        onClick={() => setPosts([post])}
+        onClick={() => setPost(post)}
         scroll={false}
         href={`/post/${post.id}`}
       >

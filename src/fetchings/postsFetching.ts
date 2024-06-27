@@ -8,7 +8,11 @@ export const fetchPosts = async (userId?: string) => {
     },
     with: {
       likes: true,
-      comments: true,
+      comments: {
+        with: {
+          replies: true,
+        },
+      },
       owner: {
         columns: {
           avatar: true,
@@ -26,7 +30,12 @@ export const fetchPosts = async (userId?: string) => {
         ? !!result.likes.find((like) => like.userId === userId)
         : false,
       sumLikes: result.likes.length,
-      sumComments: result.comments.length,
+      sumComments:
+        result.comments.length +
+        result.comments
+          .map((c) => c.replies)
+          .filter((r) => r.length > 0)
+          .reduce((total, current) => total + current.length, 0),
       comments: [] as TComment[],
     }));
   });
@@ -49,6 +58,13 @@ export const fetchUserPosts = async (userId: string): Promise<TPost[]> => {
         columns: {
           id: true,
         },
+        with: {
+          replies: {
+            columns: {
+              id: true,
+            },
+          },
+        },
       },
       likes: true,
     },
@@ -61,7 +77,12 @@ export const fetchUserPosts = async (userId: string): Promise<TPost[]> => {
   }).then((result) => {
     return result.map((data) => ({
       ...data,
-      sumComments: data.comments.length,
+      sumComments:
+        data.comments.length +
+        data.comments
+          .map((c) => c.replies)
+          .filter((r) => r.length > 0)
+          .reduce((total, current) => total + current.length, 0),
       isLiked: !!data.likes.find((like) => like.userId === userId),
       sumLikes: data.likes.length,
       comments: [],
