@@ -28,7 +28,7 @@ const PostExpanded = ({ post }: Props) => {
       </section>
       <section
         id="post_detail"
-        className="flex w-[400px] flex-col bg-background"
+        className="flex w-[500px] flex-col bg-background"
       >
         <PostOwner post={post} />
         <section

@@ -62,6 +62,8 @@ const AvatarProfile = (
           name: user.name,
         }).then(() => {
           router.refresh();
+          setIsSubmit(false);
+          toast.success("Avatar updated", { theme });
         });
       }
     }

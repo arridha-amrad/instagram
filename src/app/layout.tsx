@@ -28,12 +28,16 @@ export default async function RootLayout({
       <body className={cn(inter.className, "bg-background text-skin-base")}>
         <NextTopLoader showSpinner={false} color="#2B38C9" />
         <AppProvider session={session}>
-          <SessionProvider session={session}>
+          <SessionProvider>
             <ThemeProvider enableColorScheme={false} attribute="class">
               {children}
             </ThemeProvider>
           </SessionProvider>
-          <ToastContainer position="bottom-right" />
+          <ToastContainer
+            pauseOnHover={false}
+            hideProgressBar={true}
+            position="bottom-right"
+          />
         </AppProvider>
       </body>
     </html>
