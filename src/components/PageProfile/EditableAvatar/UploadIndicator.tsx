@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import MySpinner from "../Spinner";
+import MySpinner from "../../Spinner";
 
 const UploadIndicator = () => {
   const { pending } = useFormStatus();

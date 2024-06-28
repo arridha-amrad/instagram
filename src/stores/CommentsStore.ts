@@ -3,6 +3,11 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware";
 
+type TLikeReplyArgs = {
+  commentId: string;
+  replyId: string;
+};
+
 type State = {
   comments: TComment[];
 };
@@ -12,7 +17,7 @@ type Actions = {
   addComment: (comment: TComment) => void;
   addReply: (reply: TReply) => void;
   likeComment: (commentId: string) => void;
-  likeReply: (reply: TReply) => void;
+  likeReply: ({ commentId, replyId }: TLikeReplyArgs) => void;
   setReplies: (commentId: string, replies: TReply[]) => void;
 };
 
@@ -20,11 +25,11 @@ export const useCommentsStore = create<State & Actions>()(
   devtools(
     immer((set) => ({
       comments: [],
-      likeReply(reply) {
+      likeReply({ commentId, replyId }: TLikeReplyArgs) {
         set((state) => {
-          const comment = state.comments.find((c) => c.id === reply.commentId);
+          const comment = state.comments.find((c) => c.id === commentId);
           if (comment) {
-            const rp = comment.replies.find((r) => r.id === reply.id);
+            const rp = comment.replies.find((r) => r.id === replyId);
             if (rp) {
               if (rp.isLiked) {
                 rp.isLiked = false;

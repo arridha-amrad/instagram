@@ -19,17 +19,10 @@ const PostExpanded = ({ post }: Props) => {
 
   return (
     <div className="flex">
-      <section
-        id="post_carousel"
-        ref={ref}
-        className="h-[90vh] w-max border-r border-skin bg-background"
-      >
+      <section id="post_carousel" ref={ref} className="h-[90vh] w-max border-r border-skin bg-background">
         <Preview urls={urls} height={height} />
       </section>
-      <section
-        id="post_detail"
-        className="flex w-[500px] flex-col bg-background"
-      >
+      <section id="post_detail" className="flex w-[500px] flex-col bg-background">
         <PostOwner post={post} />
         <section
           id="post_description_and_comments"

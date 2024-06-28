@@ -15,6 +15,7 @@ type Actions = {
   likePost: (postId: string) => void;
   addPost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
+  increaseComment: () => void;
 };
 
 export const usePostStore = create<State & Actions>()(
@@ -28,6 +29,13 @@ export const usePostStore = create<State & Actions>()(
         });
       },
       isLoadPosts: true,
+      increaseComment() {
+        set((state) => {
+          if (state.post) {
+            state.post.sumComments += 1;
+          }
+        });
+      },
       addComment(comment) {
         set((state) => {
           const post = state.posts.find((p) => p.id === comment.postId);

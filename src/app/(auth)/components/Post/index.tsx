@@ -1,12 +1,11 @@
-import { HeartIcon } from "@heroicons/react/24/outline";
-
-import PostCardCarousel from "./PostImagesCarousel";
-import CommentForm from "./CommentForm";
-import PostCardActions from "./PostActions";
-import PostCardHeader from "./PostHeader";
 import { TPost } from "@/fetchings/type";
-import Link from "next/link";
 import { usePostStore } from "@/stores/PostStore";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import PostCardCarousel from "./Carousel";
+import CommentForm from "./CommentForm";
+import PostCardHeader from "./Owner";
+import PostCardActions from "./PostActions";
 
 type Props = {
   post: TPost;
@@ -32,12 +31,8 @@ const PostCard = ({ post }: Props) => {
         {post.comments.map((comment) => (
           <div className="flex items-start justify-between" key={comment.id}>
             <div>
-              <h1 className="inline pr-2 text-sm font-semibold">
-                {comment.owner.username}
-              </h1>
-              <p className="inline text-sm text-skin-muted">
-                {comment.message}
-              </p>
+              <h1 className="inline pr-2 text-sm font-semibold">{comment.owner.username}</h1>
+              <p className="inline text-sm text-skin-muted">{comment.message}</p>
             </div>
             <button className="pl-2">
               <HeartIcon className="-4 w-4" />
@@ -46,14 +41,9 @@ const PostCard = ({ post }: Props) => {
         ))}
       </section>
       <div>
-        <Link
-          onClick={() => setPost(post)}
-          scroll={false}
-          href={`/post/${post.id}`}
-        >
+        <Link onClick={() => setPost(post)} scroll={false} href={`/post/${post.id}`}>
           <p className="text-sm text-skin-muted">
-            {post.sumComments}&nbsp;{" "}
-            {post.sumComments > 1 ? "comments" : "comment"}
+            {post.sumComments}&nbsp; {post.sumComments > 1 ? "comments" : "comment"}
           </p>
         </Link>
       </div>

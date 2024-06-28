@@ -1,60 +1,46 @@
-import like from "@/actions/reply/like";
+import { likeReplyAction } from "@/actions/reply/like";
 import { TReply } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
+import { useSessionStore } from "@/stores/SessionStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
-import { useFormState } from "react-dom";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 type Props = {
   reply: TReply;
 };
 
-const initialState = {
-  type: "",
-  message: "",
-};
-
 const ButtonLikeReply = ({ reply }: Props) => {
-  const { data } = useSession();
+  const { session } = useSessionStore();
   const { likeReply } = useCommentsStore();
-  const likeAction = like.bind(null, {
-    replyId: reply.id,
-    userId: data?.user.id ?? "",
-  });
-  const [state, action] = useFormState(likeAction, initialState);
-  const [mId, setMid] = useState(0);
+  const router = useRouter();
+  const pathname = usePathname();
   const { theme } = useTheme();
 
-  useEffect(() => {
-    if (state.type === "error") {
-      toast.error(state.message, { theme });
+  const like = async () => {
+    likeReply({ commentId: reply.commentId, replyId: reply.id });
+    const authUser = session?.user;
+    if (authUser && authUser.id) {
+      const result = await likeReplyAction({ replyId: reply.id, userId: authUser.id });
+      if (result?.serverError) {
+        toast.error("Something went wrong on the server", { theme });
+        return;
+      }
+    } else {
+      router.replace(`/login?cbUrl=${pathname}`);
     }
-  }, [mId]);
+  };
 
   return (
-    <form
-      action={() => {
-        setMid(new Date().getTime());
-        likeReply(reply);
-        action();
-      }}
-    >
-      <button
-        disabled={!data?.user.id}
-        type="submit"
-        className="aspect-square w-5"
-      >
-        {reply.isLiked ? (
-          <Heart className="aspect-square w-4 fill-pink-600" />
-        ) : (
-          <HeartIcon className="aspect-square w-4" />
-        )}
-      </button>
-    </form>
+    <button onClick={like} disabled={!session?.user.id} type="submit" className="aspect-square w-5">
+      {reply.isLiked ? (
+        <Heart className="aspect-square w-4 fill-pink-600" />
+      ) : (
+        <HeartIcon className="aspect-square w-4" />
+      )}
+    </button>
   );
 };
 

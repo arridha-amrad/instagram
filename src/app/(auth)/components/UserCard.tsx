@@ -13,17 +13,12 @@ const UserCard = ({ name, username, avatar }: Props) => {
       <div className="flex flex-1 basis-0 items-start justify-start gap-3">
         <Avatar url={avatar} />
         <div className="max-w-[150px] overflow-hidden text-sm">
-          <h1 className="overflow-hidden text-ellipsis whitespace-pre-line font-semibold">
-            {username}
-          </h1>
+          <h1 className="overflow-hidden text-ellipsis whitespace-pre-line font-semibold">{username}</h1>
           <p className="line-clamp-1 text-skin-muted">{name}</p>
         </div>
       </div>
       <div className="">
-        <Link
-          className="text-sm font-medium text-skin-inverted"
-          href={`/${username}`}
-        >
+        <Link className="text-sm font-medium text-skin-inverted" href={`/${username}`}>
           visit
         </Link>
       </div>

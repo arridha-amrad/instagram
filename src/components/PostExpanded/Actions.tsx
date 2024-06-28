@@ -1,7 +1,7 @@
 import { TPost } from "@/fetchings/type";
-import { formatDistanceToNowStrict } from "date-fns";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import { formatDistanceToNowStrict } from "date-fns";
 import PostLikeButton from "../ButtonLikePost";
 
 type Props = {
@@ -21,13 +21,9 @@ const Actions = ({ post }: Props) => {
         <div className="px-1 pt-2">
           <h1 className="font-semibold">
             {post.sumLikes}
-            <span className="pl-1 text-sm">
-              {post.sumLikes > 1 ? "likes" : "like"}
-            </span>
+            <span className="pl-1 text-sm">{post.sumLikes > 1 ? "likes" : "like"}</span>
           </h1>
-          <p className="text-xs text-skin-muted">
-            {formatDistanceToNowStrict(post.createdAt)}
-          </p>
+          <p className="text-xs text-skin-muted">{formatDistanceToNowStrict(post.createdAt)}</p>
         </div>
       </div>
     </section>

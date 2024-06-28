@@ -26,21 +26,14 @@ const Reply = ({ reply }: Props) => {
           <Link href={`/${username}`} className="inline pr-1 font-semibold">
             {username}
           </Link>
-          {/* <p className="inline break-all text-sm">{message}</p> */}
           <p className="inline space-x-1 break-all text-sm">
-            {message.split(" ").map((text, i) =>
+            {message.split(" ").map((text) =>
               text.startsWith("@") ? (
-                <Link
-                  className={cn(
-                    i === 0 ? "pr-px" : "pl-px",
-                    "text-skin-inverted",
-                  )}
-                  href={`/${text.replace("@", "")}`}
-                >
-                  {text}
+                <Link className={cn("text-skin-inverted")} href={`/${text.replace("@", "")}`}>
+                  {` ${text} `}
                 </Link>
               ) : (
-                <span className={cn(i === 0 ? "pr-px" : "pl-px")}>{text}</span>
+                ` ${text} `
               ),
             )}
           </p>

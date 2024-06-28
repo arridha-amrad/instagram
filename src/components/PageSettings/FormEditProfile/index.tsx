@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
-import AvatarProfile from "../../PageProfile/AvatarProfile";
+import AvatarProfile from "../../PageProfile/EditableAvatar";
 import Inputs from "./Inputs";
 import { editProfile } from "./action";
 
@@ -62,16 +62,9 @@ const FormEditProfile = ({ user, callback }: Props) => {
     <div className="relative w-full max-w-md space-y-6">
       <div className="flex items-center justify-center gap-6">
         <div className="">
-          <AvatarProfile
-            ref={inputRef}
-            className="w-20 lg:w-20"
-            avatar={user?.avatar}
-          />
+          <AvatarProfile ref={inputRef} className="w-20 lg:w-20" avatar={user?.avatar} />
         </div>
-        <button
-          onClick={() => inputRef.current?.click()}
-          className="font-semibold text-skin-inverted"
-        >
+        <button onClick={() => inputRef.current?.click()} className="font-semibold text-skin-inverted">
           Change Avatar
         </button>
       </div>
@@ -81,11 +74,7 @@ const FormEditProfile = ({ user, callback }: Props) => {
           action(data);
         }}
       >
-        <Inputs
-          username={user?.username ?? ""}
-          name={user?.name ?? ""}
-          userInfo={user?.userInfo ?? null}
-        />
+        <Inputs username={user?.username ?? ""} name={user?.name ?? ""} userInfo={user?.userInfo ?? null} />
       </form>
     </div>
   );

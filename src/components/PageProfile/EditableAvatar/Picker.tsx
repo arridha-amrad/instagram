@@ -1,14 +1,7 @@
 "use client";
 
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import {
-  ChangeEvent,
-  Dispatch,
-  Ref,
-  SetStateAction,
-  forwardRef,
-  useRef,
-} from "react";
+import { ChangeEvent, Dispatch, Ref, SetStateAction, forwardRef, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import mergeRefs from "merge-refs";
 
@@ -34,13 +27,7 @@ const Picker = ({ setIsSubmit }: Props, ref: Ref<HTMLInputElement>) => {
       className="absolute inset-0 flex items-center justify-center rounded-full bg-black/30 opacity-0 group-hover:opacity-100"
     >
       <PhotoIcon className="aspect-square w-7" />
-      <input
-        name="image"
-        onChange={onChangeFileInput}
-        hidden
-        ref={mergeRefs(inputRef, ref)}
-        type="file"
-      />
+      <input name="image" onChange={onChangeFileInput} hidden ref={mergeRefs(inputRef, ref)} type="file" />
     </div>
   );
 };

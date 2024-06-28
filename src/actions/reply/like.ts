@@ -2,14 +2,16 @@
 
 import db from "@/lib/drizzle/db";
 import { ReplyLikesTable } from "@/lib/drizzle/schema";
+import { actionClient } from "@/lib/safe-action";
 import { and, eq } from "drizzle-orm";
+import { z } from "zod";
 
-type Args = {
-  userId: string;
-  replyId: string;
-};
+const schema = z.object({
+  userId: z.string(),
+  replyId: z.string(),
+});
 
-export default async function like({ replyId, userId }: Args, prevState: any) {
+export const likeReplyAction = actionClient.schema(schema).action(async ({ parsedInput: { replyId, userId } }) => {
   try {
     const isLiked = await db.query.ReplyLikesTable.findFirst({
       where({ userId: uid, replyId: rId }, { and, eq }) {
@@ -19,12 +21,7 @@ export default async function like({ replyId, userId }: Args, prevState: any) {
     if (isLiked) {
       await db
         .delete(ReplyLikesTable)
-        .where(
-          and(
-            eq(ReplyLikesTable.replyId, replyId),
-            eq(ReplyLikesTable.userId, userId),
-          ),
-        );
+        .where(and(eq(ReplyLikesTable.replyId, replyId), eq(ReplyLikesTable.userId, userId)));
     } else {
       await db.insert(ReplyLikesTable).values({
         replyId,
@@ -32,15 +29,9 @@ export default async function like({ replyId, userId }: Args, prevState: any) {
       });
     }
     return {
-      type: "success",
       message: "success",
     };
   } catch (err) {
-    console.log(err);
-
-    return {
-      type: "error",
-      message: "Something went wrong",
-    };
+    throw err;
   }
-}
+});

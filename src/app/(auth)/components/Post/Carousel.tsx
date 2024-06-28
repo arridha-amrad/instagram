@@ -16,7 +16,7 @@ type Props = {
   urls: PostContentUrl[];
 };
 
-const PostImagesCarousel = ({ urls }: Props) => {
+const Carousel = ({ urls }: Props) => {
   const maxIndex = urls.length - 1;
   const [ref, { height, width }] = useMeasure();
   const [position, setPosition] = useState(0);
@@ -48,11 +48,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
         </svg>
       </div>
 
-      <div
-        ref={ref}
-        className="relative overflow-hidden"
-        style={{ width: "100%", aspectRatio: 3 / 4 }}
-      >
+      <div ref={ref} className="relative overflow-hidden" style={{ width: "100%", aspectRatio: 3 / 4 }}>
         <div
           style={{
             translate: `${position}px 0px`,
@@ -73,12 +69,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
           ))}
         </div>
       </div>
-      <div
-        className={cn(
-          "absolute inset-y-0 right-2 flex items-center justify-center",
-          index >= maxIndex && "hidden",
-        )}
-      >
+      <div className={cn("absolute inset-y-0 right-2 flex items-center justify-center", index >= maxIndex && "hidden")}>
         <button
           onClick={toRight}
           className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
@@ -86,12 +77,7 @@ const PostImagesCarousel = ({ urls }: Props) => {
           <ChevronRightIcon className="aspect-square w-4" />
         </button>
       </div>
-      <div
-        className={cn(
-          "absolute inset-y-0 left-2 flex items-center justify-center",
-          index <= 0 && "hidden",
-        )}
-      >
+      <div className={cn("absolute inset-y-0 left-2 flex items-center justify-center", index <= 0 && "hidden")}>
         <button
           onClick={toLeft}
           className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
@@ -103,4 +89,4 @@ const PostImagesCarousel = ({ urls }: Props) => {
   );
 };
 
-export default PostImagesCarousel;
+export default Carousel;

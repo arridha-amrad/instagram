@@ -24,10 +24,7 @@ const CommentCard = ({ comment }: Props) => {
       <div className="flex-1 basis-0 overflow-hidden">
         <div className="flex w-full pt-0.5">
           <div className="flex-1 space-x-2 break-words text-sm">
-            <Link
-              href={`/${comment.owner.username}`}
-              className="inline font-semibold"
-            >
+            <Link href={`/${comment.owner.username}`} className="inline font-semibold">
               {comment.owner.username}
             </Link>
             <p className="inline">{comment.message}</p>
@@ -61,11 +58,7 @@ const CommentCard = ({ comment }: Props) => {
             </button>
           </div>
         </div>
-        <ShowReplies
-          isShowReplies={isShowReplies}
-          setIsShowReplies={setIsShowReplies}
-          comment={comment}
-        />
+        <ShowReplies isShowReplies={isShowReplies} setIsShowReplies={setIsShowReplies} comment={comment} />
         {isShowReplies && (
           <section>
             <Replies replies={comment.replies} />
