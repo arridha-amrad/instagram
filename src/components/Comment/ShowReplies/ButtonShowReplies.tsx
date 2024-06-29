@@ -12,7 +12,7 @@ const ButtonShowReplies = ({ sumReplies }: Props) => {
       <button
         disabled={pending}
         type="submit"
-        className="text-xs text-skin-muted"
+        className="text-xs font-semibold text-skin-muted"
       >
         See {sumReplies} replies
       </button>

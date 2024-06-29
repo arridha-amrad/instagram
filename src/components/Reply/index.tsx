@@ -4,6 +4,7 @@ import { TReply } from "@/fetchings/type";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useReplySetter } from "@/stores/ReplySetter";
 
 type Props = {
   reply: TReply;
@@ -16,6 +17,8 @@ const Reply = ({ reply }: Props) => {
     createdAt,
     message,
   } = reply;
+  console.log(reply.id);
+  const { setCommentTarget } = useReplySetter();
   return (
     <div className="flex w-full items-start gap-2 text-sm">
       <div>
@@ -27,9 +30,13 @@ const Reply = ({ reply }: Props) => {
             {username}
           </Link>
           <p className="inline space-x-1 break-all text-sm">
-            {message.split(" ").map((text) =>
+            {message.split(" ").map((text, i) =>
               text.startsWith("@") ? (
-                <Link className={cn("text-skin-inverted")} href={`/${text.replace("@", "")}`}>
+                <Link
+                  key={i}
+                  className={cn("font-medium text-blue-500")}
+                  href={`/${text.replace("@", "")}`}
+                >
                   {` ${text} `}
                 </Link>
               ) : (
@@ -38,13 +45,24 @@ const Reply = ({ reply }: Props) => {
             )}
           </p>
         </div>
-        <div className="flex gap-4 py-2 text-xs text-skin-muted">
+        <div className="flex gap-4 py-2 text-xs font-semibold text-skin-muted">
           <p className="">{formatDistanceToNowStrict(createdAt)}</p>
           {sumLikes > 0 && (
             <p>
               {sumLikes} {sumLikes > 1 ? "likes" : "like"}
             </p>
           )}
+          <button
+            onClick={() =>
+              setCommentTarget({
+                commentId: reply.commentId,
+                userId: reply.owner.id,
+                username: reply.owner.username,
+              })
+            }
+          >
+            Reply
+          </button>
         </div>
       </div>
       <div className="pt-1">

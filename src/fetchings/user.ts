@@ -8,13 +8,6 @@ type Args = {
   authUserId?: string;
 };
 
-const userColumn = {
-  id: true,
-  avatar: true,
-  name: true,
-  username: true,
-};
-
 export const fetchUser = unstable_cache(
   async (args: Args) => getUser(args),
   ["profile"],

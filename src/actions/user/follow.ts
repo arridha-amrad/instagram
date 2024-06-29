@@ -24,14 +24,7 @@ export default async function follow({ authId, userId: uId, pathname }: Args) {
   if (!isFollowed) {
     await db.insert(FollowingsTable).values({ followId: uId, userId: authId });
   } else {
-    await db
-      .delete(FollowingsTable)
-      .where(
-        and(
-          eq(FollowingsTable.followId, uId),
-          eq(FollowingsTable.userId, authId),
-        ),
-      );
+    await db.delete(FollowingsTable).where(and(eq(FollowingsTable.followId, uId), eq(FollowingsTable.userId, authId)));
   }
   revalidateTag("fetch-user");
 }

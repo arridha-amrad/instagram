@@ -1,6 +1,5 @@
+import { TPost } from "@/fetchings/type";
 import db from "@/lib/drizzle/db";
-import { TComment, TPost } from "./type";
-import { LIMIT } from "./constants";
 
 type Params = {
   userId?: string;
@@ -18,22 +17,14 @@ export const fetchPost = async ({ postId, userId }: Params): Promise<TPost | nul
     with: {
       likes: true,
       comments: {
-        limit: LIMIT,
+        columns: {
+          id: true,
+        },
         orderBy(fields, operators) {
           return operators.desc(fields.createdAt);
         },
         with: {
           replies: true,
-          likes: true,
-          owner: {
-            columns: {
-              avatar: true,
-              email: true,
-              id: true,
-              name: true,
-              username: true,
-            },
-          },
         },
       },
       owner: {
@@ -48,18 +39,6 @@ export const fetchPost = async ({ postId, userId }: Params): Promise<TPost | nul
     },
   }).then((data) => {
     if (data) {
-      const myComments: TComment[] = [];
-      for (const comment of data.comments) {
-        const data: TComment = {
-          ...comment,
-          isLiked: userId ? !!comment.likes.find((like) => like.userId === userId) : false,
-          sumLikes: comment.likes.length,
-          sumReplies: comment.replies.length,
-          sumRepliesRemaining: comment.replies.length,
-          replies: [],
-        };
-        myComments.push(data);
-      }
       return {
         ...data,
         isLiked: userId ? !!data.likes.find((like) => like.userId === userId) : false,
@@ -70,7 +49,7 @@ export const fetchPost = async ({ postId, userId }: Params): Promise<TPost | nul
             .map((c) => c.replies)
             .filter((r) => r.length > 0)
             .reduce((total, current) => total + current.length, 0),
-        comments: myComments,
+        comments: [],
       };
     }
     return null;

@@ -1,11 +1,13 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   Dispatch,
   ReactNode,
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -18,6 +20,7 @@ type State = {
   setStep: Dispatch<SetStateAction<number>>;
   isSubmitSuccessful: boolean;
   setSubmitSuccessful: Dispatch<SetStateAction<boolean>>;
+  reset: () => void;
 };
 
 const Context = createContext<State>({
@@ -29,6 +32,7 @@ const Context = createContext<State>({
   setStep: () => {},
   isSubmitSuccessful: false,
   setSubmitSuccessful: () => {},
+  reset: () => {},
 });
 
 export const CreatePostProvider = ({ children }: { children: ReactNode }) => {
@@ -36,9 +40,22 @@ export const CreatePostProvider = ({ children }: { children: ReactNode }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [step, setStep] = useState(0);
   const [isSubmitSuccessful, setSubmitSuccessful] = useState(false);
+  const reset = () => {
+    setPreview([]);
+    setFiles([]);
+    setStep(0);
+    setSubmitSuccessful(false);
+  };
+  const pathname = usePathname();
+
+  useEffect(() => {
+    reset();
+  }, [pathname]);
+
   return (
     <Context.Provider
       value={{
+        reset,
         files,
         preview,
         step,

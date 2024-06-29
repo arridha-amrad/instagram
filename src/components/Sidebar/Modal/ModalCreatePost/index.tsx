@@ -15,15 +15,11 @@ import { className } from "../../styles";
 
 const NewPostModal = () => {
   const [open, setOpen] = useState(false);
-  const { preview, step, setPreview, setStep, setFiles, isSubmitSuccessful } =
-    useCreatePost();
+  const { preview, step, reset, isSubmitSuccessful } = useCreatePost();
   const [ref, { height }] = useMeasure();
 
   const closeModal = () => {
     setOpen(false);
-    setPreview([]);
-    setStep(0);
-    setFiles([]);
   };
 
   useEffect(() => {
@@ -37,6 +33,7 @@ const NewPostModal = () => {
   useEffect(() => {
     if (isSubmitSuccessful) {
       closeModal();
+      reset();
     }
   }, [isSubmitSuccessful]);
 

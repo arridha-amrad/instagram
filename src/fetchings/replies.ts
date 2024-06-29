@@ -11,7 +11,6 @@ export const fetchReplies = async ({
   userId,
 }: Props): Promise<TReply[]> => {
   const replies = await db.query.RepliesTable.findMany({
-    limit: 5,
     orderBy(fields, operators) {
       return operators.asc(fields.createdAt);
     },

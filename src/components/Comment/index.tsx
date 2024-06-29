@@ -17,7 +17,7 @@ const CommentCard = ({ comment }: Props) => {
   const [isShowReplies, setIsShowReplies] = useState(true);
 
   return (
-    <article className="flex w-full items-start gap-2">
+    <article className="flex w-full items-start gap-2 py-2">
       <div>
         <Avatar url={comment.owner.avatar} />
       </div>
@@ -29,20 +29,18 @@ const CommentCard = ({ comment }: Props) => {
             </Link>
             <p className="inline">{comment.message}</p>
           </div>
-          <div className="aspect-square w-5 flex-none">
+          <div className="flex aspect-square w-5 flex-none items-start justify-end">
             <CommentLikeButton comment={comment} />
           </div>
         </div>
-        <div className="flex gap-4 py-2 text-xs text-skin-muted">
+        <div className="flex gap-4 py-2 text-xs font-semibold text-skin-muted">
           <div>
             <p className="">{formatDistanceToNowStrict(comment.createdAt)}</p>
           </div>
           {comment.sumLikes > 0 && (
-            <div>
-              <p>
-                {comment.sumLikes} {comment.sumLikes > 1 ? "Likes" : "Like"}
-              </p>
-            </div>
+            <p>
+              {comment.sumLikes} {comment.sumLikes > 1 ? "Likes" : "Like"}
+            </p>
           )}
           <div>
             <button
@@ -59,11 +57,7 @@ const CommentCard = ({ comment }: Props) => {
           </div>
         </div>
         <ShowReplies isShowReplies={isShowReplies} setIsShowReplies={setIsShowReplies} comment={comment} />
-        {isShowReplies && (
-          <section>
-            <Replies replies={comment.replies} />
-          </section>
-        )}
+        {isShowReplies && <Replies replies={comment.replies} />}
       </div>
     </article>
   );

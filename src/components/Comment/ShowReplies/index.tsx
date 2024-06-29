@@ -58,17 +58,11 @@ const ShowReplies = ({ comment, isShowReplies, setIsShowReplies }: Props) => {
     <div className="flex items-center gap-4 py-3">
       <div className="h-0.5 w-[30px] bg-gray-500" />
       {isShowReplies ? (
-        <button
-          onClick={() => setIsShowReplies(false)}
-          className="text-xs text-skin-muted"
-        >
+        <button onClick={() => setIsShowReplies(false)} className="text-xs font-semibold text-skin-muted">
           Hide replies
         </button>
       ) : (
-        <button
-          onClick={() => setIsShowReplies(true)}
-          className="text-xs text-skin-muted"
-        >
+        <button onClick={() => setIsShowReplies(true)} className="text-xs font-semibold text-skin-muted">
           View {comment.sumReplies} replies
         </button>
       )}

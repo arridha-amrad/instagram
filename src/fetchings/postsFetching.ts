@@ -1,5 +1,6 @@
 import db from "@/lib/drizzle/db";
 import { TComment, TPost } from "./type";
+import { unstable_cache } from "next/cache";
 
 export const fetchPosts = async (userId?: string) => {
   const posts = await db.query.PostsTable.findMany({
@@ -90,3 +91,7 @@ export const fetchUserPosts = async (userId: string): Promise<TPost[]> => {
   });
   return posts;
 };
+
+export const getUserPosts = unstable_cache(fetchUserPosts, ["user-posts"], {
+  tags: ["fetchUserPosts"],
+});
