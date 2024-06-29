@@ -3,9 +3,8 @@
 import { useState } from "react";
 import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Modal from "@/components/core/Modals/Wrapper";
-import MySpinner from "@/components/Spinner";
+import { useRouter } from "next/navigation";
 
 const Logout = () => {
   const [open, setOpen] = useState(false);
@@ -14,20 +13,20 @@ const Logout = () => {
   };
 
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   const logout = async () => {
     setLoading(true);
     try {
       await signOut({ redirect: false });
-      router.replace("/login");
+      router.replace("/login", { scroll: false });
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <fieldset className="flex items-center justify-center" disabled={loading}>
       <button onClick={() => setOpen(true)} className="py-3">
@@ -52,11 +51,11 @@ const Logout = () => {
                 Cancel
               </button>
               <Button
-                disabled={loading}
+                isLoading={loading}
                 onClick={logout}
                 className="w-32 text-sm"
               >
-                {loading ? <MySpinner /> : "Yes, Continue"}
+                Yes, Continue
               </Button>
             </section>
           </div>

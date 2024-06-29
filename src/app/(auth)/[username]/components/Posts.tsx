@@ -1,5 +1,5 @@
-import Post from "@/components/PageProfile/Post";
 import { getUserPosts } from "@/fetchings/postsFetching";
+import Post from "./Post";
 
 type Props = {
   userId: string;

@@ -1,27 +1,35 @@
 "use client";
 
-import Avatar from "../../Avatar";
-import { ChangeEvent, HTMLAttributes, Ref, forwardRef, useEffect, useRef, useState } from "react";
-import { useFormState } from "react-dom";
-import { changeAvatar, changeAvatarAction } from "./action";
-import { toast } from "react-toastify";
-import { useTheme } from "next-themes";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import UploadIndicator from "./UploadIndicator";
-import Picker from "./Picker";
+import MySpinner from "@/components/Spinner";
 import { cn } from "@/lib/utils";
 import { useSessionStore } from "@/stores/SessionStore";
-import { useAction } from "next-safe-action/hooks";
-import MySpinner from "@/components/Spinner";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import mergeRefs from "merge-refs";
+import { useSession } from "next-auth/react";
+import { useAction } from "next-safe-action/hooks";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import {
+  ChangeEvent,
+  HTMLAttributes,
+  Ref,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { toast } from "react-toastify";
+import Avatar from "@/components/Avatar";
+import { changeAvatarAction } from "./action";
 
 type Props = {
   avatar?: string | null;
 } & HTMLAttributes<HTMLDivElement>;
 
-const EditableAvatar = ({ avatar, ...props }: Props, ref: Ref<HTMLInputElement>) => {
+const EditableAvatar = (
+  { avatar, ...props }: Props,
+  ref: Ref<HTMLInputElement>,
+) => {
   const { update } = useSession();
   const { session } = useSessionStore();
   const btnRef = useRef<HTMLButtonElement | null>(null);
@@ -83,9 +91,18 @@ const EditableAvatar = ({ avatar, ...props }: Props, ref: Ref<HTMLInputElement>)
         className="absolute inset-0 flex items-center justify-center rounded-full bg-black/30 opacity-0 group-hover:opacity-100"
       >
         <PhotoIcon className="aspect-square w-7" />
-        <input name="image" onChange={onChangeFileInput} hidden ref={mergeRefs(inputRef, ref)} type="file" />
+        <input
+          name="image"
+          onChange={onChangeFileInput}
+          hidden
+          ref={mergeRefs(inputRef, ref)}
+          type="file"
+        />
       </div>
-      <Avatar url={!!preview ? preview : avatar} className={cn("w-24 sm:w-40", props.className)} />
+      <Avatar
+        url={!!preview ? preview : avatar}
+        className={cn("w-24 sm:w-40", props.className)}
+      />
       <button hidden type="submit" ref={btnRef}></button>
     </form>
   );

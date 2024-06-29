@@ -1,5 +1,5 @@
-import Profile from "@/components/PageProfile";
-import Posts from "@/components/PageProfile/Posts";
+import Profile from "@/app/(auth)/[username]/components";
+import Posts from "@/app/(auth)/[username]/components/Posts";
 import { fetchUser } from "@/fetchings/user";
 import { auth } from "@/auth";
 import { Metadata } from "next";

@@ -1,18 +1,20 @@
 import { auth } from "@/auth";
-import FormEditProfile from "@/components/PageSettings/FormEditProfile";
-
 import { fetchUser } from "@/fetchings/user";
 import { redirect } from "next/navigation";
+import FormEditProfile from "./components/FormEditProfile";
 
 const Page = async () => {
   const session = await auth();
+
   if (!session) {
-    redirect("/login?cbUrl=settings");
+    redirect("/login?cbUrl=/settings");
   }
+
   const profile = await fetchUser({
     username: session.user.username,
     authUserId: session.user.id,
   });
+
   return (
     <div className="w-full pl-14">
       <div>
