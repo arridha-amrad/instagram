@@ -7,6 +7,8 @@ import { useFormState } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { toast } from "react-toastify";
+import TextInput from "@/components/core/TextInput";
+import Button from "@/components/core/Button";
 
 const initialState = {
   type: "",
@@ -35,13 +37,21 @@ const FormChangePassword = () => {
   return (
     <form
       ref={ref}
-      className="flex w-full max-w-md flex-col gap-4"
+      className="flex w-full max-w-md"
       action={(data) => {
         setMid(new Date().getTime());
         action(data);
       }}
     >
-      <Inputs />
+      <fieldset disabled={pending} className="flex w-full flex-col gap-3">
+        <TextInput name="oldPassword" label="Current password" />
+        <TextInput name="newPassword" label="New password" />
+        <div className="self-end">
+          <Button type="submit" className="h-10 w-24">
+            Update
+          </Button>
+        </div>
+      </fieldset>
     </form>
   );
 };

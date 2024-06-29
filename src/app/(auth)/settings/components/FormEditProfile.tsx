@@ -1,24 +1,22 @@
 "use client";
 
 import { TProfile } from "@/fetchings/type";
+import { useSessionStore } from "@/stores/SessionStore";
 import { useSession } from "next-auth/react";
+import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { useFormState } from "react-dom";
+import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import AvatarProfile from "../../[username]/components/EditableAvatar";
 import Inputs from "./Inputs";
-import { editProfileAction } from "./action";
-import { useSessionStore } from "@/stores/SessionStore";
-import { useAction } from "next-safe-action/hooks";
+import { editProfileAction } from "./actionEditProfile";
+import EditableAvatar from "@/components/EditableAvatar";
 
 type Props = {
   user: TProfile;
-  callback?: VoidFunction;
 };
 
-const FormEditProfile = ({ user, callback }: Props) => {
+const FormEditProfile = ({ user }: Props) => {
   const { update } = useSession();
   const { session } = useSessionStore();
   const router = useRouter();
@@ -39,22 +37,23 @@ const FormEditProfile = ({ user, callback }: Props) => {
           username: session?.user.username,
           name,
         }).then(() => {
-          callback && callback();
           router.refresh();
         });
-      } else {
-        callback && callback();
       }
     }
-    if (state.type === "error") {
-      toast.error(state.message, { theme });
-    }
   }, [hasSucceeded]);
+
+  useEffect(() => {
+    if (hasErrored) {
+      toast.error("Something went wrong", { theme });
+    }
+  }, [hasErrored]);
+
   return (
     <div className="relative w-full max-w-md space-y-6">
       <div className="flex items-center justify-center gap-6">
         <div className="">
-          <AvatarProfile
+          <EditableAvatar
             ref={inputRef}
             className="w-20 lg:w-20"
             avatar={user?.avatar}
@@ -69,7 +68,7 @@ const FormEditProfile = ({ user, callback }: Props) => {
       </div>
       <form action={execute}>
         <Inputs
-          username={user?.username ?? ""}
+          isExecuting={isExecuting}
           name={user?.name ?? ""}
           userInfo={user?.userInfo ?? null}
         />

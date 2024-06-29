@@ -1,11 +1,11 @@
 import { auth } from "@/auth";
-import AvatarProfile from "@/app/(auth)/[username]/components/EditableAvatar";
-import { TProfile } from "@/fetchings/type";
-import Link from "next/link";
 import Avatar from "@/components/Avatar";
+import EditableAvatar from "@/components/EditableAvatar";
 import Button from "@/components/core/Button";
 import SvgFemale from "@/components/svg/SvgFemale";
 import SvgMale from "@/components/svg/SvgMale";
+import { TProfile } from "@/fetchings/type";
+import Link from "next/link";
 import ButtonFollow from "./ButtonFollow";
 import Settings from "./Settings";
 
@@ -21,7 +21,7 @@ export default async function Profile({ user: u }: Props) {
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center">
       <div className="flex flex-1 items-center justify-start sm:justify-center">
         {isAuthUser ? (
-          <AvatarProfile avatar={u?.avatar} />
+          <EditableAvatar avatar={u?.avatar} />
         ) : (
           <Avatar className="w-24 lg:w-40" url={u?.avatar} />
         )}

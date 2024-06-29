@@ -9,14 +9,27 @@ type Args = {
   postId: string;
 };
 
-export const likePostAction = async ({ postId, userId }: Args, prevState: any) => {
+export const likePostAction = async (
+  { postId, userId }: Args,
+  prevState: any,
+) => {
   try {
     let message = "";
     const isLiked = await db.query.PostLikesTable.findFirst({
-      where: and(eq(PostLikesTable.postId, postId), eq(PostLikesTable.userId, userId)),
+      where: and(
+        eq(PostLikesTable.postId, postId),
+        eq(PostLikesTable.userId, userId),
+      ),
     });
     if (isLiked) {
-      await db.delete(PostLikesTable).where(and(eq(PostLikesTable.postId, postId), eq(PostLikesTable.userId, userId)));
+      await db
+        .delete(PostLikesTable)
+        .where(
+          and(
+            eq(PostLikesTable.postId, postId),
+            eq(PostLikesTable.userId, userId),
+          ),
+        );
       message = "dislike";
     } else {
       await db.insert(PostLikesTable).values({

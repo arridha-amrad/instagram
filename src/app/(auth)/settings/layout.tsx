@@ -1,6 +1,3 @@
-import LinkChangePassword from "@/components/PageSettings/Links/LinkChangePassword";
-import LinkChangeUsername from "@/components/PageSettings/Links/LinkChangeUsername";
-import LinkEditProfile from "@/components/PageSettings/Links/LinkEditProfile";
 import SvgMeta from "@/components/svg/SvgMeta";
 import {
   DocumentTextIcon,
@@ -9,6 +6,9 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { ReactNode } from "react";
+import LinkChangePassword from "./components/Links/LinkChangePassword";
+import LinkChangeUsername from "./components/Links/LinkChangeUsername";
+import LinkEditProfile from "./components/Links/LinkEditProfile";
 
 type Props = {
   children: ReactNode;
