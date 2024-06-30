@@ -1,6 +1,6 @@
 "use client";
 
-import { actionFollow } from "@/actions/user/actionFollow";
+import { followAction } from "@/actions/follow";
 import Button from "@/components/core/Button";
 import { cn } from "@/lib/utils";
 import { useSessionStore } from "@/stores/SessionStore";
@@ -21,7 +21,7 @@ const ButtonFollow = ({ userId, isFollow }: Props) => {
   const follow = async () => {
     setPending(true);
     try {
-      await actionFollow({
+      await followAction({
         authId: session?.user.id ?? "",
         pathname,
         userId,

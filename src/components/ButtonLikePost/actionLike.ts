@@ -44,8 +44,6 @@ export const likePostAction = actionClient
       };
     } catch (err) {
       console.log(err);
-      return {
-        err: "Something went wrong",
-      };
+      throw err;
     }
   });

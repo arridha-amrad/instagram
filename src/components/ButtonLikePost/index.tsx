@@ -24,8 +24,8 @@ const ButtonLikePost = ({ post }: Props) => {
       postId: post.id,
       userId: session?.user.id ?? "",
     });
-    if (result?.data?.err) {
-      toast.error(result.data.err, { theme });
+    if (result?.serverError) {
+      toast.error("Something went wrong", { theme });
     }
   };
 

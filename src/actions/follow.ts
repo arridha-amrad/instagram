@@ -14,7 +14,7 @@ const schema = z.object({
   pathname: z.string().nullable(),
 });
 
-export const actionFollow = actionClient
+export const followAction = actionClient
   .schema(schema)
   .action(async ({ parsedInput: { authId, pathname, userId } }) => {
     if (authId === "") {

@@ -1,8 +1,9 @@
 import db from "@/lib/drizzle/db";
 import { TComment, TPost } from "./type";
 import { unstable_cache } from "next/cache";
+import { sumComments } from "@/helpers/comments";
 
-export const fetchPosts = async (userId?: string) => {
+export const fetchPosts = async (userId?: string): Promise<TPost[]> => {
   const posts = await db.query.PostsTable.findMany({
     orderBy({ createdAt }, { desc }) {
       return desc(createdAt);
@@ -10,8 +11,15 @@ export const fetchPosts = async (userId?: string) => {
     with: {
       likes: true,
       comments: {
+        columns: {
+          id: true,
+        },
         with: {
-          replies: true,
+          replies: {
+            columns: {
+              id: true,
+            },
+          },
         },
       },
       owner: {
@@ -31,12 +39,7 @@ export const fetchPosts = async (userId?: string) => {
         ? !!result.likes.find((like) => like.userId === userId)
         : false,
       sumLikes: result.likes.length,
-      sumComments:
-        result.comments.length +
-        result.comments
-          .map((c) => c.replies)
-          .filter((r) => r.length > 0)
-          .reduce((total, current) => total + current.length, 0),
+      sumComments: sumComments(result.comments),
       comments: [] as TComment[],
     }));
   });
@@ -78,12 +81,7 @@ export const fetchUserPosts = async (userId: string): Promise<TPost[]> => {
   }).then((result) => {
     return result.map((data) => ({
       ...data,
-      sumComments:
-        data.comments.length +
-        data.comments
-          .map((c) => c.replies)
-          .filter((r) => r.length > 0)
-          .reduce((total, current) => total + current.length, 0),
+      sumComments: sumComments(data.comments),
       isLiked: !!data.likes.find((like) => like.userId === userId),
       sumLikes: data.likes.length,
       comments: [],

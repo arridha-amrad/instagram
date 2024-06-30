@@ -1,53 +1,57 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import Inputs from "./Inputs";
-import { changePasswordAction } from "./action";
-import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "next-themes";
-import { toast } from "react-toastify";
-import TextInput from "@/components/core/TextInput";
 import Button from "@/components/core/Button";
-
-const initialState = {
-  type: "",
-  message: "",
-  errors: {} as any,
-};
+import TextInput from "@/components/core/TextInput";
+import { useSessionStore } from "@/stores/SessionStore";
+import { useAction } from "next-safe-action/hooks";
+import { useTheme } from "next-themes";
+import { useEffect, useRef } from "react";
+import { toast } from "react-toastify";
+import { changePasswordAction } from "./action";
 
 const FormChangePassword = () => {
-  const { data: session } = useSession();
+  const { session } = useSessionStore();
   const cp = changePasswordAction.bind(null, session?.user.id ?? "");
-  const [state, action] = useFormState(cp, initialState);
-  const [mid, setMid] = useState(0);
+  const { execute, hasErrored, hasSucceeded, isExecuting, result } =
+    useAction(cp);
+  const newPasswordError = result.validationErrors?.newPassword;
+  const oldPasswordError = result.validationErrors?.oldPassword;
   const { theme } = useTheme();
   const ref = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
-    if (state.type === "success") {
-      toast.success(state.message, { theme });
-      ref.current?.reset();
+    if (hasSucceeded) {
+      if (result.data?.message) {
+        toast.success(result.data.message, { theme });
+        ref.current?.reset();
+      }
+      if (result.data?.err) {
+        toast.error(result.data.err, { theme });
+      }
     }
-    if (state.type === "error") {
-      toast.error(state.message, { theme });
+  }, [hasSucceeded]);
+
+  useEffect(() => {
+    if (hasErrored) {
+      toast.error(result.serverError, { theme });
     }
-  }, [mid]);
+  }, [hasErrored]);
 
   return (
-    <form
-      ref={ref}
-      className="flex w-full max-w-md"
-      action={(data) => {
-        setMid(new Date().getTime());
-        action(data);
-      }}
-    >
-      <fieldset disabled={pending} className="flex w-full flex-col gap-3">
-        <TextInput name="oldPassword" label="Current password" />
-        <TextInput name="newPassword" label="New password" />
+    <form ref={ref} className="flex w-full max-w-md" action={execute}>
+      <fieldset disabled={isExecuting} className="flex w-full flex-col gap-3">
+        <TextInput
+          errorMessage={oldPasswordError && oldPasswordError[0]}
+          name="oldPassword"
+          label="Current password"
+        />
+        <TextInput
+          errorMessage={newPasswordError && newPasswordError[0]}
+          name="newPassword"
+          label="New password"
+        />
         <div className="self-end">
-          <Button type="submit" className="h-10 w-24">
+          <Button isLoading={isExecuting} type="submit" className="h-10 w-24">
             Update
           </Button>
         </div>
