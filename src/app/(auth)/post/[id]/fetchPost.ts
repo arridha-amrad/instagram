@@ -1,4 +1,5 @@
 import { TPost } from "@/fetchings/type";
+import { sumComments } from "@/helpers/comments";
 import db from "@/lib/drizzle/db";
 
 type Params = {
@@ -6,7 +7,10 @@ type Params = {
   postId: string;
 };
 
-export const fetchPost = async ({ postId, userId }: Params): Promise<TPost | null> => {
+export const fetchPost = async ({
+  postId,
+  userId,
+}: Params): Promise<TPost | null> => {
   const post = await db.query.PostsTable.findFirst({
     where({ id }, { eq }) {
       return eq(id, postId);
@@ -24,7 +28,11 @@ export const fetchPost = async ({ postId, userId }: Params): Promise<TPost | nul
           return operators.desc(fields.createdAt);
         },
         with: {
-          replies: true,
+          replies: {
+            columns: {
+              id: true,
+            },
+          },
         },
       },
       owner: {
@@ -41,14 +49,11 @@ export const fetchPost = async ({ postId, userId }: Params): Promise<TPost | nul
     if (data) {
       return {
         ...data,
-        isLiked: userId ? !!data.likes.find((like) => like.userId === userId) : false,
+        isLiked: userId
+          ? !!data.likes.find((like) => like.userId === userId)
+          : false,
         sumLikes: data.likes.length,
-        sumComments:
-          data.comments.length +
-          data.comments
-            .map((c) => c.replies)
-            .filter((r) => r.length > 0)
-            .reduce((total, current) => total + current.length, 0),
+        sumComments: sumComments(data.comments),
         comments: [],
       };
     }

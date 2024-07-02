@@ -17,7 +17,8 @@ type Args = {
 };
 
 export const useCreateComment = ({ post, session }: Args) => {
-  const { setFocusToCommentForm, isFocusToCommentForm, commentTarget, id } = useReplySetter();
+  const { setFocusToCommentForm, isFocusToCommentForm, commentTarget, id } =
+    useReplySetter();
   const { theme } = useTheme();
   const { increaseComment } = usePostStore();
   const { addComment, addReply } = useCommentsStore();
@@ -56,8 +57,14 @@ export const useCreateComment = ({ post, session }: Args) => {
     }
   }, [message]);
 
-  const ca = commentAction.bind(null, replyState.commentId, post.id, session?.user.id ?? "");
-  const { execute, isExecuting, result, hasSucceeded, hasErrored } = useAction(ca);
+  const ca = commentAction.bind(
+    null,
+    replyState.commentId,
+    post.id,
+    session?.user.id ?? "",
+  );
+  const { execute, isExecuting, result, hasSucceeded, hasErrored } =
+    useAction(ca);
 
   useEffect(() => {
     if (hasErrored) {

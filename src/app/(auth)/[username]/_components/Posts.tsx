@@ -1,5 +1,5 @@
-import { getUserPosts } from "@/fetchings/postsFetching";
 import Post from "./Post";
+import { getUserPosts } from "./fetchUserPosts";
 
 type Props = {
   userId: string;

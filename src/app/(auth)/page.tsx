@@ -1,10 +1,10 @@
 import { auth } from "@/auth";
 import SuggestedUsers from "./_components/SuggestedUsers";
-import { fetchPosts } from "@/fetchings/postsFetching";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Posts from "./_components/Posts";
 import UserCard from "./_components/UserCard";
+import { fetchPosts } from "./_components/fetchPosts";
 
 export const metadata: Metadata = {
   title: "Instagram",

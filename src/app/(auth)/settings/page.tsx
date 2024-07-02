@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import { fetchUser } from "@/fetchings/user";
 import { redirect } from "next/navigation";
 import FormEditProfile from "./components/FormEditProfile";
+import { fetchUser } from "@/fetchings/user";
 
 const Page = async () => {
   const session = await auth();

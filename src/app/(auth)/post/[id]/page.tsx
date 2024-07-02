@@ -4,11 +4,11 @@ import Comments from "@/components/PostExpanded/Comments";
 import { fetchComments } from "@/fetchings/comments";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
-import Action from "./components/Action";
-import Carousel from "./components/Carousel";
-import CommentForm from "./components/CommentForm";
-import Provider from "./components/Provider";
-import TotalComments from "./components/SumComments";
+import Action from "./_components/Action";
+import Carousel from "./_components/Carousel";
+import CommentForm from "./_components/CommentForm";
+import Provider from "./_components/Provider";
+import TotalComments from "./_components/SumComments";
 import { fetchPost } from "./fetchPost";
 import { Metadata } from "next";
 

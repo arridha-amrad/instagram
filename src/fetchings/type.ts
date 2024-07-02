@@ -5,7 +5,8 @@ import {
   UserInfoTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
-import { fetchSearchHistories, fetchUser } from "./user";
+import { fetchUser } from "./user";
+import { fetchSearchHistories } from "@/components/Sidebar/fetchSearchHistories";
 
 export type TPostSchema = typeof PostsTable.$inferSelect;
 export type TCommentSchema = typeof CommentsTable.$inferSelect;

@@ -1,15 +1,15 @@
 import { auth } from "@/auth";
 import SwitchTheme from "@/components/SwitchTheme";
+import LinkHome from "./Links/LinkHome";
+import LinkProfile from "./Links/LinkProfile";
+import LinkSettings from "./Links/LinkSettings";
 import NewPostModal from "./Modal/ModalCreatePost";
 import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
 import Logout from "./Modal/ModalLogout";
-import SidebarBrand from "./SidebarBrand";
 import ButtonSearchUser from "./Search/ButtonSearchUser";
-import { fetchSearchHistories } from "@/fetchings/user";
 import Histories from "./Search/Histories";
-import LinkHome from "./Links/LinkHome";
-import LinkSettings from "./Links/LinkSettings";
-import LinkProfile from "./Links/LinkProfile";
+import SidebarBrand from "./SidebarBrand";
+import { fetchSearchHistories } from "./fetchSearchHistories";
 
 export default async function Sidebar() {
   const session = await auth();

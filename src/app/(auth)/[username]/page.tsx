@@ -1,8 +1,8 @@
-import Profile from "@/app/(auth)/[username]/components";
-import Posts from "@/app/(auth)/[username]/components/Posts";
-import { fetchUser } from "@/fetchings/user";
 import { auth } from "@/auth";
 import { Metadata } from "next";
+import Profile from "./_components";
+import Posts from "./_components/Posts";
+import { fetchUser } from "@/fetchings/user";
 
 type Props = {
   params: {
