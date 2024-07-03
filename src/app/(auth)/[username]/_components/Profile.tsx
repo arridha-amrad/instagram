@@ -25,7 +25,7 @@ export default async function Profile({ user: u }: Props) {
         {isAuthUser ? (
           <EditableAvatar avatar={u?.avatar} />
         ) : (
-          <Avatar className="w-24 lg:w-40" url={u?.avatar} />
+          <Avatar className="w-24 sm:w-40" url={u?.avatar} />
         )}
       </div>
       <div className="flex-[2] space-y-4">

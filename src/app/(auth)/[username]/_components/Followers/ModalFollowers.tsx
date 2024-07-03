@@ -1,16 +1,15 @@
 "use client";
 
-import Modal from "@/components/core/Modals/Wrapper";
-import { TOwner } from "@/fetchings/type";
-import { useEffect, useState } from "react";
 import MySpinner from "@/components/Spinner";
+import Modal from "@/components/core/Modals/Wrapper";
+import { useEffect, useState } from "react";
 import Card from "../Card";
-import { useFollowerStore } from "./store";
+import { Data, useFollowerStore } from "./store";
 
 type Props = {
   username: string;
   total: number;
-  followers: TOwner[];
+  followers: Data[];
 };
 
 export default function ModalFollowers({ total, followers }: Props) {
@@ -40,7 +39,7 @@ export default function ModalFollowers({ total, followers }: Props) {
       </button>
       {open && (
         <Modal closeModal={close}>
-          <div className="relative h-max max-h-[500px] min-h-[200px] w-full max-w-sm rounded-md border border-skin bg-background">
+          <div className="relative h-max max-h-[500px] min-h-[100px] w-full max-w-sm rounded-md border border-skin bg-background">
             {isLoading ? (
               <MySpinner />
             ) : (
@@ -48,8 +47,13 @@ export default function ModalFollowers({ total, followers }: Props) {
                 <div className="space-x-2 border-b border-skin py-2 text-center">
                   <h1 className="inline text-sm font-semibold">Followers</h1>
                 </div>
+                {users.length === 0 && (
+                  <div className="flex h-full items-center justify-center pt-4">
+                    <p className="text-sm">You have no followers</p>
+                  </div>
+                )}
                 {users.map((user) => (
-                  <Card key={user.id} user={user} />
+                  <Card isFollow={user.isFollow} key={user.id} user={user} />
                 ))}
               </div>
             )}

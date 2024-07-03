@@ -3,14 +3,16 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+export type Data = TOwner & { isFollow: boolean };
+
 type State = {
-  users: TOwner[];
+  users: Data[];
   isLoading: boolean;
 };
 
 type Action = {
-  setUsers: (users: TOwner[]) => void;
-  addUsers: (users: TOwner[]) => void;
+  setUsers: (users: Data[]) => void;
+  addUsers: (users: Data[]) => void;
 };
 
 export const useFollowerStore = create<State & Action>()(

@@ -11,10 +11,11 @@ import { toast } from "react-toastify";
 
 type Props = {
   user: TOwner;
+  isFollow?: boolean;
 };
 
-const Card = ({ user }: Props) => {
-  const [isFollow, setIsFollow] = useState(true);
+const Card = ({ user, isFollow: isF = true }: Props) => {
+  const [isFollow, setIsFollow] = useState(isF);
   const { session } = useSessionStore();
   const pathname = usePathname();
   const { theme } = useTheme();
@@ -45,15 +46,17 @@ const Card = ({ user }: Props) => {
           <p className="line-clamp-1 text-skin-muted">{user.name}</p>
         </div>
       </div>
-      <button
-        onClick={follow}
-        className={cn(
-          "w-28 rounded-md border-skin py-1 text-sm font-semibold",
-          isFollow ? "border text-skin-muted" : "bg-skin-fill text-skin-base",
-        )}
-      >
-        {isFollow ? "following" : "follow"}
-      </button>
+      {session?.user.id !== user.id && (
+        <button
+          onClick={follow}
+          className={cn(
+            "w-28 rounded-md border-skin py-1 text-sm font-semibold",
+            isFollow ? "border text-skin-muted" : "bg-skin-fill text-skin-base",
+          )}
+        >
+          {isFollow ? "following" : "follow"}
+        </button>
+      )}
     </div>
   );
 };
