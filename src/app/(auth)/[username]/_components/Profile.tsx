@@ -54,7 +54,11 @@ export default async function Profile({ user: u }: Props) {
             <span className="pr-1 font-semibold">{u?.followers} </span>
             Followers
           </div>
-          <Followings />
+          <Followings
+            userId={u?.id ?? ""}
+            total={u?.followings ?? 0}
+            username={u?.username ?? ""}
+          />
         </div>
         <div className="spacey-2 text-sm">
           <div className="flex items-center gap-1">
