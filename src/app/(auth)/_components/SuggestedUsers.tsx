@@ -7,6 +7,7 @@ type Props = {
 };
 
 const SuggestedUsers = ({ users }: Props) => {
+  if (users.length === 0) return null;
   return (
     <div className="w-full">
       <div className="flex items-center justify-between px-4 pb-4">

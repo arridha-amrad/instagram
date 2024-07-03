@@ -9,6 +9,7 @@ import Link from "next/link";
 import ButtonFollow from "./ButtonFollow";
 import Settings from "./Settings";
 import Followings from "./Followings";
+import Followers from "./Followers";
 
 type Props = {
   user: TProfile;
@@ -50,10 +51,11 @@ export default async function Profile({ user: u }: Props) {
           <div>
             <h1>{u?.sumPosts} Posts</h1>
           </div>
-          <div>
-            <span className="pr-1 font-semibold">{u?.followers} </span>
-            Followers
-          </div>
+          <Followers
+            total={u?.followers ?? 0}
+            userId={u?.id ?? ""}
+            username={u?.username ?? ""}
+          />
           <Followings
             userId={u?.id ?? ""}
             total={u?.followings ?? 0}

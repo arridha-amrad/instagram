@@ -20,29 +20,24 @@ export const followAction = actionClient
     if (authId === "") {
       redirect(`/login?cbUrl=${pathname}`);
     }
-    console.log({ authId, userId });
-
-    // const isFollowed = await db.query.FollowingsTable.findFirst({
-    //   where({ followId, userId }, { and, eq }) {
-    //     return and(eq(followId, userId), eq(userId, authId));
-    //   },
-    // });
-
-    // console.log({ isFollowed });
-
-    // if (!isFollowed) {
-    //   await db
-    //     .insert(FollowingsTable)
-    //     .values({ followId: userId, userId: authId });
-    // } else {
-    //   await db
-    //     .delete(FollowingsTable)
-    //     .where(
-    //       and(
-    //         eq(FollowingsTable.followId, userId),
-    //         eq(FollowingsTable.userId, authId),
-    //       ),
-    //     );
-    // }
-    // revalidateTag("fetch-user");
+    const isFollow = await db.query.FollowingsTable.findFirst({
+      where(fields, { and, eq }) {
+        return and(eq(fields.followId, userId), eq(fields.userId, authId));
+      },
+    });
+    if (!isFollow) {
+      await db
+        .insert(FollowingsTable)
+        .values({ followId: userId, userId: authId });
+    } else {
+      await db
+        .delete(FollowingsTable)
+        .where(
+          and(
+            eq(FollowingsTable.followId, userId),
+            eq(FollowingsTable.userId, authId),
+          ),
+        );
+    }
+    revalidateTag("fetch-user");
   });

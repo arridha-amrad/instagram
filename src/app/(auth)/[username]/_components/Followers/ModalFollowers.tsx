@@ -3,20 +3,20 @@
 import Modal from "@/components/core/Modals/Wrapper";
 import { TOwner } from "@/fetchings/type";
 import { useEffect, useState } from "react";
-import { useFollowingsStore } from "./store";
-import Card from "../Card";
 import MySpinner from "@/components/Spinner";
+import Card from "../Card";
+import { useFollowerStore } from "./store";
 
 type Props = {
   username: string;
   total: number;
-  followings: TOwner[];
+  followers: TOwner[];
 };
 
-export default function ModalFollowings({ total, followings }: Props) {
-  const { setUsers, users, isLoading } = useFollowingsStore();
+export default function ModalFollowers({ total, followers }: Props) {
+  const { setUsers, users, isLoading } = useFollowerStore();
   useEffect(() => {
-    setUsers(followings);
+    setUsers(followers);
   }, []);
   const [open, setOpen] = useState(false);
   const close = () => {
@@ -36,17 +36,17 @@ export default function ModalFollowings({ total, followings }: Props) {
     <>
       <button onClick={openModal}>
         <span className="pr-1 font-semibold">{total} </span>
-        Followings
+        Followers
       </button>
       {open && (
         <Modal closeModal={close}>
-          <div className="relative h-max max-h-[500px] w-full max-w-sm rounded-md border border-skin bg-background">
+          <div className="relative h-max max-h-[500px] min-h-[200px] w-full max-w-sm rounded-md border border-skin bg-background">
             {isLoading ? (
               <MySpinner />
             ) : (
               <div>
                 <div className="space-x-2 border-b border-skin py-2 text-center">
-                  <h1 className="inline text-sm font-semibold">Followings</h1>
+                  <h1 className="inline text-sm font-semibold">Followers</h1>
                 </div>
                 {users.map((user) => (
                   <Card key={user.id} user={user} />
