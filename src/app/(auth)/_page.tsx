@@ -33,7 +33,7 @@ const Page = async () => {
           <UserCard name={name ?? ""} username={username} avatar={image} />
         </div>
         <div className="h-4" />
-        <SuggestedUsers />
+        {/* <SuggestedUsers /> */}
       </section>
     </section>
   );
