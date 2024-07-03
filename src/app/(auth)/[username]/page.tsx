@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { Metadata } from "next";
-import Profile from "./_components";
+import Profile from "./_components/Profile";
 import Posts from "./_components/Posts";
 import { fetchUser } from "@/fetchings/user";
 

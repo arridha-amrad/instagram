@@ -1,13 +1,38 @@
+"use client";
+
+import { followAction } from "@/actions/follow";
 import Avatar from "@/components/Avatar";
+import { TOwner } from "@/fetchings/type";
+import { cn } from "@/lib/utils";
+import { useSessionStore } from "@/stores/SessionStore";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
-  avatar?: string | null;
-  username: string;
-  name: string;
+  user: TOwner;
 };
 
-const DummySuggestedUser = ({ name, username, avatar }: Props) => {
+const DummySuggestedUser = ({
+  user: { name, username, avatar, id },
+}: Props) => {
+  const pathname = usePathname();
+  const { session } = useSessionStore();
+  const [isFollow, setFollow] = useState(false);
+  const follow = async () => {
+    try {
+      setFollow((val) => !val);
+      await followAction({
+        authId: session?.user.id ?? "",
+        pathname,
+        userId: id,
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
+  };
   return (
     <div className="flex w-full items-center justify-between px-4">
       <div className="flex items-start justify-start gap-3">
@@ -22,7 +47,15 @@ const DummySuggestedUser = ({ name, username, avatar }: Props) => {
           <p className="line-clamp-1 text-skin-muted">{name}</p>
         </div>
       </div>
-      <button className="text-sm font-medium text-skin-inverted">follow</button>
+      <button
+        onClick={follow}
+        className={cn(
+          "text-sm font-semibold",
+          isFollow ? "text-skin-muted" : "text-skin-inverted",
+        )}
+      >
+        {isFollow ? "unFollow" : "follow"}
+      </button>
     </div>
   );
 };

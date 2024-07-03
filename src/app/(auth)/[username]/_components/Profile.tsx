@@ -8,6 +8,7 @@ import { TProfile } from "@/fetchings/type";
 import Link from "next/link";
 import ButtonFollow from "./ButtonFollow";
 import Settings from "./Settings";
+import Followings from "./Followings";
 
 type Props = {
   user: TProfile;
@@ -53,10 +54,7 @@ export default async function Profile({ user: u }: Props) {
             <span className="pr-1 font-semibold">{u?.followers} </span>
             Followers
           </div>
-          <div>
-            <span className="pr-1 font-semibold">{u?.followings} </span>
-            Followings
-          </div>
+          <Followings />
         </div>
         <div className="spacey-2 text-sm">
           <div className="flex items-center gap-1">

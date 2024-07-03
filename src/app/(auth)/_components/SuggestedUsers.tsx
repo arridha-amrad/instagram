@@ -19,12 +19,7 @@ const SuggestedUsers = ({ users }: Props) => {
       </div>
       <div className="mt-2 space-y-3">
         {users.map((user) => (
-          <DummySuggestedUser
-            avatar={user.avatar}
-            name={user.name}
-            username={user.username}
-            key={user.id}
-          />
+          <DummySuggestedUser user={user} key={user.id} />
         ))}
       </div>
     </div>
