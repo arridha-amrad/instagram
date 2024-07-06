@@ -11,9 +11,13 @@ type Props = {
 const PostActions = ({ post }: Props) => {
   const { setPost } = usePostStore();
   return (
-    <div className="flex h-[50px] items-center gap-3">
+    <div className="flex items-center gap-3 py-2">
       <ButtonLikePost post={post} />
-      <Link onClick={() => setPost(post)} scroll={false} href={`/post/${post.id}`}>
+      <Link
+        onClick={() => setPost(post)}
+        scroll={false}
+        href={`/post/${post.id}`}
+      >
         <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
       </Link>
     </div>

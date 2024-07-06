@@ -17,7 +17,7 @@ const LinkProfile = ({ user }: Props) => {
   const isActive = href === pathname;
   return (
     <Link className={className.button} href={`/${user.username}` ?? "/"}>
-      <Avatar url={user.image} className="w-8" />
+      <Avatar isPriority url={user.image} className="w-8" />
       <span className={cn("hidden xl:inline", isActive && "font-semibold")}>
         Profile
       </span>

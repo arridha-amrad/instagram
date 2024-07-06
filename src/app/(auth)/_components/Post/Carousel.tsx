@@ -48,7 +48,11 @@ const Carousel = ({ urls }: Props) => {
         </svg>
       </div>
 
-      <div ref={ref} className="relative overflow-hidden" style={{ width: "100%", aspectRatio: 3 / 4 }}>
+      <div
+        ref={ref}
+        className="relative overflow-hidden"
+        style={{ width: "100%", aspectRatio: 3 / 4 }}
+      >
         <div
           style={{
             translate: `${position}px 0px`,
@@ -58,7 +62,6 @@ const Carousel = ({ urls }: Props) => {
           {urls.map((url, i) => (
             <div key={i} style={{ height, width }}>
               <Image
-                loading="lazy"
                 src={url.url}
                 alt="post"
                 width={1000}
@@ -69,7 +72,12 @@ const Carousel = ({ urls }: Props) => {
           ))}
         </div>
       </div>
-      <div className={cn("absolute inset-y-0 right-2 flex items-center justify-center", index >= maxIndex && "hidden")}>
+      <div
+        className={cn(
+          "absolute inset-y-0 right-2 flex items-center justify-center",
+          index >= maxIndex && "hidden",
+        )}
+      >
         <button
           onClick={toRight}
           className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
@@ -77,7 +85,12 @@ const Carousel = ({ urls }: Props) => {
           <ChevronRightIcon className="aspect-square w-4" />
         </button>
       </div>
-      <div className={cn("absolute inset-y-0 left-2 flex items-center justify-center", index <= 0 && "hidden")}>
+      <div
+        className={cn(
+          "absolute inset-y-0 left-2 flex items-center justify-center",
+          index <= 0 && "hidden",
+        )}
+      >
         <button
           onClick={toLeft}
           className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"

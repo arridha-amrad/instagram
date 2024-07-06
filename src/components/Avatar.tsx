@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   url?: string | null;
+  isPriority?: boolean;
 } & HTMLAttributes<HTMLDivElement>;
 
-const Avatar = ({ url, ...props }: Props) => {
+const Avatar = ({ url, isPriority = false, ...props }: Props) => {
   return (
     <div
       className={cn(
@@ -17,6 +18,7 @@ const Avatar = ({ url, ...props }: Props) => {
     >
       <Image
         alt="avatar"
+        priority={isPriority}
         width={300}
         height={300}
         className="h-full w-full object-cover"
