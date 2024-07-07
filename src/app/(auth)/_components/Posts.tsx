@@ -27,8 +27,8 @@ export default function Posts({ posts }: Props) {
 
   return (
     <section className="space-y-6">
-      {ps.map((post) => (
-        <Post post={post} key={post.id} />
+      {ps.map((post, i) => (
+        <Post isFirst={i === 0} post={post} key={post.id} />
       ))}
     </section>
   );

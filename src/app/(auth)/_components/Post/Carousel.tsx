@@ -3,8 +3,10 @@
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useMeasure from "react-use-measure";
+import useEmblaCarousel from "embla-carousel-react";
+import { EmblaCarouselType } from "embla-carousel";
 
 type PostContentUrl = {
   type: "image" | "video";
@@ -14,25 +16,61 @@ type PostContentUrl = {
 
 type Props = {
   urls: PostContentUrl[];
+  isFirstPost?: boolean;
 };
 
-const Carousel = ({ urls }: Props) => {
-  const maxIndex = urls.length - 1;
-  const [ref, { height, width }] = useMeasure();
-  const [position, setPosition] = useState(0);
-  const [index, setIndex] = useState(0);
+const Carousel = ({ urls, isFirstPost }: Props) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel();
 
-  const toRight = () => {
-    setIndex((val) => (val === length - 1 ? length - 1 : (val += 1)));
-  };
+  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
 
-  const toLeft = () => {
-    setIndex((val) => (val === 0 ? 0 : (val -= 1)));
-  };
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const onDotButtonClick = useCallback(
+    (index: number) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(index);
+    },
+    [emblaApi],
+  );
+
+  const onInit = useCallback((emblaApi: EmblaCarouselType) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onDotSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  const onPrevButtonClick = useCallback(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const onNextButtonClick = useCallback(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setPrevBtnDisabled(!emblaApi.canScrollPrev());
+    setNextBtnDisabled(!emblaApi.canScrollNext());
+  }, []);
 
   useEffect(() => {
-    setPosition(-1 * index * width);
-  }, [index]);
+    if (!emblaApi) return;
+    onSelect(emblaApi);
+    onDotSelect(emblaApi);
+    onInit(emblaApi);
+    emblaApi
+      .on("reInit", onSelect)
+      .on("reInit", onInit)
+      .on("reInit", onDotSelect)
+      .on("select", onDotSelect)
+      .on("select", onSelect);
+  }, [emblaApi, onSelect, onInit, onDotSelect]);
 
   return (
     <section className="relative w-full">
@@ -49,19 +87,20 @@ const Carousel = ({ urls }: Props) => {
       </div>
 
       <div
-        ref={ref}
-        className="relative overflow-hidden"
-        style={{ width: "100%", aspectRatio: 3 / 4 }}
+        id="embla_view_port"
+        ref={emblaRef}
+        className="w-full overflow-hidden"
+        style={{ aspectRatio: 4 / 5 }}
       >
-        <div
-          style={{
-            translate: `${position}px 0px`,
-          }}
-          className={`absolute left-0 top-0 flex transition-all duration-500 ease-in`}
-        >
+        <div id="embla_container" className="flex h-full">
           {urls.map((url, i) => (
-            <div key={i} style={{ height, width }}>
+            <div
+              key={i}
+              className="h-full min-w-0 flex-shrink-0 flex-grow-0 basis-full"
+            >
               <Image
+                loading={isFirstPost ? "eager" : "lazy"}
+                priority={isFirstPost}
                 src={url.url}
                 alt="post"
                 width={1000}
@@ -72,31 +111,37 @@ const Carousel = ({ urls }: Props) => {
           ))}
         </div>
       </div>
-      <div
-        className={cn(
-          "absolute inset-y-0 right-2 flex items-center justify-center",
-          index >= maxIndex && "hidden",
-        )}
-      >
+
+      <div className="absolute inset-y-0 left-2 flex items-center justify-center">
         <button
-          onClick={toRight}
-          className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
+          disabled={prevBtnDisabled}
+          onClick={onPrevButtonClick}
+          className="flex aspect-square w-8 items-center justify-center rounded-full bg-background/50 disabled:opacity-0"
+        >
+          <ChevronLeftIcon className="aspect-square w-4" />
+        </button>
+      </div>
+      <div className="absolute inset-y-0 right-2 flex items-center justify-center">
+        <button
+          disabled={nextBtnDisabled}
+          onClick={onNextButtonClick}
+          className="flex aspect-square w-8 items-center justify-center rounded-full bg-background/50 disabled:opacity-0"
         >
           <ChevronRightIcon className="aspect-square w-4" />
         </button>
       </div>
-      <div
-        className={cn(
-          "absolute inset-y-0 left-2 flex items-center justify-center",
-          index <= 0 && "hidden",
-        )}
-      >
-        <button
-          onClick={toLeft}
-          className="inline-flex aspect-square w-7 items-center justify-center rounded-full bg-border/70"
-        >
-          <ChevronLeftIcon className="aspect-square w-4" />
-        </button>
+
+      <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center justify-center gap-1 rounded-lg p-1">
+        {scrollSnaps.map((_, i) => (
+          <button
+            onClick={() => onDotButtonClick(i)}
+            key={i}
+            className={cn(
+              "aspect-square w-3 rounded-full",
+              i === selectedIndex ? "bg-background/70" : "bg-skin-input/40",
+            )}
+          />
+        ))}
       </div>
     </section>
   );

@@ -9,14 +9,15 @@ import PostCardActions from "./PostActions";
 
 type Props = {
   post: TPost;
+  isFirst?: boolean;
 };
 
-const PostCard = ({ post }: Props) => {
+const PostCard = ({ post, isFirst = false }: Props) => {
   const { setPost } = usePostStore();
   return (
     <article className="w-full">
       <PostCardHeader post={post} />
-      <PostCardCarousel urls={post.urls} />
+      <PostCardCarousel isFirstPost={isFirst} urls={post.urls} />
       <PostCardActions post={post} />
       <section id="post_total_likes">
         <h1 className="text-sm">
