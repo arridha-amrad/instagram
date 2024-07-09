@@ -137,7 +137,7 @@ const Carousel = ({ urls, isFirstPost }: Props) => {
             onClick={() => onDotButtonClick(i)}
             key={i}
             className={cn(
-              "aspect-square w-3 rounded-full",
+              "aspect-square w-2 rounded-full",
               i === selectedIndex ? "bg-background/70" : "bg-skin-input/40",
             )}
           />

@@ -6,6 +6,7 @@ import PostCardCarousel from "./Carousel";
 import CommentForm from "./CommentForm";
 import PostCardHeader from "./Owner";
 import PostCardActions from "./PostActions";
+import TotalLikes from "./TotalLikes";
 
 type Props = {
   post: TPost;
@@ -19,17 +20,14 @@ const PostCard = ({ post, isFirst = false }: Props) => {
       <PostCardHeader post={post} />
       <PostCardCarousel isFirstPost={isFirst} urls={post.urls} />
       <PostCardActions post={post} />
-      <section id="post_total_likes">
-        <h1 className="text-sm">
-          <span className="font-semibold">{post.sumLikes}</span>{" "}
-          {post.sumLikes > 1 ? "likes" : "like"}
-        </h1>
-      </section>
+      {post.sumLikes > 0 && (
+        <TotalLikes postId={post.id} total={post.sumLikes} />
+      )}
       <section id="post_description" className="line-clamp-2 text-sm">
         <h1 className="inline pr-2 font-semibold">{post.owner.username}</h1>
         <p className="inline text-skin-muted">{post.description}</p>
       </section>
-      <section id="post_comments" className="py-2">
+      <section id="post_comments" className="py-1">
         {post.comments.map((comment) => (
           <div className="flex items-start justify-between" key={comment.id}>
             <div>

@@ -9,7 +9,7 @@ type Props = {
   children: ReactNode;
 };
 
-const Modal = ({ closeModal, children }: Props) => {
+const Wrapper = ({ closeModal, children }: Props) => {
   return createPortal(
     <div className="fixed inset-0 flex items-center justify-center">
       <div
@@ -27,4 +27,4 @@ const Modal = ({ closeModal, children }: Props) => {
   );
 };
 
-export default Modal;
+export default Wrapper;

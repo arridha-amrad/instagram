@@ -3,8 +3,8 @@
 import MySpinner from "@/components/Spinner";
 import Modal from "@/components/core/Modals/Wrapper";
 import { useEffect, useState } from "react";
-import Card from "../Card";
 import { Data, useFollowerStore } from "./store";
+import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 
 type Props = {
   username: string;
@@ -53,7 +53,11 @@ export default function ModalFollowers({ total, followers }: Props) {
                   </div>
                 )}
                 {users.map((user) => (
-                  <Card isFollow={user.isFollow} key={user.id} user={user} />
+                  <UserWithFollowButtonCard
+                    isFollow={user.isFollow}
+                    key={user.id}
+                    user={user}
+                  />
                 ))}
               </div>
             )}

@@ -4,8 +4,8 @@ import Modal from "@/components/core/Modals/Wrapper";
 import { TOwner } from "@/fetchings/type";
 import { useEffect, useState } from "react";
 import { useFollowingsStore } from "./store";
-import Card from "../Card";
 import MySpinner from "@/components/Spinner";
+import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 
 type Props = {
   username: string;
@@ -49,7 +49,7 @@ export default function ModalFollowings({ total, followings }: Props) {
                   <h1 className="inline text-sm font-semibold">Followings</h1>
                 </div>
                 {users.map((user) => (
-                  <Card key={user.id} user={user} />
+                  <UserWithFollowButtonCard key={user.id} user={user} />
                 ))}
               </div>
             )}

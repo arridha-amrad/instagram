@@ -14,7 +14,7 @@ type Props = {
   isFollow?: boolean;
 };
 
-const Card = ({ user, isFollow: isF = true }: Props) => {
+const UserWithFollowButtonCard = ({ user, isFollow: isF = true }: Props) => {
   const [isFollow, setIsFollow] = useState(isF);
   const { session } = useSessionStore();
   const pathname = usePathname();
@@ -61,4 +61,4 @@ const Card = ({ user, isFollow: isF = true }: Props) => {
   );
 };
 
-export default Card;
+export default UserWithFollowButtonCard;
