@@ -22,47 +22,48 @@ const commentSchema = zfd.formData({
 
 export const commentAction = actionClient
   .schema(commentSchema)
-  .bindArgsSchemas<[commentId: z.ZodNullable<z.ZodString>, postId: z.ZodNullable<z.ZodString>, userId: z.ZodString]>([
-    z.string().nullable(),
-    z.string().nullable(),
-    z.string(),
-  ])
-  .action(async ({ bindArgsParsedInputs: [commentId, postId, userId], parsedInput: { message } }) => {
-    try {
-      if (!commentId) {
-        if (!postId || !userId) {
+  .bindArgsSchemas([z.string().nullable(), z.string().nullable(), z.string()])
+  .action(
+    async ({
+      bindArgsParsedInputs: [commentId, postId, userId],
+      parsedInput: { message },
+    }) => {
+      try {
+        if (!commentId) {
+          if (!postId || !userId) {
+            return {
+              err: "postId and userId are null",
+            };
+          }
+          const response = await createComment({
+            message: message,
+            postId,
+            userId,
+          });
           return {
-            err: "postId and userId are null",
+            msgComment: "New comment added",
+            data: response,
+          };
+        } else {
+          if (!userId) {
+            return {
+              err: "userId cannot be null",
+            };
+          }
+          const response = await createReply({
+            commentId,
+            message: message,
+            userId,
+          });
+          return {
+            msgReply: "New reply added",
+            data: response,
           };
         }
-        const response = await createComment({
-          message: message,
-          postId,
-          userId,
-        });
-        return {
-          msgComment: "New comment added",
-          data: response,
-        };
-      } else {
-        if (!userId) {
-          return {
-            err: "userId cannot be null",
-          };
-        }
-        const response = await createReply({
-          commentId,
-          message: message,
-          userId,
-        });
-        return {
-          msgReply: "New reply added",
-          data: response,
-        };
-      }
-    } catch (err) {
-      console.log(err);
+      } catch (err) {
+        console.log(err);
 
-      throw err;
-    }
-  });
+        throw err;
+      }
+    },
+  );

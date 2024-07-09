@@ -13,6 +13,7 @@ const Page = async ({ params }: Props) => {
   const comments = await fetchComments({
     postId: params.id,
     userId: session?.user.id,
+    page: 1,
   });
   return <Modal currPathname={`/post/${params.id}`} comments={comments} />;
 };

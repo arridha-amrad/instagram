@@ -13,8 +13,6 @@ const schema = z.object({
 export const loadMoreComments = actionClient
   .schema(schema)
   .action(async ({ parsedInput: { postId, userId, page } }) => {
-    console.log({ postId, userId, page });
-
     const comments = await fetchComments({
       page,
       postId,

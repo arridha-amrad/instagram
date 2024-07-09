@@ -9,7 +9,7 @@ export default async function Posts({ userId }: Props) {
   const posts = await getUserPosts(userId);
 
   return (
-    <section className="grid w-full grid-cols-1 gap-2 pt-20 sm:grid-cols-2 md:gap-3 lg:grid-cols-3">
+    <section className="grid w-full grid-cols-3 gap-1 pt-20">
       {posts.map((post) => (
         <Post post={post} key={post.id} />
       ))}

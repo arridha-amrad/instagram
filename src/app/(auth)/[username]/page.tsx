@@ -14,7 +14,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const user = await fetchUser({
     username: params.username,
   });
-
   return {
     title: `${user?.name} (@${params.username}) • Instagram`,
     description: `${params.username} instagram profile page`,

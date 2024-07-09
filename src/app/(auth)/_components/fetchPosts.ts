@@ -39,6 +39,7 @@ export const fetchPosts = async (userId?: string): Promise<TPost[]> => {
         : false,
       sumLikes: result.likes.length,
       sumComments: sumComments(result.comments),
+      sumCommentsOnly: result.comments.length,
       comments: [] as TComment[],
     }));
   });

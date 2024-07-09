@@ -17,7 +17,7 @@ const PostLink = ({ children, post }: Props) => {
       onClick={() => setPost(post)}
       scroll={false}
       href={`/post/${post.id}`}
-      className="relative aspect-square overflow-hidden rounded-md"
+      className="relative aspect-square overflow-hidden"
     >
       {children}
     </Link>

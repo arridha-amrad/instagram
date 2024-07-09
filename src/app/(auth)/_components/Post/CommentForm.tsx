@@ -16,11 +16,13 @@ type Props = {
   post: TPost;
 };
 
-const CommentForm = ({ post }: Props) => {
+export default function CommentForm({ post }: Props) {
   const { session } = useSessionStore();
   const { theme } = useTheme();
+  // @ts-ignore
   const ca = commentAction.bind(null, null, post.id, session?.user.id ?? "");
-  const { execute, result, isExecuting, hasErrored, hasSucceeded } = useAction(ca);
+  const { execute, result, isExecuting, hasErrored, hasSucceeded } =
+    useAction(ca);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { addComment } = usePostStore();
@@ -50,7 +52,11 @@ const CommentForm = ({ post }: Props) => {
   }, [hasErrored]);
 
   return (
-    <form ref={formRef} action={execute} className="flex gap-4 border-b border-skin pb-2">
+    <form
+      ref={formRef}
+      action={execute}
+      className="flex gap-4 border-b border-skin pb-2"
+    >
       <input
         disabled={isExecuting}
         value={message}
@@ -61,11 +67,13 @@ const CommentForm = ({ post }: Props) => {
         placeholder="Add a comment..."
       />
 
-      <Button className={cn("inline-flex justify-center", !message && "hidden")} type="submit" isLoading={isExecuting}>
+      <Button
+        className={cn("inline-flex justify-center", !message && "hidden")}
+        type="submit"
+        isLoading={isExecuting}
+      >
         Submit
       </Button>
     </form>
   );
-};
-
-export default CommentForm;
+}
