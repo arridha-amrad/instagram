@@ -15,10 +15,11 @@ type Props = {
 
 const PostCard = ({ post, isFirst = false }: Props) => {
   const { setPost } = usePostStore();
+  const urls = post.urls.map((u) => u.url);
   return (
     <article className="w-full">
       <PostCardHeader post={post} />
-      <PostCardCarousel isFirstPost={isFirst} urls={post.urls} />
+      <PostCardCarousel isFirstPost={isFirst} urls={urls} />
       <PostCardActions post={post} />
       {post.sumLikes > 0 && (
         <TotalLikes postId={post.id} total={post.sumLikes} />

@@ -10,21 +10,32 @@ type TLikeReplyArgs = {
 
 type State = {
   comments: TComment[];
+  page: number;
+  total: number;
 };
 
 type Actions = {
-  setComments: (comments: TComment[]) => void;
+  setComments: (comments: TComment[], total: number) => void;
   addComment: (comment: TComment) => void;
   addReply: (reply: TReply) => void;
   likeComment: (commentId: string) => void;
   likeReply: ({ commentId, replyId }: TLikeReplyArgs) => void;
   setReplies: (commentId: string, replies: TReply[]) => void;
+  addMoreComments: (comments: TComment[]) => void;
 };
 
 export const useCommentsStore = create<State & Actions>()(
   devtools(
     immer((set) => ({
       comments: [],
+      page: 0,
+      total: 0,
+      addMoreComments(comments) {
+        set((state) => {
+          state.comments = [...state.comments, ...comments];
+          state.page += 1;
+        });
+      },
       likeReply({ commentId, replyId }: TLikeReplyArgs) {
         set((state) => {
           const comment = state.comments.find((c) => c.id === commentId);
@@ -65,9 +76,11 @@ export const useCommentsStore = create<State & Actions>()(
           }
         });
       },
-      setComments(comments) {
+      setComments(comments, total) {
         set((state) => {
           state.comments = comments;
+          state.total = total;
+          state.page = 1;
         });
       },
       addReply: (reply: TReply) => {

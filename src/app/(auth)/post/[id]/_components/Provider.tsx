@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function Provider({ children, post, comments }: Props) {
-  const { setPost, post: pst } = usePostStore();
+  const { setPost, post: pst, isLoadPost, reset: rst } = usePostStore();
   const { setComments } = useCommentsStore();
   const { reset } = useReplySetter();
 
@@ -23,14 +23,15 @@ export default function Provider({ children, post, comments }: Props) {
 
   useEffect(() => {
     reset();
+    rst();
   }, [pathname]);
 
   useEffect(() => {
     setPost(post);
-    setComments(comments);
+    setComments(comments, post.sumCommentsOnly);
   }, [post, comments]);
 
-  if (!pst) {
+  if (isLoadPost) {
     return (
       <div className="flex justify-start px-4 py-4">
         <MySpinner />

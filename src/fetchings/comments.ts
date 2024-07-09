@@ -1,17 +1,25 @@
 import db from "@/lib/drizzle/db";
 import { TComment } from "./type";
 
+const LIMIT = 5;
+
+type Args = {
+  postId: string;
+  userId?: string;
+  page: number;
+};
+
 export async function fetchComments({
   postId,
   userId,
-}: {
-  postId: string;
-  userId?: string;
-}): Promise<TComment[]> {
+  page,
+}: Args): Promise<TComment[]> {
   const comments = await db.query.CommentsTable.findMany({
     orderBy: ({ createdAt }, { desc }) => {
       return desc(createdAt);
     },
+    limit: LIMIT,
+    offset: LIMIT * (page - 1),
     where(fields, { eq }) {
       return eq(fields.postId, postId);
     },
@@ -37,8 +45,8 @@ export async function fetchComments({
       sumReplies: result.replies.length,
       sumRepliesRemaining: result.replies.length,
       replies: [],
+      page,
     }));
   });
-  // console.log(JSON.stringify(comments, null, 2));
   return comments;
 }

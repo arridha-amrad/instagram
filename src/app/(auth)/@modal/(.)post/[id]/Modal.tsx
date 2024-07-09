@@ -23,7 +23,7 @@ const Modal = ({ comments, currPathname }: Props) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    setComments(comments);
+    setComments(comments, post?.sumComments ?? 0);
     document.documentElement.classList.add("overflow-y-hidden", "pr-4");
   }, []);
 

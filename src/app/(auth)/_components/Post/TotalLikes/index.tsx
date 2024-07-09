@@ -53,7 +53,9 @@ const TotalLikes = ({ postId, total }: Props) => {
               </div>
 
               {users.length === 0 ? (
-                <MySpinner />
+                <div className="pt-4">
+                  <MySpinner />
+                </div>
               ) : (
                 users.map((user) => (
                   <UserWithFollowButtonCard

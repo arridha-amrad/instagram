@@ -7,6 +7,7 @@ type State = {
   posts: TPost[];
   post: TPost | null;
   isLoadPosts: boolean;
+  isLoadPost: boolean;
 };
 
 type Actions = {
@@ -16,6 +17,7 @@ type Actions = {
   addPost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
   increaseComment: () => void;
+  reset: () => void;
 };
 
 export const usePostStore = create<State & Actions>()(
@@ -26,9 +28,16 @@ export const usePostStore = create<State & Actions>()(
       setPost(post) {
         set((state) => {
           state.post = post;
+          state.isLoadPost = false;
+        });
+      },
+      reset() {
+        set((state) => {
+          state.isLoadPost = true;
         });
       },
       isLoadPosts: true,
+      isLoadPost: true,
       increaseComment() {
         set((state) => {
           if (state.post) {

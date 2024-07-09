@@ -31,6 +31,7 @@ export type TPost = TPostSchema & {
   isLiked: boolean;
   sumLikes: number;
   sumComments: number;
+  sumCommentsOnly: number;
 };
 
 export type TReply = TReplySchema & { owner: TOwner } & {

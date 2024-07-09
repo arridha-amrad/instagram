@@ -5,12 +5,12 @@ import { fetchComments } from "@/fetchings/comments";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import Action from "./_components/Action";
-import Carousel from "./_components/Carousel";
 import CommentForm from "./_components/CommentForm";
 import Provider from "./_components/Provider";
 import TotalComments from "./_components/SumComments";
 import { fetchPost } from "./fetchPost";
 import { Metadata } from "next";
+import Carousel from "@/components/Carousel";
 
 type Props = {
   params: {
@@ -23,18 +23,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await fetchPost({ postId: params.id, userId: session?.user.id });
 
   return {
-    title: `Istagram Post by ${post?.owner.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
+    title: `Instagram Post by ${post?.owner.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
     description: `Instagram post created by ${post?.owner.username}`,
   };
 }
 
 const Page = async ({ params }: Props) => {
   const session = await auth();
-  const post = await fetchPost({ postId: params.id, userId: session?.user.id });
-  const comments = await fetchComments({
-    postId: params.id,
-    userId: session?.user.id,
-  });
+  const [post, comments] = await Promise.all([
+    fetchPost({ postId: params.id, userId: session?.user.id }),
+    fetchComments({
+      postId: params.id,
+      userId: session?.user.id,
+      page: 1,
+    }),
+  ]);
 
   if (!post) {
     return (
@@ -65,7 +68,7 @@ const Page = async ({ params }: Props) => {
             {formatDistanceToNowStrict(post.createdAt)}
           </h2>
         </section>
-        <Carousel urls={post.urls.map((v) => v.url)} />
+        <Carousel isFirstPost={true} urls={post.urls.map((u) => u.url)} />
         <Action />
         <CommentForm />
         <TotalComments />

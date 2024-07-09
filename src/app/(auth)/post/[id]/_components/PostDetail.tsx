@@ -5,7 +5,7 @@ import { TComment } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useEffect } from "react";
-import Carousel from "./Carousel";
+import Carousel from "./_Carousel";
 
 type Props = {
   comments: TComment[];
