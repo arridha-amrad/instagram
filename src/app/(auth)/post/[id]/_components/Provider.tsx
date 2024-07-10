@@ -1,7 +1,7 @@
 "use client";
 
 import MySpinner from "@/components/Spinner";
-import { TComment, TPost } from "@/fetchings/type";
+import { TComment, TFetchComments, TPost } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
@@ -11,7 +11,7 @@ import { ReactNode, useEffect } from "react";
 type Props = {
   children: ReactNode;
   post: TPost;
-  comments: TComment[];
+  comments: TFetchComments;
 };
 
 export default function Provider({ children, post, comments }: Props) {
@@ -28,7 +28,7 @@ export default function Provider({ children, post, comments }: Props) {
 
   useEffect(() => {
     setPost(post);
-    setComments(comments, post.sumCommentsOnly);
+    setComments(comments.comments, comments.total);
   }, [post, comments]);
 
   if (isLoadPost) {

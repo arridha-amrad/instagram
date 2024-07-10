@@ -17,6 +17,12 @@ export type TOwner = Pick<
   "id" | "avatar" | "name" | "username"
 >;
 
+export type TFetchComments = {
+  comments: TComment[];
+  total: number;
+  page: number;
+};
+
 export type TComment = TCommentSchema & { owner: TOwner } & {
   isLiked: boolean;
   sumLikes: number;
@@ -31,7 +37,6 @@ export type TPost = TPostSchema & {
   isLiked: boolean;
   sumLikes: number;
   sumComments: number;
-  sumCommentsOnly: number;
 };
 
 export type TReply = TReplySchema & { owner: TOwner } & {

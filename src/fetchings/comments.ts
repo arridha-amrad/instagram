@@ -1,5 +1,7 @@
 import db from "@/lib/drizzle/db";
-import { TComment } from "./type";
+import { TFetchComments } from "./type";
+import { CommentsTable } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
 
 const LIMIT = 5;
 
@@ -13,7 +15,14 @@ export async function fetchComments({
   postId,
   userId,
   page,
-}: Args): Promise<TComment[]> {
+}: Args): Promise<TFetchComments> {
+  const [total] = await db
+    .select({
+      sum: sql<number>`cast(count(${CommentsTable.id}) as int)`,
+    })
+    .from(CommentsTable)
+    .where(eq(CommentsTable.postId, postId));
+
   const comments = await db.query.CommentsTable.findMany({
     orderBy: ({ createdAt }, { desc }) => {
       return desc(createdAt);
@@ -48,5 +57,5 @@ export async function fetchComments({
       page,
     }));
   });
-  return comments;
+  return { comments, total: total.sum, page };
 }

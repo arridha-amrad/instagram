@@ -1,7 +1,7 @@
 "use client";
 
 import PostExpanded from "@/components/PostExpanded";
-import { TComment } from "@/fetchings/type";
+import { TFetchComments } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {
-  comments: TComment[];
+  comments: TFetchComments;
   currPathname: string;
 };
 
@@ -23,7 +23,7 @@ const Modal = ({ comments, currPathname }: Props) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    setComments(comments, post?.sumComments ?? 0);
+    setComments(comments.comments, comments.total);
     document.documentElement.classList.add("overflow-y-hidden", "pr-4");
   }, []);
 

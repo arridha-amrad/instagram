@@ -68,7 +68,7 @@ const Page = async ({ params }: Props) => {
             {formatDistanceToNowStrict(post.createdAt)}
           </h2>
         </section>
-        <Carousel isFirstPost={true} urls={post.urls.map((u) => u.url)} />
+        <Carousel urls={post.urls.map((u) => u.url)} />
         <Action />
         <CommentForm />
         <TotalComments />

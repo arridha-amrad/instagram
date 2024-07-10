@@ -9,10 +9,9 @@ import { useCallback, useEffect, useState } from "react";
 
 type Props = {
   urls: string[];
-  isFirstPost?: boolean;
 };
 
-const Carousel = ({ urls, isFirstPost }: Props) => {
+const Carousel = ({ urls }: Props) => {
   const [emblaRef, emblaApi] = useEmblaCarousel();
 
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
@@ -92,8 +91,6 @@ const Carousel = ({ urls, isFirstPost }: Props) => {
               className="h-full min-w-0 flex-shrink-0 flex-grow-0 basis-full"
             >
               <Image
-                loading={isFirstPost ? "eager" : "lazy"}
-                priority={isFirstPost}
                 src={url}
                 alt="post"
                 width={1000}

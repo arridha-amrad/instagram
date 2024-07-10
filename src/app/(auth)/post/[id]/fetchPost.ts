@@ -54,7 +54,6 @@ export const fetchPost = async ({
           : false,
         sumLikes: data.likes.length,
         sumComments: sumComments(data.comments),
-        sumCommentsOnly: data.comments.length,
         comments: [],
       };
     }

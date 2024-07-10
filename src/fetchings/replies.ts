@@ -1,14 +1,18 @@
 import db from "@/lib/drizzle/db";
 import { TReply } from "./type";
 
+const LIMIT = 5;
+
 type Props = {
   commentId: string;
   userId?: string;
+  page?: number;
 };
 
 export const fetchReplies = async ({
   commentId,
   userId,
+  page = 1,
 }: Props): Promise<TReply[]> => {
   const replies = await db.query.RepliesTable.findMany({
     orderBy(fields, operators) {
@@ -17,6 +21,8 @@ export const fetchReplies = async ({
     where(fields, { eq }) {
       return eq(fields.commentId, commentId);
     },
+    limit: 5,
+    offset: LIMIT * (page - 1),
     with: {
       likes: true,
       owner: {
