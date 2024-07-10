@@ -2,11 +2,11 @@ import Avatar from "@/components/Avatar";
 import { TComment } from "@/fetchings/type";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { formatDistanceToNowStrict } from "date-fns";
+import Link from "next/link";
 import { useState } from "react";
+import ButtonFetchReplies from "./ButtonFetchReplies";
 import CommentLikeButton from "./CommentLikeButton";
 import Replies from "./Replies";
-import ShowReplies from "./ShowReplies";
-import Link from "next/link";
 
 type Props = {
   comment: TComment;
@@ -59,11 +59,13 @@ const CommentCard = ({ comment }: Props) => {
             </button>
           </div>
         </div>
-        <ShowReplies
-          isShowReplies={isShowReplies}
-          setIsShowReplies={setIsShowReplies}
-          comment={comment}
-        />
+        {comment.sumReplies > 0 && (
+          <ButtonFetchReplies
+            isShowReplies={isShowReplies}
+            setIsShowReplies={setIsShowReplies}
+            comment={comment}
+          />
+        )}
         {isShowReplies && <Replies replies={comment.replies} />}
       </div>
     </article>

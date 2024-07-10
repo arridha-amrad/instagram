@@ -1,7 +1,7 @@
 "use client";
 
 import MySpinner from "@/components/Spinner";
-import { TComment, TFetchComments, TPost } from "@/fetchings/type";
+import { TFetchComments, TPost } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";

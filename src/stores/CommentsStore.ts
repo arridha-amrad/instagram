@@ -57,8 +57,9 @@ export const useCommentsStore = create<State & Actions>()(
         set((state) => {
           const comment = state.comments.find((c) => c.id === commentId);
           if (comment) {
-            comment.replies = [...replies];
-            comment.sumRepliesRemaining -= replies.length;
+            comment.replies = [...comment.replies, ...replies];
+            comment.sumRepliesRemaining =
+              comment.sumReplies - comment.replies.length;
           }
         });
       },

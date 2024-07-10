@@ -20,7 +20,7 @@ export const changePasswordAction = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .bindArgsSchemas<[userId: z.ZodString]>([z.string()])
+  .bindArgsSchemas([z.string().min(1)])
   .action(
     async ({
       bindArgsParsedInputs: [userId],

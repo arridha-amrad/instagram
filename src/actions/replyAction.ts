@@ -1,22 +1,22 @@
 "use server";
 
 import { fetchReplies } from "@/fetchings/replies";
+import { actionClient } from "@/lib/safe-action";
+import { z } from "zod";
 
-export const getCommentReplies = async (
-  { commentId, userId }: { commentId: string; userId?: string },
-  prevState: any,
-) => {
-  try {
-    const replies = await fetchReplies({ commentId, userId });
-    return {
-      data: replies,
-      type: "success",
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      data: [],
-      type: "error",
-    };
-  }
-};
+const schema = z.object({
+  commentId: z.string(),
+  userId: z.string().optional(),
+  page: z.number().optional(),
+});
+
+export const fetchRepliesAction = actionClient
+  .schema(schema)
+  .action(async ({ parsedInput: { commentId, userId, page } }) => {
+    const replies = await fetchReplies({
+      commentId,
+      userId,
+      page,
+    });
+    return replies;
+  });

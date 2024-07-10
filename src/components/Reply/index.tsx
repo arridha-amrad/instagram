@@ -1,10 +1,10 @@
 import Avatar from "@/components/Avatar";
-import ButtonLikeReply from "./ButtonLikeReply";
 import { TReply } from "@/fetchings/type";
-import { formatDistanceToNowStrict } from "date-fns";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useReplySetter } from "@/stores/ReplySetter";
+import { formatDistanceToNowStrict } from "date-fns";
+import Link from "next/link";
+import ButtonLikeReply from "./ButtonLikeReply";
 
 type Props = {
   reply: TReply;
@@ -20,7 +20,7 @@ const Reply = ({ reply }: Props) => {
   console.log(reply.id);
   const { setCommentTarget } = useReplySetter();
   return (
-    <div className="flex w-full items-start gap-2 text-sm">
+    <div className="flex w-full items-start gap-2 py-2 text-sm">
       <div>
         <Avatar url={avatar} />
       </div>
