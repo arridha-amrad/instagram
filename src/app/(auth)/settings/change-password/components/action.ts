@@ -2,7 +2,7 @@
 
 import db from "@/lib/drizzle/db";
 import { UsersTable } from "@/lib/drizzle/schema";
-import { actionClient } from "@/lib/safe-action";
+import { CustomServerError, authActionClient } from "@/lib/safe-action";
 import { hash, verify } from "argon2";
 import { eq } from "drizzle-orm";
 import { flattenValidationErrors } from "next-safe-action";
@@ -15,39 +15,28 @@ const schema = zfd.formData({
   newPassword: zfd.text(z.string()),
 });
 
-export const changePasswordAction = actionClient
+export const changePasswordAction = authActionClient
   .schema(schema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .bindArgsSchemas([z.string().min(1)])
   .action(
-    async ({
-      bindArgsParsedInputs: [userId],
-      parsedInput: { newPassword, oldPassword },
-    }) => {
-      if (userId === "") {
-        redirect("/login?cbUrl=/setings/change-password");
-      }
+    async ({ ctx: { userId }, parsedInput: { newPassword, oldPassword } }) => {
       try {
         const user = await db.query.UsersTable.findFirst({
           where: eq(UsersTable.id, userId),
         });
         if (!user) {
-          return {
-            err: "User not found",
-          };
+          throw new CustomServerError("User not found");
         }
         if (!user.password) {
-          return {
-            err: "Your account is created using different provider",
-          };
+          throw new CustomServerError(
+            "Your account is created using different provider",
+          );
         }
         const isMatch = await verify(user.password, oldPassword);
         if (!isMatch) {
-          return {
-            err: "Wrong password",
-          };
+          throw new CustomServerError("Wrong password");
         }
         const hashedPassword = await hash(newPassword);
         await db
@@ -60,7 +49,6 @@ export const changePasswordAction = actionClient
           message: "Password changed successfully",
         };
       } catch (err) {
-        console.log(err);
         throw err;
       }
     },
