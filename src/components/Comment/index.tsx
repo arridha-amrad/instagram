@@ -5,7 +5,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
 import ButtonFetchReplies from "./ButtonFetchReplies";
-import CommentLikeButton from "./CommentLikeButton";
+import ButtonLikeComment from "./ButtonLikeComment";
 import Replies from "./Replies";
 
 type Props = {
@@ -33,7 +33,7 @@ const CommentCard = ({ comment }: Props) => {
             <p className="inline">{comment.message}</p>
           </div>
           <div className="flex aspect-square w-5 flex-none items-start justify-end">
-            <CommentLikeButton comment={comment} />
+            <ButtonLikeComment comment={comment} />
           </div>
         </div>
         <div className="flex gap-4 py-2 text-xs font-semibold text-skin-muted">

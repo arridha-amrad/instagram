@@ -2,18 +2,17 @@
 
 import db from "@/lib/drizzle/db";
 import { ReplyLikesTable } from "@/lib/drizzle/schema";
-import { actionClient } from "@/lib/safe-action";
+import { authActionClient, CustomServerError } from "@/lib/safe-action";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 const schema = z.object({
-  userId: z.string(),
   replyId: z.string(),
 });
 
-export const likeReplyAction = actionClient
+export const likeReplyAction = authActionClient
   .schema(schema)
-  .action(async ({ parsedInput: { replyId, userId } }) => {
+  .action(async ({ ctx: { userId }, parsedInput: { replyId } }) => {
     try {
       const isLiked = await db.query.ReplyLikesTable.findFirst({
         where({ userId: uid, replyId: rId }, { and, eq }) {
@@ -39,6 +38,6 @@ export const likeReplyAction = actionClient
         message: "success",
       };
     } catch (err) {
-      throw err;
+      throw new CustomServerError("Something went wrong");
     }
   });

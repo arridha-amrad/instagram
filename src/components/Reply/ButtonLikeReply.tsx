@@ -4,9 +4,8 @@ import { useSessionStore } from "@/stores/SessionStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
-import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { likeReplyAction } from "./actionLike";
+import { likeReplyAction } from "./action";
 
 type Props = {
   reply: TReply;
@@ -15,23 +14,15 @@ type Props = {
 const ButtonLikeReply = ({ reply }: Props) => {
   const { session } = useSessionStore();
   const { likeReply } = useCommentsStore();
-  const router = useRouter();
-  const pathname = usePathname();
   const { theme } = useTheme();
 
   const like = async () => {
     likeReply({ commentId: reply.commentId, replyId: reply.id });
-    const authUser = session?.user;
-    if (authUser && authUser.id) {
-      const result = await likeReplyAction({
-        replyId: reply.id,
-        userId: authUser.id,
-      });
-      if (result?.serverError) {
-        toast.error("Something went wrong on the server", { theme });
-      }
-    } else {
-      router.replace(`/login?cbUrl=${pathname}`);
+    const result = await likeReplyAction({
+      replyId: reply.id
+    });
+    if (result?.serverError) {
+      toast.error("Something went wrong", { theme });
     }
   };
 
