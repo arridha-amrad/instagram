@@ -11,7 +11,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { editProfileAction } from "./actionEditProfile";
+import { editProfileAction } from "./action";
 
 type Props = {
   user: TProfile;
@@ -22,14 +22,21 @@ const FormEditProfile = ({ user }: Props) => {
   const { session } = useSessionStore();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const epa = editProfileAction.bind(null, session?.user.id ?? "");
-  const { execute, isExecuting, hasErrored, hasSucceeded, result } =
-    useAction(epa);
   const { theme } = useTheme();
+
+  const { execute, isExecuting, hasSucceeded, result } = useAction(
+    editProfileAction,
+    {
+      onError: ({ error }) => {
+        console.log(error);
+        toast.error("Something went wrong", { theme });
+      },
+    },
+  );
 
   useEffect(() => {
     if (hasSucceeded && result.data?.message) {
-      const { name } = result.data.data;
+      const { name } = result.data.user;
       toast.success(result.data.message, { theme });
       if (name !== user?.name) {
         update({
@@ -43,12 +50,6 @@ const FormEditProfile = ({ user }: Props) => {
       }
     }
   }, [hasSucceeded]);
-
-  useEffect(() => {
-    if (hasErrored) {
-      toast.error("Something went wrong", { theme });
-    }
-  }, [hasErrored]);
 
   return (
     <div className="relative w-full max-w-md space-y-6">
@@ -74,7 +75,7 @@ const FormEditProfile = ({ user }: Props) => {
             variant="normal"
             type="text"
             id="fullName"
-            name="fullName"
+            name="name"
             defaultValue={user?.name}
           />
           <TextInput

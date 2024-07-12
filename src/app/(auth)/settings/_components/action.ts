@@ -2,11 +2,10 @@
 
 import db from "@/lib/drizzle/db";
 import { UserInfoTable, UsersTable } from "@/lib/drizzle/schema";
-import { actionClient } from "@/lib/safe-action";
+import { authActionClient } from "@/lib/safe-action";
 import { eq } from "drizzle-orm";
 import { flattenValidationErrors } from "next-safe-action";
 import { revalidateTag } from "next/cache";
-import { RedirectType, redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -18,20 +17,16 @@ const schema = zfd.formData({
   gender: zfd.text(z.string().optional()),
 });
 
-export const editProfileAction = actionClient
+export const editProfileAction = authActionClient
   .schema(schema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .bindArgsSchemas<[userId: z.ZodString]>([z.string()])
   .action(
     async ({
-      bindArgsParsedInputs: [userId],
+      ctx: { userId },
       parsedInput: { name, bio, gender, occupation, website },
     }) => {
-      if (userId === "") {
-        redirect("/login?cbUrl=/settings", RedirectType.replace);
-      }
       try {
         const response = await db.transaction(async (tx) => {
           const [result] = await tx
@@ -67,7 +62,7 @@ export const editProfileAction = actionClient
         revalidateTag("fetch-user");
         return {
           message: "Profile updated",
-          data: response,
+          user: response,
         };
       } catch (err) {
         console.log(err);

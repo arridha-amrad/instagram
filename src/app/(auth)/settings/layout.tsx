@@ -6,9 +6,9 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { ReactNode } from "react";
-import LinkChangePassword from "./components/Links/LinkChangePassword";
-import LinkChangeUsername from "./components/Links/LinkChangeUsername";
-import LinkEditProfile from "./components/Links/LinkEditProfile";
+import LinkChangePassword from "./_components/Links/LinkChangePassword";
+import LinkChangeUsername from "./_components/Links/LinkChangeUsername";
+import LinkEditProfile from "./_components/Links/LinkEditProfile";
 
 type Props = {
   children: ReactNode;

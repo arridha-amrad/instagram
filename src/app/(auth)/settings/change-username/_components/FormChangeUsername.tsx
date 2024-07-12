@@ -2,29 +2,31 @@
 
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
-import { useSessionStore } from "@/stores/SessionStore";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { changeUsernameAction } from "./actionChangeUsername";
+import { changeUsernameAction } from "./action";
 
 const FormChangeUsername = () => {
   const { update } = useSession();
-  const { session } = useSessionStore();
-  const action = changeUsernameAction.bind(null, session?.user.id ?? "");
-
-  const { execute, result, hasErrored, hasSucceeded, isExecuting } =
-    useAction(action);
-
-  const currUsernameErrValidation = result.validationErrors?.currentUsername;
-  const newUsernameErrValidation = result.validationErrors?.newUsername;
-
   const { theme } = useTheme();
   const formRef = useRef<HTMLFormElement | null>(null);
   const router = useRouter();
+
+  const { execute, result, hasSucceeded, isExecuting } = useAction(
+    changeUsernameAction,
+    {
+      onError: ({ error: { serverError } }) => {
+        toast.error(serverError, { theme });
+      },
+    },
+  );
+
+  const currUsernameErrValidation = result.validationErrors?.currentUsername;
+  const newUsernameErrValidation = result.validationErrors?.newUsername;
 
   useEffect(() => {
     if (hasSucceeded && result.data?.message) {
@@ -41,12 +43,6 @@ const FormChangeUsername = () => {
       });
     }
   }, [hasSucceeded]);
-
-  useEffect(() => {
-    if (hasErrored) {
-      toast.error(result.serverError, { theme });
-    }
-  }, [hasErrored]);
 
   return (
     <form

@@ -2,12 +2,11 @@
 
 import db from "@/lib/drizzle/db";
 import { UsersTable } from "@/lib/drizzle/schema";
+import { authActionClient, CustomServerError } from "@/lib/safe-action";
 import { eq } from "drizzle-orm";
-import { actionClient } from "@/lib/safe-action";
-import { zfd } from "zod-form-data";
-import { z } from "zod";
 import { flattenValidationErrors } from "next-safe-action";
-import { redirect } from "next/navigation";
+import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 const usernameSchema = zfd.formData({
   newUsername: zfd.text(
@@ -19,20 +18,16 @@ const usernameSchema = zfd.formData({
   currentUsername: zfd.text(z.string()),
 });
 
-export const changeUsernameAction = actionClient
+export const changeUsernameAction = authActionClient
   .schema(usernameSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .bindArgsSchemas<[userId: z.ZodString]>([z.string()])
   .action(
     async ({
-      bindArgsParsedInputs: [userId],
+      ctx: { userId },
       parsedInput: { currentUsername, newUsername },
     }) => {
-      if (userId === "") {
-        redirect("/");
-      }
       try {
         const user = await db.query.UsersTable.findFirst({
           columns: {
@@ -43,20 +38,13 @@ export const changeUsernameAction = actionClient
           },
           where: eq(UsersTable.id, userId),
         });
-
         if (!user) {
-          return {
-            err: "User not found",
-          };
+          throw new CustomServerError("User not found");
         }
-
         const isMatch = user.username === currentUsername;
         if (!isMatch) {
-          return {
-            err: "Wrong username",
-          };
+          throw new CustomServerError("Wrong username");
         }
-
         const [result] = await db
           .update(UsersTable)
           .set({
@@ -69,7 +57,6 @@ export const changeUsernameAction = actionClient
             name: UsersTable.name,
             avatar: UsersTable.avatar,
           });
-
         return {
           data: result,
           message: "Username change successfully",

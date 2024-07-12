@@ -2,20 +2,19 @@
 
 import db from "@/lib/drizzle/db";
 import { PostLikesTable } from "@/lib/drizzle/schema";
-import { actionClient } from "@/lib/safe-action";
+import { authActionClient } from "@/lib/safe-action";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 const schema = z.object({
-  userId: z.string(),
   postId: z.string(),
+  pathname: z.string(),
 });
 
-export const likePostAction = actionClient
+export const likePostAction = authActionClient
   .schema(schema)
-  .action(async ({ parsedInput: { userId, postId } }) => {
+  .action(async ({ ctx: { userId }, parsedInput: { postId } }) => {
     try {
-      let message = "";
       const isLiked = await db.query.PostLikesTable.findFirst({
         where: and(
           eq(PostLikesTable.postId, postId),
@@ -31,19 +30,13 @@ export const likePostAction = actionClient
               eq(PostLikesTable.userId, userId),
             ),
           );
-        message = "dislike";
       } else {
         await db.insert(PostLikesTable).values({
           postId,
           userId,
         });
-        message = "like";
       }
-      return {
-        message: message,
-      };
     } catch (err) {
-      console.log(err);
       throw err;
     }
   });

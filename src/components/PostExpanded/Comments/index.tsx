@@ -2,7 +2,7 @@
 
 import { useCommentsStore } from "@/stores/CommentsStore";
 import Comment from "@/components/Comment";
-import { loadMoreComments } from "./safeAction";
+import { loadMoreComments } from "./action";
 import { useParams } from "next/navigation";
 import { useSessionStore } from "@/stores/SessionStore";
 import { useState } from "react";
@@ -18,7 +18,7 @@ const Comments = () => {
     setLoading(true);
     try {
       const response = await loadMoreComments({
-        postId: id,
+        postId: id as string,
         userId: session?.user.id,
         page: page + 1,
       });

@@ -6,7 +6,6 @@ import { CustomServerError, authActionClient } from "@/lib/safe-action";
 import { hash, verify } from "argon2";
 import { eq } from "drizzle-orm";
 import { flattenValidationErrors } from "next-safe-action";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 

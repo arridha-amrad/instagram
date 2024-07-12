@@ -26,8 +26,6 @@ const ButtonFetchReplies = ({
   const [page, setPage] = useState(0);
   const { theme } = useTheme();
 
-  console.log({ id: comment.id, sRR: comment.sumRepliesRemaining });
-
   const fetchReplies = async () => {
     setIsLoading(true);
     try {

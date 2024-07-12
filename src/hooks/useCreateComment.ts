@@ -17,10 +17,15 @@ type Args = {
 };
 
 export const useCreateComment = ({ post, session }: Args) => {
-  const { setFocusToCommentForm, isFocusToCommentForm, commentTarget, id } =
-    useReplySetter();
+  const {
+    setFocusToCommentForm,
+    isFocusToCommentForm,
+    commentTarget,
+    id,
+    reset,
+  } = useReplySetter();
   const { theme } = useTheme();
-  const { increaseComment } = usePostStore();
+  const { increaseComment, addComment: adC } = usePostStore();
   const { addComment, addReply } = useCommentsStore();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
@@ -57,45 +62,39 @@ export const useCreateComment = ({ post, session }: Args) => {
     }
   }, [message]);
 
-  const ca = commentAction.bind(
-    null,
-    replyState.commentId,
-    post.id,
-    session?.user.id ?? "",
-  );
-  const { execute, isExecuting, result, hasSucceeded, hasErrored } =
-    useAction(ca);
+  const ca = commentAction.bind(null, replyState.commentId, post.id);
 
-  useEffect(() => {
-    if (hasErrored) {
-      toast.error("Something went wrong", { theme });
-    }
-  }, [hasErrored]);
-
-  useEffect(() => {
-    if (hasSucceeded && session?.user) {
-      if (result.data?.msgComment) {
+  const { execute, isExecuting } = useAction(ca, {
+    onError: ({ error: { serverError } }) => {
+      toast.error(serverError, { theme });
+    },
+    onSuccess: ({ data }) => {
+      setMessage("");
+      reset();
+      formRef.current?.reset();
+      if (!session) return;
+      if (data?.comment) {
         increaseComment();
         setNewCommentOnClient({
-          authUser: session.user,
-          comment: result.data.data as TCommentSchema,
+          authUser: session?.user,
+          comment: data.comment as TCommentSchema,
           setterFn: addComment,
         });
+        setNewCommentOnClient({
+          authUser: session?.user,
+          comment: data.comment as TCommentSchema,
+          setterFn: adC,
+        });
       }
-      if (result.data?.msgReply) {
+      if (data?.reply) {
         setNewReplyOnClient({
           authUser: session.user,
-          reply: result.data.data as TReplySchema,
+          reply: data.reply as TReplySchema,
           setterFn: addReply,
         });
       }
-      setMessage("");
-      formRef.current?.reset();
-    }
-    if (result.data?.err) {
-      toast.error(result.data.err, { theme });
-    }
-  }, [hasSucceeded]);
+    },
+  });
 
   return {
     setFocusToCommentForm,

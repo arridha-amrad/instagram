@@ -1,8 +1,8 @@
 "use client";
 
+import Avatar from "@/components/Avatar";
 import MySpinner from "@/components/Spinner";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/SessionStore";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import mergeRefs from "merge-refs";
 import { useSession } from "next-auth/react";
@@ -16,10 +16,8 @@ import {
   forwardRef,
   useEffect,
   useRef,
-  useState,
 } from "react";
 import { toast } from "react-toastify";
-import Avatar from "@/components/Avatar";
 import { changeAvatarAction } from "./action";
 
 type Props = {
@@ -31,51 +29,39 @@ const EditableAvatar = (
   ref: Ref<HTMLInputElement>,
 ) => {
   const { update } = useSession();
-  const { session } = useSessionStore();
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const [preview, setPreview] = useState("");
-  const [isSubmit, setIsSubmit] = useState(false);
   const { theme } = useTheme();
-  const ca = changeAvatarAction.bind(null, session?.user.id ?? "");
-  const { execute, result, isExecuting, hasSucceeded } = useAction(ca);
-
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    if (result.data?.err) {
-      toast.error(result.data.err, { theme });
-    }
-    if (result.data?.message && session?.user) {
-      const user = result.data.data;
-      if (user) {
-        if (user.image) {
-          setPreview(user.image);
-        }
-        update({
-          id: user.id,
-          username: user.username,
-          image: user.image,
-          name: user.name,
-        }).then(() => {
-          router.refresh();
-          setIsSubmit(false);
-          toast.success(result.data?.message, { theme });
-        });
-      }
-    }
-  }, [hasSucceeded]);
+  const { execute, result, isExecuting, hasSucceeded } = useAction(
+    changeAvatarAction,
+    {
+      onError: ({ error: { serverError } }) => {
+        toast.error(serverError, { theme });
+      },
+    },
+  );
 
   useEffect(() => {
-    if (isSubmit) {
-      btnRef.current?.click();
+    if (hasSucceeded) {
+      const user = result.data?.user;
+      update({
+        id: user?.id,
+        username: user?.username,
+        image: user?.image,
+        name: user?.name,
+      }).then(() => {
+        router.refresh();
+        toast.success("Avatar updated", { theme });
+      });
     }
-  }, [isSubmit]);
+  }, [hasSucceeded]);
 
   const onChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      setIsSubmit(true);
+      btnRef.current?.click();
     }
   };
 
@@ -92,6 +78,8 @@ const EditableAvatar = (
       >
         <PhotoIcon className="aspect-square w-7" />
         <input
+          disabled={isExecuting}
+          accept="image/*"
           name="image"
           onChange={onChangeFileInput}
           hidden
@@ -99,10 +87,7 @@ const EditableAvatar = (
           type="file"
         />
       </div>
-      <Avatar
-        url={!!preview ? preview : avatar}
-        className={cn("w-24 sm:w-40", props.className)}
-      />
+      <Avatar url={avatar} className={cn("w-24 sm:w-40", props.className)} />
       <button hidden type="submit" ref={btnRef}></button>
     </form>
   );

@@ -6,6 +6,7 @@ import { useSessionStore } from "@/stores/SessionStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { likePostAction } from "./actionLike";
 
@@ -17,15 +18,21 @@ const ButtonLikePost = ({ post }: Props) => {
   const { likePost } = usePostStore();
   const { session } = useSessionStore();
   const { theme } = useTheme();
+  const pathname = usePathname();
 
   const like = async () => {
     likePost(post.id);
-    const result = await likePostAction({
-      postId: post.id,
-      userId: session?.user.id ?? "",
-    });
-    if (result?.serverError) {
-      toast.error("Something went wrong", { theme });
+    try {
+      const result = await likePostAction({
+        postId: post.id,
+        pathname,
+      });
+      if (result?.serverError) {
+        toast.error("Something went wrong", { theme });
+      }
+    } catch (err) {
+      // cancel prev like
+      likePost(post.id);
     }
   };
 

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import FormEditProfile from "./components/FormEditProfile";
+import FormEditProfile from "./_components/FormEditProfile";
 import { fetchUser } from "@/fetchings/user";
 
 const Page = async () => {

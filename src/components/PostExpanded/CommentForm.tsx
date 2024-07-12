@@ -10,13 +10,25 @@ type Props = {
 
 const CommentForm = ({ post }: Props) => {
   const { session } = useSessionStore();
-  const { execute, formRef, inputRef, isExecuting, message, setFocusToCommentForm, setMessage } = useCreateComment({
+  const {
+    execute,
+    formRef,
+    inputRef,
+    isExecuting,
+    message,
+    setFocusToCommentForm,
+    setMessage,
+  } = useCreateComment({
     post,
     session,
   });
 
   return (
-    <form ref={formRef} action={execute} className="flex h-full items-center pt-1">
+    <form
+      ref={formRef}
+      action={execute}
+      className="flex h-full items-center pt-1"
+    >
       <div className="relative flex h-full w-full items-center">
         {isExecuting && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80">
@@ -42,7 +54,9 @@ const CommentForm = ({ post }: Props) => {
           type="submit"
           className={cn(
             "h-full bg-background px-2 text-sm",
-            message.length > 0 ? "font-semibold text-skin-inverted" : "text-skin-muted/50",
+            message.length > 0
+              ? "font-semibold text-skin-inverted"
+              : "text-skin-muted/50",
           )}
         >
           {isExecuting ? <MySpinner /> : "Send"}

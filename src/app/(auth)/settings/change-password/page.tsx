@@ -1,4 +1,4 @@
-import FormChangePassword from "./components/FormChangePassword";
+import FormChangePassword from "./_components/FormChangePassword";
 
 const Page = () => {
   return (

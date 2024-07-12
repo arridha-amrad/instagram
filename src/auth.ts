@@ -100,6 +100,8 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
 
       if (trigger === "update" && session) {
+        console.log("update session : ", session);
+
         // see actions/updateUser returning value
         token = createToken(token, session);
         return token;

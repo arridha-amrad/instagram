@@ -2,7 +2,7 @@
 
 import db from "@/lib/drizzle/db";
 import { CommentsTable, RepliesTable } from "@/lib/drizzle/schema";
-import { actionClient } from "@/lib/safe-action";
+import { authActionClient } from "@/lib/safe-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -20,49 +20,39 @@ const commentSchema = zfd.formData({
   message: zfd.text(z.string()),
 });
 
-export const commentAction = actionClient
+export const commentAction = authActionClient
   .schema(commentSchema)
-  .bindArgsSchemas([z.string().nullable(), z.string().nullable(), z.string()])
+  .bindArgsSchemas<
+    [commentId: z.ZodNullable<z.ZodString>, postId: z.ZodNullable<z.ZodString>]
+  >([z.string().nullable(), z.string().nullable()])
   .action(
     async ({
-      bindArgsParsedInputs: [commentId, postId, userId],
+      ctx: { userId },
+      bindArgsParsedInputs: [commentId, postId],
       parsedInput: { message },
     }) => {
       try {
         if (!commentId) {
-          if (!postId || !userId) {
-            return {
-              err: "postId and userId are null",
-            };
-          }
+          if (!postId) return;
           const response = await createComment({
             message: message,
             postId,
             userId,
           });
           return {
-            msgComment: "New comment added",
-            data: response,
+            comment: response,
           };
         } else {
-          if (!userId) {
-            return {
-              err: "userId cannot be null",
-            };
-          }
           const response = await createReply({
             commentId,
             message: message,
             userId,
           });
           return {
-            msgReply: "New reply added",
-            data: response,
+            reply: response,
           };
         }
       } catch (err) {
-        console.log(err);
-
         throw err;
       }
     },

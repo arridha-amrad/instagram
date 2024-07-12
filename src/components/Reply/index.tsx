@@ -17,13 +17,11 @@ const Reply = ({ reply }: Props) => {
     createdAt,
     message,
   } = reply;
-  console.log(reply.id);
+
   const { setCommentTarget } = useReplySetter();
   return (
     <div className="flex w-full items-start gap-2 py-2 text-sm">
-      <div>
-        <Avatar url={avatar} />
-      </div>
+      <Avatar url={avatar} />
       <div className="flex-1 basis-0">
         <div className="text-wrap pt-0.5">
           <Link href={`/${username}`} className="inline pr-1 font-semibold">

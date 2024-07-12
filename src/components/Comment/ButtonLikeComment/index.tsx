@@ -4,9 +4,9 @@ import { TComment } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
+import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { likeCommentAction } from "./action";
-import { usePathname } from "next/navigation";
 
 type Props = {
   comment: TComment;
@@ -17,15 +17,16 @@ const ButtonLikeComment = ({ comment }: Props) => {
   const pathname = usePathname();
   const like = async () => {
     lc(comment.id);
-    const result = await likeCommentAction.bind(
-      null,
-      comment.id,
-      pathname,
-    )({
-      pathname,
-    });
-    if (result?.serverError) {
-      toast.error("Something went wrong");
+    try {
+      const result = await likeCommentAction({
+        commentId: comment.id,
+        pathname,
+      });
+      if (result?.serverError) {
+        toast.error("Something went wrong");
+      }
+    } catch (err) {
+      lc(comment.id);
     }
   };
   return (
