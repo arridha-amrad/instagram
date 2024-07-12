@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/core/Modals/Wrapper";
+import Modal from "@/components/core/ModalWrapper";
 import { CogIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";

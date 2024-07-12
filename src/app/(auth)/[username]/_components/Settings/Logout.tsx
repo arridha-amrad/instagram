@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
-import Modal from "@/components/core/Modals/Wrapper";
+import Modal from "@/components/core/ModalWrapper";
 import { useRouter } from "next/navigation";
 
 const Logout = () => {

@@ -2,7 +2,7 @@
 
 import { TOwner } from "@/fetchings/type";
 import db from "@/lib/drizzle/db";
-import { actionClient } from "@/lib/safe-action";
+import { authActionClient } from "@/lib/safe-action";
 import { z } from "zod";
 
 export type User = {
@@ -12,12 +12,11 @@ export type User = {
 
 const schema = z.object({
   postId: z.string(),
-  userId: z.string(),
 });
 
-export const fetchLikes = actionClient
+export const fetchLikes = authActionClient
   .schema(schema)
-  .action(async ({ parsedInput: { postId, userId } }) => {
+  .action(async ({ parsedInput: { postId }, ctx: { userId } }) => {
     const likes = await db.query.PostLikesTable.findMany({
       columns: {},
       with: {

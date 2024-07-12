@@ -1,11 +1,10 @@
 "use client";
 
-import Wrapper from "@/components/core/Modals/Wrapper";
-import { useEffect, useState } from "react";
-import { fetchLikes, User } from "./safeAction";
-import { useSessionStore } from "@/stores/SessionStore";
-import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 import MySpinner from "@/components/Spinner";
+import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
+import { useEffect, useState } from "react";
+import { fetchLikes, User } from "./action";
+import Wrapper from "@/components/core/ModalWrapper";
 
 type Props = {
   postId: string;
@@ -13,14 +12,12 @@ type Props = {
 };
 
 const TotalLikes = ({ postId, total }: Props) => {
-  const { session } = useSessionStore();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const openModal = async () => {
     setOpen(true);
     const response = await fetchLikes({
       postId,
-      userId: session?.user.id,
     });
     if (response?.data) {
       setUsers(response?.data);

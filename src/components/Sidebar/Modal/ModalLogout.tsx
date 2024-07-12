@@ -5,7 +5,7 @@ import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import Modal from "@/components/core/Modals/Wrapper";
+import Modal from "@/components/core/ModalWrapper";
 import { className } from "../styles";
 
 const ModalLogout = () => {

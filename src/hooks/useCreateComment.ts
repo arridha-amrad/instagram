@@ -8,6 +8,7 @@ import { useReplySetter } from "@/stores/ReplySetter";
 import { Session } from "next-auth";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -35,6 +36,16 @@ export const useCreateComment = ({ post, session }: Args) => {
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const pathname = usePathname()
+
+  useEffect(() => {
+    reset()
+    setMessage("")
+    setReplyState({
+      commentId: "",
+      userId: ""
+    })
+  }, [pathname])
 
   useEffect(() => {
     if (isFocusToCommentForm) {

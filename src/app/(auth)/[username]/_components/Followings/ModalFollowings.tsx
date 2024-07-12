@@ -1,11 +1,11 @@
 "use client";
 
-import Modal from "@/components/core/Modals/Wrapper";
+import Modal from "@/components/core/ModalWrapper";
+import MySpinner from "@/components/Spinner";
+import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 import { TOwner } from "@/fetchings/type";
 import { useEffect, useState } from "react";
 import { useFollowingsStore } from "./store";
-import MySpinner from "@/components/Spinner";
-import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 
 type Props = {
   username: string;

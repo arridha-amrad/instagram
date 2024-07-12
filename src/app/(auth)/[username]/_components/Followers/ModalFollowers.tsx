@@ -1,7 +1,7 @@
 "use client";
 
 import MySpinner from "@/components/Spinner";
-import Modal from "@/components/core/Modals/Wrapper";
+import Modal from "@/components/core/ModalWrapper";
 import { useEffect, useState } from "react";
 import { Data, useFollowerStore } from "./store";
 import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
