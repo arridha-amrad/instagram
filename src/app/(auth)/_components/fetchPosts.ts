@@ -1,12 +1,32 @@
 import { TPost, TComment } from "@/fetchings/type";
 import { sumComments } from "@/helpers/comments";
 import db from "@/lib/drizzle/db";
+import { PostsTable } from "@/lib/drizzle/schema";
+import { sql } from "drizzle-orm";
 
-export const fetchPosts = async (userId?: string): Promise<TPost[]> => {
+const LIMIT = 5;
+
+type Args = {
+  userId?: string;
+  page: number;
+};
+
+export const fetchPosts = async ({
+  page,
+  userId,
+}: Args): Promise<{ posts: TPost[]; total: number; page: number }> => {
+  const [result] = await db
+    .select({
+      total: sql<number>`cast(count(${PostsTable.id}) as int)`,
+    })
+    .from(PostsTable);
+
   const posts = await db.query.PostsTable.findMany({
     orderBy({ createdAt }, { desc }) {
       return desc(createdAt);
     },
+    limit: LIMIT,
+    offset: LIMIT * (page - 1),
     with: {
       likes: true,
       comments: {
@@ -43,5 +63,9 @@ export const fetchPosts = async (userId?: string): Promise<TPost[]> => {
       comments: [] as TComment[],
     }));
   });
-  return posts;
+  return {
+    posts,
+    total: result.total,
+    page,
+  };
 };

@@ -32,8 +32,9 @@ export const useCommentsStore = create<State & Actions>()(
       total: 0,
       addMoreComments(comments) {
         set((state) => {
-          const newComments = [...state.comments, ...comments].filter((v, i, arr) => arr.findIndex((val) => val.id === v.id) === i)
-          console.log({ newComments });
+          const newComments = [...state.comments, ...comments].filter(
+            (v, i, arr) => arr.findIndex((val) => val.id === v.id) === i,
+          );
           state.comments = newComments;
           state.page += 1;
         });

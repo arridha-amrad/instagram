@@ -1,11 +1,8 @@
 import { auth } from "@/auth";
-import SuggestedUsers from "../_components/SuggestedUsers";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Posts from "../_components/Posts";
-import UserCard from "../_components/UserCard";
-import { fetchPosts } from "../_components/fetchPosts";
 import { ReactNode } from "react";
+import UserCard from "../_components/UserCard";
 
 export const metadata: Metadata = {
   title: "Instagram",
@@ -24,7 +21,7 @@ const Layout = async ({ children, suggestedUsers }: Props) => {
   }
 
   const {
-    user: { username, name, image, id },
+    user: { username, name, image },
   } = session;
 
   return (
