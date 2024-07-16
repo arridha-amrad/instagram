@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { likePostAction } from "./actionLike";
+import { useHomeStore } from "@/app/(auth)/(home)/_components/store";
 
 type Props = {
   post: TPost;
@@ -16,12 +17,14 @@ type Props = {
 
 const ButtonLikePost = ({ post }: Props) => {
   const { likePost } = usePostStore();
+  const { likePost: lp } = useHomeStore();
   const { session } = useSessionStore();
   const { theme } = useTheme();
   const pathname = usePathname();
 
   const like = async () => {
     likePost(post.id);
+    lp(post.id);
     try {
       const result = await likePostAction({
         postId: post.id,
@@ -33,6 +36,7 @@ const ButtonLikePost = ({ post }: Props) => {
     } catch (err) {
       // cancel prev like
       likePost(post.id);
+      lp(post.id);
     }
   };
 

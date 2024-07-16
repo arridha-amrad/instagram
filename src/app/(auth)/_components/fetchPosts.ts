@@ -63,6 +63,8 @@ export const fetchPosts = async ({
       comments: [] as TComment[],
     }));
   });
+  console.log("sum : ", result.total);
+
   return {
     posts,
     total: result.total,

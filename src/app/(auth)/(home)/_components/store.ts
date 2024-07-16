@@ -11,7 +11,8 @@ type State = {
 };
 
 type Action = {
-  setPosts: (posts: TPost[]) => void;
+  setPosts: (posts: TPost[], total: number) => void;
+  addPosts: (posts: TPost[]) => void;
   likePost: (postId: string) => void;
   addPost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
@@ -24,11 +25,19 @@ export const useHomeStore = create<State & Action>()(
       isLoading: true,
       page: 0,
       total: 0,
-      setPosts(posts) {
+      addPosts(posts) {
+        set((state) => {
+          state.posts = [...state.posts, ...posts].filter(
+            (v, i, arr) => arr.findIndex((val) => val.id === v.id) === i,
+          );
+          state.page += 1;
+        });
+      },
+      setPosts(posts, total) {
         set((state) => {
           state.posts = posts;
           state.isLoading = false;
-          state.total = 1;
+          state.total = total;
           state.page = 1;
         });
       },
@@ -58,6 +67,7 @@ export const useHomeStore = create<State & Action>()(
       addPost(post) {
         set((state) => {
           state.posts.unshift(post);
+          state.total += 1;
         });
       },
     })),
