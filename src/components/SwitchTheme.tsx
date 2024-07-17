@@ -7,9 +7,19 @@ import { useTheme } from "next-themes";
 const SwitchTheme = () => {
   const [isDark, setDark] = useState(false);
   const { setTheme, theme } = useTheme();
+
   useEffect(() => {
-    setDark(theme === "dark");
+    const isDark = document.documentElement.classList.contains("dark");
+    setDark(isDark);
+    setTheme(isDark ? "dark" : "light");
+  }, []);
+
+  useEffect(() => {
+    if (theme) {
+      setDark(theme === "dark");
+    }
   }, [theme]);
+
   return (
     <Switch
       checked={isDark}

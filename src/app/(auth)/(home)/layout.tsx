@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import UserCard from "../_components/UserCard";
+import UserCard from "./_components/UserCard";
 
 export const metadata: Metadata = {
   title: "Instagram",

@@ -1,12 +1,12 @@
 "use client";
 
 import { useSessionStore } from "@/stores/SessionStore";
-import { useHomeStore } from "../store";
 import { loadPosts } from "./action";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import Spinner from "@/components/Spinner";
+import { useHomeStore } from "../../../../../lib/zustand/stores/homeStore";
 
 const ButtonLoadMorePosts = () => {
   const { page, addPosts } = useHomeStore();

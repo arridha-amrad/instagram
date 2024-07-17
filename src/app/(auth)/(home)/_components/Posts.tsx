@@ -1,7 +1,7 @@
 "use client";
 
-import { useHomeStore } from "../(home)/_components/store";
 import Post from "./Post";
+import { useHomeStore } from "../../../../lib/zustand/stores/homeStore";
 
 export default function Posts() {
   const { posts } = useHomeStore();

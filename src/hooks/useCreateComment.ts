@@ -36,16 +36,16 @@ export const useCreateComment = ({ post, session }: Args) => {
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
-    reset()
-    setMessage("")
+    reset();
+    setMessage("");
     setReplyState({
       commentId: "",
-      userId: ""
-    })
-  }, [pathname])
+      userId: "",
+    });
+  }, [pathname]);
 
   useEffect(() => {
     if (isFocusToCommentForm) {

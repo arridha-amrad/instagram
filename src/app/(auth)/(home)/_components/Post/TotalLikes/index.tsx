@@ -5,6 +5,7 @@ import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 import { useEffect, useState } from "react";
 import { fetchLikes, User } from "./action";
 import Wrapper from "@/components/core/ModalWrapper";
+import { useSessionStore } from "@/stores/SessionStore";
 
 type Props = {
   postId: string;
@@ -14,15 +15,19 @@ type Props = {
 const TotalLikes = ({ postId, total }: Props) => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
+  const { session } = useSessionStore();
+
   const openModal = async () => {
     setOpen(true);
     const response = await fetchLikes({
       postId,
+      authUserId: session?.user.id,
     });
     if (response?.data) {
       setUsers(response?.data);
     }
   };
+
   const closeModal = () => {
     setOpen(false);
   };
@@ -49,9 +54,9 @@ const TotalLikes = ({ postId, total }: Props) => {
                 <h1 className="inline text-sm font-semibold">Likes</h1>
               </div>
 
-              {users.length === 0 ? (
-                <div className="pt-4">
-                  <MySpinner />
+              {true ? (
+                <div className="flex items-center justify-center py-4">
+                  <MySpinner className="w-6 fill-indigo-500" />
                 </div>
               ) : (
                 users.map((user) => (

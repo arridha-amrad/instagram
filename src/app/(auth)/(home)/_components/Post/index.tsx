@@ -1,11 +1,11 @@
 import { TPost } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";
 import Link from "next/link";
-import PostCardCarousel from "./Carousel";
+import Carousel from "./Carousel";
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
-import PostCardHeader from "./Owner";
-import PostCardActions from "./PostActions";
+import Owner from "./Owner";
+import Actions from "./PostActions";
 import TotalLikes from "./TotalLikes";
 
 type Props = {
@@ -18,9 +18,9 @@ const PostCard = ({ post, isFirst = false }: Props) => {
   const urls = post.urls.map((u) => u.url);
   return (
     <article className="w-full">
-      <PostCardHeader post={post} />
-      <PostCardCarousel isFirstPost={isFirst} urls={urls} />
-      <PostCardActions post={post} />
+      <Owner post={post} />
+      <Carousel isFirstPost={isFirst} urls={urls} />
+      <Actions post={post} />
       {post.sumLikes > 0 && (
         <TotalLikes postId={post.id} total={post.sumLikes} />
       )}

@@ -2,7 +2,7 @@
 
 import { TPost } from "@/fetchings/type";
 import { ReactNode, useEffect } from "react";
-import { useHomeStore } from "./store";
+import { useHomeStore } from "../../../../lib/zustand/stores/homeStore";
 import Spinner from "@/components/Spinner";
 import ButtonLoadMorePosts from "./LoadMorePosts";
 

@@ -11,7 +11,7 @@ type Args = {
   page: number;
 };
 
-export const fetchPosts = async ({
+const fetchPosts = async ({
   page,
   userId,
 }: Args): Promise<{ posts: TPost[]; total: number; page: number }> => {
@@ -63,7 +63,6 @@ export const fetchPosts = async ({
       comments: [] as TComment[],
     }));
   });
-  console.log("sum : ", result.total);
 
   return {
     posts,
@@ -71,3 +70,5 @@ export const fetchPosts = async ({
     page,
   };
 };
+
+export default fetchPosts;

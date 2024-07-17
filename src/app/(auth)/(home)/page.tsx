@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import Posts from "../_components/Posts";
-import { fetchPosts } from "../_components/fetchPosts";
+import Posts from "./_components/Posts";
 import Provider from "./_components/Provider";
+import fetchPosts from "@/lib/drizzle/queries/fetchPosts";
 
 export default async function Page() {
   const session = await auth();

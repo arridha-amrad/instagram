@@ -1,6 +1,6 @@
 "use server";
 
-import { fetchPosts } from "@/app/(auth)/_components/fetchPosts";
+import fetchPosts from "@/lib/drizzle/queries/fetchPosts";
 import { actionClient } from "@/lib/safe-action";
 import { z } from "zod";
 
