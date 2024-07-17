@@ -1,13 +1,15 @@
 import { auth } from "@/auth";
 import { Metadata } from "next";
 import Profile from "./_components/Profile";
-import Posts from "./_components/Posts";
+import Posts from "./@posts/Posts";
 import { fetchUser } from "@/fetchings/user";
+import { ReactNode } from "react";
 
 type Props = {
   params: {
     username: string;
   };
+  posts: ReactNode;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params, posts }: Props) => {
   const session = await auth();
   const user = await fetchUser({
     username: params.username,
@@ -38,7 +40,7 @@ const Page = async ({ params }: Props) => {
   return (
     <main className="w-full py-4">
       <Profile user={user} />
-      {user.id && <Posts userId={user.id} />}
+      {posts}
     </main>
   );
 };

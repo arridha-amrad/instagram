@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import db from "@/lib/drizzle/db";
 import SuggestedUsers from "./_components/SuggestedUsers";
 import { redirect } from "next/navigation";
 import fetchSuggestedUsers from "@/lib/drizzle/queries/fetchSuggestedUsers";

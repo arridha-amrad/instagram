@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { fetchLikes, User } from "./action";
 import Wrapper from "@/components/core/ModalWrapper";
 import { useSessionStore } from "@/stores/SessionStore";
+import { toast } from "react-toastify";
+import { useTheme } from "next-themes";
 
 type Props = {
   postId: string;
@@ -16,15 +18,23 @@ const TotalLikes = ({ postId, total }: Props) => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const { session } = useSessionStore();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
   const openModal = async () => {
     setOpen(true);
-    const response = await fetchLikes({
-      postId,
-      authUserId: session?.user.id,
-    });
-    if (response?.data) {
-      setUsers(response?.data);
+    setIsLoading(true);
+    try {
+      const response = await fetchLikes({
+        postId,
+        authUserId: session?.user.id,
+      });
+      if (response?.data) {
+        setUsers(response?.data);
+      }
+    } catch (err) {
+      toast.error("Something went wrong", { theme });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,7 +64,7 @@ const TotalLikes = ({ postId, total }: Props) => {
                 <h1 className="inline text-sm font-semibold">Likes</h1>
               </div>
 
-              {true ? (
+              {isLoading ? (
                 <div className="flex items-center justify-center py-4">
                   <MySpinner className="w-6 fill-indigo-500" />
                 </div>
