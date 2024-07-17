@@ -7,7 +7,6 @@ import { Data, useFollowerStore } from "./store";
 import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 
 type Props = {
-  username: string;
   total: number;
   followers: Data[];
 };

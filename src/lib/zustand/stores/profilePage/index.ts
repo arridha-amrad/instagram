@@ -1,12 +1,18 @@
 import { create } from "zustand";
-import createPostsSlice, { PostSlice } from "./usePostsStore";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { FollowerSlice, createFollowerSlice } from "./createFollowerSlice";
+import { PostSlice, createPostSlice } from "./createPostSlice";
+import { createFollowingsSlice, FollowingSlice } from "./createFollowingSlice";
 
-const useBoundProfileStore = create<PostSlice>()(
+const useBoundProfileStore = create<
+  PostSlice & FollowerSlice & FollowingSlice
+>()(
   devtools(
     immer((...a) => ({
-      ...createPostsSlice(...a),
+      ...createPostSlice(...a),
+      ...createFollowerSlice(...a),
+      ...createFollowingsSlice(...a),
     })),
   ),
 );

@@ -1,5 +1,7 @@
 import { TPost } from "@/fetchings/type";
 import { StateCreator } from "zustand";
+import { FollowerSlice } from "./createFollowerSlice";
+import { FollowingSlice } from "./createFollowingSlice";
 
 export interface PostSlice {
   total: number;
@@ -10,8 +12,8 @@ export interface PostSlice {
   isLoading: boolean;
 }
 
-const createPostsSlice: StateCreator<
-  PostSlice,
+export const createPostSlice: StateCreator<
+  PostSlice & FollowerSlice & FollowingSlice,
   [["zustand/devtools", never], ["zustand/immer", never]],
   [],
   PostSlice
@@ -35,5 +37,3 @@ const createPostsSlice: StateCreator<
     });
   },
 });
-
-export default createPostsSlice;

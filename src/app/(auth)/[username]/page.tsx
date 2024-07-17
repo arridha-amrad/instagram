@@ -4,20 +4,27 @@ import EditableAvatar from "@/components/EditableAvatar";
 import Button from "@/components/core/Button";
 import SvgFemale from "@/components/svg/SvgFemale";
 import SvgMale from "@/components/svg/SvgMale";
-import { TProfile } from "@/fetchings/type";
 import Link from "next/link";
-import ButtonFollow from "./ButtonFollow";
-import Settings from "./Settings";
-import Followings from "./Followings";
-import Followers from "./Followers";
+import ButtonFollow from "./_components/ButtonFollow";
+import Followers from "./_components/Followers";
+import Followings from "./_components/Followings";
+import Settings from "./_components/Settings";
+import fetchUserProfile from "@/lib/drizzle/queries/fetchUserProfile";
 
 type Props = {
-  user: TProfile;
+  params: {
+    username: string;
+  };
 };
 
-export default async function Profile({ user: u }: Props) {
-  const data = await auth();
-  const isAuthUser = data?.user.id === u?.id;
+export default async function Page({ params: { username } }: Props) {
+  const session = await auth();
+  const u = await fetchUserProfile({
+    username: username,
+    authUserId: session?.user.id,
+  });
+
+  const isAuthUser = session?.user.id === u?.id;
 
   return (
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center">

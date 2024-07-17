@@ -1,6 +1,6 @@
 "use client";
 
-import MySpinner from "@/components/_Spinner";
+import Spinner from "@/components/Spinner";
 import { TUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
 import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
 import { ReactNode, useEffect } from "react";
@@ -17,15 +17,17 @@ const Provider = ({ children, data }: Props) => {
     setPosts(data.posts, data.total);
   }, []);
 
-  if (isLoading) {
-    return (
-      <div>
-        <MySpinner className="w-6" /> set yor post
-      </div>
-    );
-  }
-
-  return children;
+  return (
+    <div className="py-20">
+      {isLoading ? (
+        <div className="flex items-center justify-center">
+          <Spinner className="w-6" />
+        </div>
+      ) : (
+        children
+      )}
+    </div>
+  );
 };
 
 export default Provider;

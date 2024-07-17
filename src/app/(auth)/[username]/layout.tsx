@@ -1,8 +1,5 @@
-import { auth } from "@/auth";
-import { Metadata } from "next";
-import Profile from "./_components/Profile";
-import Posts from "./@posts/Posts";
 import { fetchUser } from "@/fetchings/user";
+import { Metadata } from "next";
 import { ReactNode } from "react";
 
 type Props = {
@@ -10,6 +7,7 @@ type Props = {
     username: string;
   };
   posts: ReactNode;
+  children: ReactNode;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -22,27 +20,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Page = async ({ params, posts }: Props) => {
-  const session = await auth();
-  const user = await fetchUser({
-    username: params.username,
-    authUserId: session?.user.id,
-  });
-
-  if (!user) {
-    return (
-      <div>
-        <h1>Oops, User not found</h1>
-      </div>
-    );
-  }
-
+const Layout = async ({ posts, children }: Props) => {
   return (
     <main className="w-full py-4">
-      <Profile user={user} />
+      {children}
       {posts}
     </main>
   );
 };
 
-export default Page;
+export default Layout;
