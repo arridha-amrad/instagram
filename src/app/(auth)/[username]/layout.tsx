@@ -7,7 +7,7 @@ type Props = {
     username: string;
   };
   posts: ReactNode;
-  children: ReactNode;
+  profile: ReactNode;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Layout = async ({ posts, children }: Props) => {
+const Layout = async ({ posts, profile }: Props) => {
   return (
     <main className="w-full py-4">
-      {children}
+      {profile}
       {posts}
     </main>
   );

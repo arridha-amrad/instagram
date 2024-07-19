@@ -9,7 +9,7 @@ export interface FollowerSlice {
   followers: Data[];
   total: number;
   page: number;
-  isLoading: boolean;
+  isLoadingFollowers: boolean;
   setFollowers: (followers: Data[], total: number) => void;
   setMoreFollowers: (followers: Data[]) => void;
 }
@@ -21,7 +21,7 @@ export const createFollowerSlice: StateCreator<
   FollowerSlice
 > = (set) => ({
   followers: [],
-  isLoading: true,
+  isLoadingFollowers: true,
   page: 0,
   total: 0,
   users: [],
@@ -30,7 +30,7 @@ export const createFollowerSlice: StateCreator<
       state.followers = followers;
       state.total = total;
       state.page = 1;
-      state.isLoading = false;
+      state.isLoadingFollowers = false;
     });
   },
   setMoreFollowers(followers) {

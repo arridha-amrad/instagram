@@ -5,11 +5,11 @@ import Button from "@/components/core/Button";
 import SvgFemale from "@/components/svg/SvgFemale";
 import SvgMale from "@/components/svg/SvgMale";
 import Link from "next/link";
-import ButtonFollow from "./_components/ButtonFollow";
-import Followers from "./_components/Followers";
-import Followings from "./_components/Followings";
-import Settings from "./_components/Settings";
+import ButtonFollow from "../_components/ButtonFollow";
+import Followings from "../_components/Followings";
+import Settings from "../_components/Settings";
 import fetchUserProfile from "@/lib/drizzle/queries/fetchUserProfile";
+import Followers from "../_components/Followers";
 
 type Props = {
   params: {
@@ -23,6 +23,14 @@ export default async function Page({ params: { username } }: Props) {
     username: username,
     authUserId: session?.user.id,
   });
+
+  if (!u) {
+    return (
+      <div>
+        <h1>User not found</h1>
+      </div>
+    );
+  }
 
   const isAuthUser = session?.user.id === u?.id;
 
@@ -58,11 +66,7 @@ export default async function Page({ params: { username } }: Props) {
           <div>
             <h1>{u?.sumPosts} Posts</h1>
           </div>
-          <Followers
-            total={u?.followers ?? 0}
-            userId={u?.id ?? ""}
-            username={u?.username ?? ""}
-          />
+          <Followers total={u.followers} userId={u?.id ?? ""} />
           <Followings
             userId={u?.id ?? ""}
             total={u?.followings ?? 0}
