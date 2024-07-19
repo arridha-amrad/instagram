@@ -1,4 +1,4 @@
-import PostsProvider from "./PostsProvider";
+import PostsProvider from "./_components/PostsProvider";
 
 type Params = {
   params: {

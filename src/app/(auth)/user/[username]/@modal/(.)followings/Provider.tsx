@@ -11,10 +11,10 @@ const Provider = ({
   children: ReactNode;
   data: TInfiniteResult<TOwnerIsFollow[]>;
 }) => {
-  const { setFollowers } = useBoundProfileStore();
+  const { setFollowings } = useBoundProfileStore();
 
   useEffect(() => {
-    setFollowers(data);
+    setFollowings(data.users, data.total);
   }, []);
 
   return children;

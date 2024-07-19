@@ -1,6 +1,6 @@
 "use client";
 
-import Post from "./_components/Post";
+import Post from "./Post";
 import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
 
 export default function Posts() {

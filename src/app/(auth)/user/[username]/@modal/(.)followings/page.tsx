@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
-import ModalFollowers from "./ModalFollowers";
+import ModalFollowings from "./ModalFollowings";
 import Provider from "./Provider";
+import { fetchUserFollowings } from "@/lib/drizzle/queries/fetchUserFollowings";
 
 type Props = {
   params: {
@@ -12,14 +12,16 @@ type Props = {
 const Page = async ({ params: { username } }: Props) => {
   const session = await auth();
 
-  const data = await fetchUserFollowers({
+  const data = await fetchUserFollowings({
     authUserId: session?.user.id,
     username,
   });
 
+  console.log(JSON.stringify(data, null, 2));
+
   return (
     <Provider data={data}>
-      <ModalFollowers />
+      <ModalFollowings />
     </Provider>
   );
 };

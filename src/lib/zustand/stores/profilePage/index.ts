@@ -14,6 +14,11 @@ const useBoundProfileStore = create<
       ...createFollowerSlice(...a),
       ...createFollowingsSlice(...a),
     })),
+    {
+      anonymousActionType: "useProfile",
+      name: "Profile Store",
+      enabled: process.env.NODE_ENV === "development",
+    },
   ),
 );
 

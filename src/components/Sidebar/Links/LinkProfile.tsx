@@ -12,7 +12,7 @@ type Props = {
 };
 
 const LinkProfile = ({ user }: Props) => {
-  const href = `/${user.username}`;
+  const href = `/user/${user.username}`;
   const pathname = usePathname();
   const isActive = href === pathname;
   return (

@@ -4,8 +4,8 @@ import UsersContainer from "@/components/UsersContainer";
 import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
 import { useRouter } from "next/navigation";
 
-export default function ModalFollowers() {
-  const { followers } = useBoundProfileStore();
+export default function ModalFollowings() {
+  const { followings } = useBoundProfileStore();
   const router = useRouter();
   const closeModal = () => {
     router.back();
@@ -17,8 +17,8 @@ export default function ModalFollowers() {
         className="absolute inset-0 bg-background/50 backdrop-blur"
       />
       <UsersContainer
-        title="Followers"
-        users={followers}
+        title="Followings"
+        users={followings}
         closeCallback={closeModal}
       />
     </div>

@@ -1,7 +1,8 @@
 import db from "@/lib/drizzle/db";
 import { eq, sql } from "drizzle-orm";
-import { FollowingsTable, UsersTable } from "@/lib/drizzle/schema";
+import { FollowingsTable, UsersTable } from "../schema";
 import { TInfiniteResult, TOwnerIsFollow } from "./type";
+import { unstable_cache } from "next/cache";
 
 type Args = {
   username: string;
@@ -11,9 +12,9 @@ type Args = {
 
 const LIMIT = 10;
 
-export const fetchUserFollowers = async ({
-  authUserId,
+const fetchFollowings = async ({
   username,
+  authUserId,
   page = 1,
 }: Args): Promise<TInfiniteResult<TOwnerIsFollow[]>> => {
   const user = await db.query.UsersTable.findFirst({
@@ -33,14 +34,14 @@ export const fetchUserFollowers = async ({
       total: sql<number>`cast(count(${FollowingsTable.followId}) as int)`,
     })
     .from(FollowingsTable)
-    .where(eq(FollowingsTable.followId, user.id));
+    .where(eq(FollowingsTable.userId, user.id));
 
-  const followers = await db.query.FollowingsTable.findMany({
+  const users = await db.query.FollowingsTable.findMany({
     columns: {},
     limit: LIMIT,
     offset: LIMIT * (page - 1),
     with: {
-      user: {
+      follow: {
         with: {
           followers: true,
         },
@@ -52,15 +53,15 @@ export const fetchUserFollowers = async ({
         },
       },
     },
-    where(fields, { eq }) {
-      return eq(fields.followId, user.id);
+    where(fields, operators) {
+      return operators.eq(fields.userId, user.id);
     },
   }).then((result) => {
-    const data = result.map(({ user }) => {
+    const data = result.map(({ follow }) => {
       const a = {
-        ...user,
-        isFollow: !!user.followers.find(
-          (f) => f.followId === user.id && f.userId === authUserId,
+        ...follow,
+        isFollow: !!follow.followers.find(
+          (f) => f.userId === authUserId && f.followId === follow.id,
         ),
       };
       const { followers, ...rest } = a;
@@ -70,8 +71,14 @@ export const fetchUserFollowers = async ({
   });
 
   return {
-    users: followers,
-    total: result.total,
     page,
+    total: result.total,
+    users,
   };
 };
+
+export const fetchUserFollowings = unstable_cache(
+  fetchFollowings,
+  ["fetchUserFollowings"],
+  { tags: ["fetchUserFollowings"] },
+);
