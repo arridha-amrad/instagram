@@ -3,12 +3,10 @@ import Provider from "./Provider";
 import Posts from "./Posts";
 
 type Params = {
-  params: {
-    username: string;
-  };
+  username: string;
 };
 
-export default async function Page({ params: { username } }: Params) {
+export default async function PostsProvider({ username }: Params) {
   const data = await getUserPosts({ username, page: 1 });
 
   return (

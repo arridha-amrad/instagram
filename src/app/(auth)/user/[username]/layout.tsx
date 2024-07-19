@@ -1,13 +1,14 @@
 import { fetchUser } from "@/fetchings/user";
 import { Metadata } from "next";
 import { ReactNode } from "react";
+import UserProfile from "./_components/UserProfile";
 
 type Props = {
   params: {
     username: string;
   };
-  posts: ReactNode;
-  profile: ReactNode;
+  children: ReactNode;
+  modal: ReactNode;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -20,11 +21,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Layout = async ({ posts, profile }: Props) => {
+const Layout = async ({ children, modal, params }: Props) => {
   return (
     <main className="w-full py-4">
-      {profile}
-      {posts}
+      <UserProfile username={params.username} />
+      {children}
+      {modal}
     </main>
   );
 };
