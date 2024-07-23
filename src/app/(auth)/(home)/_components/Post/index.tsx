@@ -8,6 +8,7 @@ import Comments from "./Comments";
 import Owner from "./Owner";
 import Actions from "./PostActions";
 import TotalLikes from "./TotalLikes";
+import { cn } from "@/lib/utils";
 
 type Props = {
   post: TPost;
@@ -18,7 +19,7 @@ const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
   const { setPost } = usePostStore();
   const urls = post.urls.map((u) => u.url);
   return (
-    <article ref={ref} className="w-full">
+    <article ref={ref} className={cn("w-full", !isFirst ? "py-4" : "")}>
       <Owner post={post} />
       <Carousel isFirstPost={isFirst} urls={urls} />
       <Actions post={post} />
