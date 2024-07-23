@@ -16,7 +16,7 @@ export default function Posts() {
   const [currPage, setCurrPage] = useState(page);
   const [loading, setLoading] = useState(false);
 
-  const lastPostRef = useLastElement({
+  const lastElementRef = useLastElement({
     callback: () => setCurrPage((val) => val + 1),
     data: posts,
     loading,
@@ -47,12 +47,9 @@ export default function Posts() {
   }, [currPage]);
 
   const windowRowVirtualizer = useWindowVirtualizer({
-    count: posts.length,
-    estimateSize: () => 50,
+    count: posts.length === total ? total : posts.length + 1,
+    estimateSize: () => total,
     overscan: 5,
-    getItemKey(index) {
-      return posts[index].id;
-    },
   });
 
   return (
@@ -65,6 +62,7 @@ export default function Posts() {
     >
       {windowRowVirtualizer.getVirtualItems().map((virtualRow) => {
         const post = posts[virtualRow.index];
+        const isLoaderRow = virtualRow.index > posts.length - 1;
         return (
           <div
             key={virtualRow.index}
@@ -81,19 +79,13 @@ export default function Posts() {
               data-index={virtualRow.index}
               ref={windowRowVirtualizer.measureElement}
             >
-              {virtualRow.index === posts.length - 1 ? (
-                <>
-                  <Post
-                    ref={lastPostRef}
-                    isFirst={virtualRow.index === 0}
-                    post={post}
-                  />
-                  {loading && (
-                    <div className="flex items-center justify-center py-10">
-                      <Spinner />
-                    </div>
-                  )}
-                </>
+              {isLoaderRow ? (
+                <div
+                  ref={lastElementRef}
+                  className="flex items-center justify-center py-10"
+                >
+                  <Spinner />
+                </div>
               ) : (
                 <Post isFirst={virtualRow.index === 0} post={post} />
               )}

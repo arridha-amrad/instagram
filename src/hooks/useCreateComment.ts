@@ -2,8 +2,8 @@ import { commentAction } from "@/actions/commentAction";
 import { TCommentSchema, TPost, TReplySchema } from "@/fetchings/type";
 import setNewCommentOnClient from "@/helpers/setNewCommentOnClient";
 import setNewReplyOnClient from "@/helpers/setNewReplyOnClient";
+import { useHomeStore } from "@/lib/zustand/stores/homeStore";
 import { useCommentsStore } from "@/stores/CommentsStore";
-import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { Session } from "next-auth";
 import { useAction } from "next-safe-action/hooks";
@@ -26,7 +26,7 @@ export const useCreateComment = ({ post, session }: Args) => {
     reset,
   } = useReplySetter();
   const { theme } = useTheme();
-  const { increaseComment, addComment: adC } = usePostStore();
+  const { addComment: adC } = useHomeStore();
   const { addComment, addReply } = useCommentsStore();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
@@ -85,7 +85,6 @@ export const useCreateComment = ({ post, session }: Args) => {
       formRef.current?.reset();
       if (!session) return;
       if (data?.comment) {
-        increaseComment();
         setNewCommentOnClient({
           authUser: session?.user,
           comment: data.comment as TCommentSchema,

@@ -16,7 +16,6 @@ export default function Tab({ href, name, username }: Props) {
   const target =
     href === "" ? `/user/${username}` : `/user/${username}/${href}`;
   const isActive = target === pathname;
-  console.log({ name, isActive, pathname, target });
 
   return (
     <div className={cn("p-4", isActive ? "border-t" : "")} key={name}>

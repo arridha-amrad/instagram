@@ -9,7 +9,7 @@ const Comments = ({ comments }: Props) => {
   return (
     <section id="post_comments" className="py-1">
       {comments.map((comment) => (
-        <Comment comment={comment} />
+        <Comment key={comment.id} comment={comment} />
       ))}
     </section>
   );
