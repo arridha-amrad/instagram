@@ -2,9 +2,8 @@
 
 import { TPost } from "@/fetchings/type";
 import { ReactNode, useEffect } from "react";
-import { useHomeStore } from "../../../../lib/zustand/stores/homeStore";
 import Spinner from "@/components/Spinner";
-import ButtonLoadMorePosts from "./LoadMorePosts";
+import { useHomeStore } from "@/lib/zustand/stores/homeStore";
 
 type Data = {
   page: number;
@@ -18,7 +17,7 @@ type Props = {
 };
 
 export default function Provider({ children, data }: Props) {
-  const { setPosts, isLoading, total, posts } = useHomeStore();
+  const { setPosts, isLoading } = useHomeStore();
 
   useEffect(() => {
     setPosts(data.posts, data.total);
@@ -32,12 +31,5 @@ export default function Provider({ children, data }: Props) {
     );
   }
 
-  return (
-    <>
-      {children}
-      <div className="py-4">
-        {total > posts.length && <ButtonLoadMorePosts />}
-      </div>
-    </>
-  );
+  return children;
 }

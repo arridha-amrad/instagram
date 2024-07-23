@@ -1,6 +1,7 @@
 import { TPost } from "@/fetchings/type";
 import { usePostStore } from "@/stores/PostStore";
 import Link from "next/link";
+import { forwardRef, Ref } from "react";
 import Carousel from "./Carousel";
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
@@ -13,11 +14,11 @@ type Props = {
   isFirst?: boolean;
 };
 
-const PostCard = ({ post, isFirst = false }: Props) => {
+const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
   const { setPost } = usePostStore();
   const urls = post.urls.map((u) => u.url);
   return (
-    <article className="w-full">
+    <article ref={ref} className="w-full">
       <Owner post={post} />
       <Carousel isFirstPost={isFirst} urls={urls} />
       <Actions post={post} />
@@ -48,4 +49,4 @@ const PostCard = ({ post, isFirst = false }: Props) => {
   );
 };
 
-export default PostCard;
+export default forwardRef(Post);

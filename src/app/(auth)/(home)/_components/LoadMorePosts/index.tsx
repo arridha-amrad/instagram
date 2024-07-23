@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import Spinner from "@/components/Spinner";
-import { useHomeStore } from "../../../../../lib/zustand/stores/homeStore";
+import { useHomeStore } from "@/lib/zustand/stores/homeStore";
 
 const ButtonLoadMorePosts = () => {
   const { page, addPosts } = useHomeStore();

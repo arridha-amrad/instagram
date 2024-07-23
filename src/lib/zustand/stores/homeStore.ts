@@ -8,10 +8,13 @@ type State = {
   isLoading: boolean;
   page: number;
   total: number;
+  isFetching: boolean;
 };
 
 type Action = {
   setPosts: (posts: TPost[], total: number) => void;
+  setPage: (page: number) => void;
+  setIsFetching: (val: boolean) => void;
   addPosts: (posts: TPost[]) => void;
   likePost: (postId: string) => void;
   addPost: (post: TPost) => void;
@@ -21,10 +24,21 @@ type Action = {
 export const useHomeStore = create<State & Action>()(
   devtools(
     immer((set) => ({
+      isFetching: false,
       posts: [],
       isLoading: true,
       page: 0,
       total: 0,
+      setPage(page) {
+        set((state) => {
+          state.page = page;
+        });
+      },
+      setIsFetching(val) {
+        set((state) => {
+          state.isFetching = val;
+        });
+      },
       addPosts(posts) {
         set((state) => {
           state.posts = [...state.posts, ...posts].filter(
