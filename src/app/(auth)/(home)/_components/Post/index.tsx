@@ -8,7 +8,6 @@ import Comments from "./Comments";
 import Owner from "./Owner";
 import Actions from "./PostActions";
 import TotalLikes from "./TotalLikes";
-import { usePostPageStore } from "@/lib/zustand/postPageStore";
 
 type Props = {
   post: TPost;
@@ -17,9 +16,11 @@ type Props = {
 
 const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
   const urls = post.urls.map((u) => u.url);
-  const { setPost } = usePostPageStore();
   return (
-    <article ref={ref} className={cn("w-full", !isFirst ? "py-4" : "")}>
+    <article
+      ref={ref}
+      className={cn("w-full space-y-2", !isFirst ? "py-4" : "")}
+    >
       <Owner post={post} />
       <Carousel isFirstPost={isFirst} urls={urls} />
       <Actions post={post} />
@@ -32,19 +33,15 @@ const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
           <p className="inline text-skin-muted">{post.description}</p>
         </section>
       )}
-      <Comments comments={post.comments} />
       {post.sumComments > 0 && (
-        <Link
-          onClick={() => setPost(post)}
-          scroll={false}
-          href={`/post/${post.id}`}
-        >
-          <p className="text-sm text-skin-muted">
+        <Link className="block" scroll={false} href={`/post/${post.id}`}>
+          <span className="text-sm text-skin-muted">
             {post.sumComments}&nbsp;{" "}
             {post.sumComments > 1 ? "comments" : "comment"}
-          </p>
+          </span>
         </Link>
       )}
+      <Comments comments={post.comments} />
       <CommentForm post={post} />
     </article>
   );

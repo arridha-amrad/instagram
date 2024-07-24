@@ -31,5 +31,5 @@ export default function Provider({ children, data }: Props) {
     );
   }
 
-  return children;
+  return <div className="py-4">{children}</div>;
 }

@@ -9,21 +9,21 @@ type Props = {
 
 const Owner = ({ post }: Props) => {
   return (
-    <section className="flex w-full items-center gap-3 py-3">
-      <Avatar url={post.owner.avatar} />
+    <section className="flex w-full items-center gap-3 text-sm">
+      <Avatar className="w-9" url={post.owner.avatar} />
       <div>
         <Link
-          href={`/${post.owner.username}`}
+          href={`/user/${post.owner.username}`}
           className="font-semibold hover:underline"
         >
           {post.owner.username}
         </Link>
-        <p className="text-sm text-skin-muted">{post.location}</p>
+        <p className="text-skin-muted">{post.location}</p>
       </div>
       <div className="aspect-square w-1 rounded-full bg-neutral-500" />
-      <h2 className="text-sm text-skin-muted">
+      <p className="text-skin-muted">
         {formatDistanceToNowStrict(post.createdAt)}
-      </h2>
+      </p>
     </section>
   );
 };

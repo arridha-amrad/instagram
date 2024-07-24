@@ -52,7 +52,7 @@ export default function Posts() {
 
   const windowRowVirtualizer = useWindowVirtualizer({
     count: posts.length === total ? total : posts.length + 1,
-    estimateSize: () => total,
+    estimateSize: () => 50,
     overscan: 5,
   });
 
