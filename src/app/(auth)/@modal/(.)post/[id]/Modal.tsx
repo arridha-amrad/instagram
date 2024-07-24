@@ -2,8 +2,8 @@
 
 import PostExpanded from "@/components/PostExpanded";
 import { TFetchComments } from "@/fetchings/type";
+import { usePostPageStore } from "@/lib/zustand/stores/postPageStore";
 import { useCommentsStore } from "@/stores/CommentsStore";
-import { usePostStore } from "@/stores/PostStore";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -17,9 +17,8 @@ type Props = {
 const Modal = ({ comments, currPathname }: Props) => {
   const router = useRouter();
   const { reset } = useReplySetter();
-  const { post } = usePostStore();
   const { setComments } = useCommentsStore();
-
+  const { post } = usePostPageStore();
   const pathname = usePathname();
 
   useEffect(() => {

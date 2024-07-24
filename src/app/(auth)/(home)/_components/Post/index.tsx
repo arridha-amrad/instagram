@@ -1,5 +1,5 @@
 import { TPost } from "@/fetchings/type";
-import { usePostStore } from "@/stores/PostStore";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { forwardRef, Ref } from "react";
 import Carousel from "./Carousel";
@@ -8,7 +8,7 @@ import Comments from "./Comments";
 import Owner from "./Owner";
 import Actions from "./PostActions";
 import TotalLikes from "./TotalLikes";
-import { cn } from "@/lib/utils";
+import { usePostPageStore } from "@/lib/zustand/postPageStore";
 
 type Props = {
   post: TPost;
@@ -16,8 +16,8 @@ type Props = {
 };
 
 const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
-  const { setPost } = usePostStore();
   const urls = post.urls.map((u) => u.url);
+  const { setPost } = usePostPageStore();
   return (
     <article ref={ref} className={cn("w-full", !isFirst ? "py-4" : "")}>
       <Owner post={post} />

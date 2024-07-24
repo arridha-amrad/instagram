@@ -5,9 +5,9 @@ import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
 import { useEffect, useState } from "react";
 import { fetchLikes, User } from "./action";
 import Wrapper from "@/components/core/ModalWrapper";
-import { useSessionStore } from "@/stores/SessionStore";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
 
 type Props = {
   postId: string;

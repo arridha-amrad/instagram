@@ -1,7 +1,7 @@
 "use client";
 
 import Post from "./Post";
-import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
+import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 
 export default function Posts() {
   const posts = useBoundProfileStore((state) => state.posts);

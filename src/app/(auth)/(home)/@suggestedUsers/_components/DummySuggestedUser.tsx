@@ -4,7 +4,7 @@ import { followAction } from "@/actions/follow";
 import Avatar from "@/components/Avatar";
 import { TOwner } from "@/fetchings/type";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/SessionStore";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";

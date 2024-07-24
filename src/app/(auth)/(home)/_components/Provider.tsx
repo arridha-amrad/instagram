@@ -3,7 +3,7 @@
 import { TPost } from "@/fetchings/type";
 import { ReactNode, useEffect } from "react";
 import Spinner from "@/components/Spinner";
-import { useHomeStore } from "@/lib/zustand/stores/homeStore";
+import { useHomePageStore } from "@/lib/zustand/homePageStore";
 
 type Data = {
   page: number;
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export default function Provider({ children, data }: Props) {
-  const { setPosts, isLoading } = useHomeStore();
+  const { setPosts, isLoading } = useHomePageStore();
 
   useEffect(() => {
     setPosts(data.posts, data.total);

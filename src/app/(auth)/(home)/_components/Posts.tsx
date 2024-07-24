@@ -1,17 +1,17 @@
 "use client";
 
-import { useLastElement } from "@/hooks/useLastElement";
-import { useHomeStore } from "@/lib/zustand/stores/homeStore";
-import { useEffect, useState } from "react";
-import Post from "./Post";
-import { toast } from "react-toastify";
-import { useTheme } from "next-themes";
-import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchPosts";
 import Spinner from "@/components/Spinner";
+import { useLastElement } from "@/hooks/useLastElement";
+import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchPosts";
+import { useHomePageStore } from "@/lib/zustand/homePageStore";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Post from "./Post";
 
 export default function Posts() {
-  const { posts, page, total, addPosts, isLoading } = useHomeStore();
+  const { posts, page, total, addPosts, isLoading } = useHomePageStore();
 
   const [currPage, setCurrPage] = useState(page);
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,6 @@ export default function Posts() {
   const { theme } = useTheme();
 
   useEffect(() => {
-    if (page <= 0 || isLoading) return;
     const loadPosts = async () => {
       setLoading(true);
       try {
@@ -34,16 +33,21 @@ export default function Posts() {
           page: currPage,
         });
         if (result?.data) {
+          console.log(result.data);
           addPosts(result.data.posts);
         }
       } catch (err) {
-        console.log(err);
         toast.error("Something went wrong", { theme });
       } finally {
         setLoading(false);
       }
     };
-    loadPosts();
+
+    if (page === currPage || isLoading) {
+      return;
+    } else {
+      loadPosts();
+    }
   }, [currPage]);
 
   const windowRowVirtualizer = useWindowVirtualizer({

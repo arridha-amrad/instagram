@@ -4,7 +4,7 @@ import Button from "@/components/core/Button";
 import { TPost } from "@/fetchings/type";
 import { useCreateComment } from "@/hooks/useCreateComment";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/SessionStore";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
 
 type Props = {
   post: TPost;

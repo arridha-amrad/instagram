@@ -1,6 +1,6 @@
 "use client";
 
-import { useSessionStore } from "@/stores/SessionStore";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
 import { Session } from "next-auth";
 import { ReactNode, useEffect } from "react";
 

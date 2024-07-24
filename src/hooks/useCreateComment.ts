@@ -2,7 +2,7 @@ import { commentAction } from "@/actions/commentAction";
 import { TCommentSchema, TPost, TReplySchema } from "@/fetchings/type";
 import setNewCommentOnClient from "@/helpers/setNewCommentOnClient";
 import setNewReplyOnClient from "@/helpers/setNewReplyOnClient";
-import { useHomeStore } from "@/lib/zustand/stores/homeStore";
+import { useHomePageStore } from "@/lib/zustand/homePageStore";
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { Session } from "next-auth";
@@ -26,7 +26,7 @@ export const useCreateComment = ({ post, session }: Args) => {
     reset,
   } = useReplySetter();
   const { theme } = useTheme();
-  const { addComment: adC } = useHomeStore();
+  const { addComment: adC } = useHomePageStore();
   const { addComment, addReply } = useCommentsStore();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");

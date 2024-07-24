@@ -1,30 +1,35 @@
 "use client";
 
 import { TPost } from "@/fetchings/type";
-import { useHomeStore } from "@/lib/zustand/stores/homeStore";
-import { usePostStore } from "@/stores/PostStore";
-import { useSessionStore } from "@/stores/SessionStore";
+import { useHomePageStore } from "@/lib/zustand/homePageStore";
+
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { likePostAction } from "./actionLike";
+import { usePostPageStore } from "@/lib/zustand/postPageStore";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
 
 type Props = {
   post: TPost;
 };
 
 const ButtonLikePost = ({ post }: Props) => {
-  const { likePost } = usePostStore();
-  const { likePost: lp } = useHomeStore();
+  const { likePost } = usePostPageStore();
+  const { likePost: lp } = useHomePageStore();
   const { session } = useSessionStore();
   const { theme } = useTheme();
   const pathname = usePathname();
 
-  const like = async () => {
+  const storesAction = () => {
     likePost(post.id);
     lp(post.id);
+  };
+
+  const like = async () => {
+    storesAction();
     try {
       const result = await likePostAction({
         postId: post.id,
@@ -35,8 +40,7 @@ const ButtonLikePost = ({ post }: Props) => {
       }
     } catch (err) {
       // cancel prev like
-      likePost(post.id);
-      lp(post.id);
+      storesAction();
     }
   };
 

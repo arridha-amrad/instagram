@@ -21,7 +21,7 @@ type Action = {
   addComment: (comment: TComment) => void;
 };
 
-export const useHomeStore = create<State & Action>()(
+export const useHomePageStore = create<State & Action>()(
   devtools(
     immer((set) => ({
       isFetching: false,

@@ -3,14 +3,16 @@
 import Button from "@/components/core/Button";
 import setNewPostOnClient from "@/helpers/setNewPostOnClient";
 import { cn } from "@/lib/utils";
-import { usePostStore } from "@/stores/PostStore";
-import { useSessionStore } from "@/stores/SessionStore";
+
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useCreatePost } from "../CreatePostContext";
 import { createPostAction } from "./actionCreatePost";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { useHomePageStore } from "@/lib/zustand/homePageStore";
+import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 
 const FormCreatePost = () => {
   const { step, files, setSubmitSuccessful } = useCreatePost();
@@ -19,7 +21,8 @@ const FormCreatePost = () => {
   const { result, isExecuting, hasErrored, hasSucceeded, execute } =
     useAction(cpa);
   const { theme } = useTheme();
-  const { addPost } = usePostStore();
+  const { addPost } = useHomePageStore();
+  const { addPost: adp } = useBoundProfileStore();
 
   useEffect(() => {
     if (hasSucceeded && result.data?.message) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { TInfiniteResult, TOwnerIsFollow } from "@/lib/drizzle/queries/type";
-import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
+import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 import { ReactNode, useEffect } from "react";
 
 const Provider = ({

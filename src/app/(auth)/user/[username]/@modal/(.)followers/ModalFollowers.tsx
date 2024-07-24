@@ -1,7 +1,7 @@
 "use client";
 
 import UsersContainer from "@/components/UsersContainer";
-import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
+import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 import { useRouter } from "next/navigation";
 
 export default function ModalFollowers() {

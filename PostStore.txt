@@ -13,7 +13,7 @@ type State = {
 type Actions = {
   setPosts: (posts: TPost[]) => void;
   setPost: (post: TPost) => void;
-  likePost: (postId: string) => void;
+  
   addPost: (post: TPost) => void;
   addComment: (comment: TComment) => void;
   increaseComment: () => void;

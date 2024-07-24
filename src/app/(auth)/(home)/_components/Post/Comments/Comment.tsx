@@ -1,6 +1,6 @@
 import { likeCommentAction } from "@/actions/likeCommentAction";
 import { TComment } from "@/fetchings/type";
-import { useSessionStore } from "@/stores/SessionStore";
+import { useSessionStore } from "@/lib/zustand/sessionStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import Link from "next/link";

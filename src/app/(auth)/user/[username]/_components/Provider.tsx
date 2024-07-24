@@ -2,7 +2,7 @@
 
 import Spinner from "@/components/Spinner";
 import { TUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
-import useBoundProfileStore from "@/lib/zustand/stores/profilePage";
+import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 import { ReactNode, useEffect } from "react";
 
 type Props = {
