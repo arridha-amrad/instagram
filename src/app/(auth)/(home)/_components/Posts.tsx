@@ -3,7 +3,7 @@
 import Spinner from "@/components/Spinner";
 import { useLastElement } from "@/hooks/useLastElement";
 import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchPosts";
-import { useHomePageStore } from "@/lib/zustand/homePageStore";
+import usePostsStore from "@/stores/Posts";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -11,16 +11,17 @@ import { toast } from "react-toastify";
 import Post from "./Post";
 
 export default function Posts() {
-  const { posts, page, total, addPosts, isLoading } = useHomePageStore();
+  const { feedPosts, pageFeedPosts, totalFeedPosts, addFeedPosts } =
+    usePostsStore();
 
-  const [currPage, setCurrPage] = useState(page);
+  const [currPage, setCurrPage] = useState(pageFeedPosts);
   const [loading, setLoading] = useState(false);
 
   const lastElementRef = useLastElement({
     callback: () => setCurrPage((val) => val + 1),
-    data: posts,
+    data: feedPosts,
     loading,
-    total,
+    total: totalFeedPosts,
   });
 
   const { theme } = useTheme();
@@ -33,8 +34,7 @@ export default function Posts() {
           page: currPage,
         });
         if (result?.data) {
-          console.log(result.data);
-          addPosts(result.data.posts);
+          addFeedPosts(result.data.posts);
         }
       } catch (err) {
         toast.error("Something went wrong", { theme });
@@ -43,7 +43,7 @@ export default function Posts() {
       }
     };
 
-    if (page === currPage || isLoading) {
+    if (pageFeedPosts === currPage) {
       return;
     } else {
       loadPosts();
@@ -51,7 +51,10 @@ export default function Posts() {
   }, [currPage]);
 
   const windowRowVirtualizer = useWindowVirtualizer({
-    count: posts.length === total ? total : posts.length + 1,
+    count:
+      feedPosts.length === totalFeedPosts
+        ? totalFeedPosts
+        : feedPosts.length + 1,
     estimateSize: () => 50,
     overscan: 5,
   });
@@ -65,8 +68,8 @@ export default function Posts() {
       }}
     >
       {windowRowVirtualizer.getVirtualItems().map((virtualRow) => {
-        const post = posts[virtualRow.index];
-        const isLoaderRow = virtualRow.index > posts.length - 1;
+        const post = feedPosts[virtualRow.index];
+        const isLoaderRow = virtualRow.index > feedPosts.length - 1;
         return (
           <div
             key={virtualRow.index}

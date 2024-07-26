@@ -1,9 +1,9 @@
 "use client";
 
-import { TPost } from "@/fetchings/type";
-import { ReactNode, useEffect } from "react";
 import Spinner from "@/components/Spinner";
-import { useHomePageStore } from "@/lib/zustand/homePageStore";
+import { TPost } from "@/fetchings/type";
+import usePostsStore from "@/stores/Posts";
+import { ReactNode, useEffect } from "react";
 
 type Data = {
   page: number;
@@ -17,13 +17,13 @@ type Props = {
 };
 
 export default function Provider({ children, data }: Props) {
-  const { setPosts, isLoading } = useHomePageStore();
+  const { setFeedPosts, isLoadingFeedPosts } = usePostsStore();
 
   useEffect(() => {
-    setPosts(data.posts, data.total);
+    setFeedPosts(data.posts, data.total);
   }, []);
 
-  if (isLoading) {
+  if (isLoadingFeedPosts) {
     return (
       <div className="mx-auto flex items-center justify-center py-4">
         <Spinner className="w-7" />

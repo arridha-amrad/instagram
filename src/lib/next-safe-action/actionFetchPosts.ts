@@ -11,7 +11,6 @@ export const actionFetchPosts = authActionClient
     }),
   )
   .action(async ({ ctx: { userId }, parsedInput: { page } }) => {
-    await new Promise((res) => setTimeout(res, 3000));
     const result = await fetchPosts({
       page,
       userId,

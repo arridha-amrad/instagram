@@ -3,14 +3,14 @@ import { StateCreator } from "zustand";
 import { FollowerSlice } from "./createFollowerSlice";
 import { FollowingSlice } from "./createFollowingSlice";
 
-export interface PostSlice {
+export type PostSlice = {
   total: number;
   page: number;
   posts: TPost[];
   setPosts: (posts: TPost[], total: number) => void;
   addPost: (post: TPost) => void;
   isLoading: boolean;
-}
+};
 
 export const createPostSlice: StateCreator<
   PostSlice & FollowerSlice & FollowingSlice,

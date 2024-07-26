@@ -6,14 +6,14 @@ import { TOwnerIsFollow } from "@/lib/drizzle/queries/type";
 
 export type Data = TOwner & { isFollow: boolean };
 
-export interface FollowingSlice {
+export type FollowingSlice = {
   followings: TOwnerIsFollow[];
   total: number;
   page: number;
   isLoadingFollowings: boolean;
   setFollowings: (followings: TOwnerIsFollow[], total: number) => void;
   setMoreFollowings: (followings: TOwnerIsFollow[]) => void;
-}
+};
 
 export const createFollowingsSlice: StateCreator<
   PostSlice & FollowingSlice & FollowerSlice,
