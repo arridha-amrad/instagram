@@ -8,6 +8,7 @@ export type FeedSlice = {
   pageFeedPosts: number;
   feedPosts: TPost[];
   isLoadingFeedPosts: boolean;
+  likeFeedPost: (postId: string) => void;
   setFeedPosts: (posts: TPost[], total: number) => void;
   addFeedPosts: (feedPosts: TPost[]) => void;
 };
@@ -22,6 +23,14 @@ export const createFeedSlice: StateCreator<
   pageFeedPosts: 0,
   totalFeedPosts: 0,
   isLoadingFeedPosts: true,
+  likeFeedPost(postId) {
+    set((state) => {
+      const post = state.feedPosts.find((p) => p.id === postId);
+      if (!post) return;
+      post.sumLikes = post.isLiked ? post.sumLikes - 1 : post.sumLikes + 1;
+      post.isLiked = !post.isLiked;
+    });
+  },
   addFeedPosts(feedPosts) {
     set((state) => {
       state.feedPosts = [...state.feedPosts, ...feedPosts].filter(

@@ -66,7 +66,7 @@ const Carousel = ({ urls, isFirstPost }: Props) => {
   }, [emblaApi, onSelect, onInit, onDotSelect]);
 
   return (
-    <section className="relative w-full">
+    <section className="group relative w-full">
       <div className="absolute inset-0 flex animate-pulse items-center justify-center rounded bg-gray-300 dark:bg-gray-700">
         <svg
           className="h-10 w-10 text-gray-200 dark:text-gray-600"
@@ -105,7 +105,7 @@ const Carousel = ({ urls, isFirstPost }: Props) => {
         </div>
       </div>
 
-      <div className="absolute inset-y-0 left-2 flex items-center justify-center">
+      <div className="invisible absolute inset-y-0 left-2 flex items-center justify-center group-hover:visible">
         <button
           disabled={prevBtnDisabled}
           onClick={onPrevButtonClick}
@@ -114,7 +114,7 @@ const Carousel = ({ urls, isFirstPost }: Props) => {
           <ChevronLeftIcon className="aspect-square w-4" />
         </button>
       </div>
-      <div className="absolute inset-y-0 right-2 flex items-center justify-center">
+      <div className="invisible absolute inset-y-0 right-2 flex items-center justify-center group-hover:visible">
         <button
           disabled={nextBtnDisabled}
           onClick={onNextButtonClick}
@@ -135,6 +135,11 @@ const Carousel = ({ urls, isFirstPost }: Props) => {
             )}
           />
         ))}
+      </div>
+      <div className="absolute right-2 top-2 opacity-0 transition-opacity duration-200 ease-linear group-hover:opacity-100">
+        <div className="relative rounded-md bg-background bg-opacity-50 px-2 py-1 text-sm">
+          {selectedIndex + 1} / {scrollSnaps.length}
+        </div>
       </div>
     </section>
   );

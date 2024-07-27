@@ -25,6 +25,7 @@ export const useCreateComment = ({ post, session }: Args) => {
     id,
     reset,
   } = useReplySetter();
+
   const { theme } = useTheme();
   const { addComment: adC } = useHomePageStore();
   const { addComment, addReply } = useCommentsStore();

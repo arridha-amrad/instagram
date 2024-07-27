@@ -1,12 +1,13 @@
-import { TPost } from "@/fetchings/type";
+import { TPost } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
+import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
 import Link from "next/link";
 import { forwardRef, Ref } from "react";
+import ButtonLike from "./ButtonLike";
 import Carousel from "./Carousel";
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 import Owner from "./Owner";
-import Actions from "./PostActions";
 import TotalLikes from "./TotalLikes";
 
 type Props = {
@@ -23,7 +24,12 @@ const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
     >
       <Owner post={post} />
       <Carousel isFirstPost={isFirst} urls={urls} />
-      <Actions post={post} />
+      <div className="flex items-center gap-3">
+        <ButtonLike postId={post.id} isLiked={post.isLiked} />
+        <Link scroll={false} href={`/post/${post.id}`}>
+          <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
+        </Link>
+      </div>
       {post.sumLikes > 0 && (
         <TotalLikes postId={post.id} total={post.sumLikes} />
       )}
