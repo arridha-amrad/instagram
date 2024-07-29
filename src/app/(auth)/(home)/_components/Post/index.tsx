@@ -20,7 +20,7 @@ const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
   return (
     <article
       ref={ref}
-      className={cn("w-full space-y-2", !isFirst ? "py-4" : "")}
+      className={cn("w-full space-y-2", !isFirst ? "pt-10" : "")}
     >
       <Owner post={post} />
       <Carousel isFirstPost={isFirst} urls={urls} />

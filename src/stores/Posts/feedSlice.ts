@@ -1,4 +1,4 @@
-import { TPost } from "@/lib/drizzle/queries/type";
+import { TComment, TPost } from "@/lib/drizzle/queries/type";
 import { StateCreator } from "zustand";
 import { DetailSlice } from "./detailSlice";
 import { ProfileSlice } from "./profileSlice";
@@ -11,6 +11,8 @@ export type FeedSlice = {
   likeFeedPost: (postId: string) => void;
   setFeedPosts: (posts: TPost[], total: number) => void;
   addFeedPosts: (feedPosts: TPost[]) => void;
+  addCommentToFeedPost: (comment: TComment) => void;
+  likeCommentOfFeedPost: (postId: string, commentId: string) => void;
 };
 
 export const createFeedSlice: StateCreator<
@@ -23,6 +25,25 @@ export const createFeedSlice: StateCreator<
   pageFeedPosts: 0,
   totalFeedPosts: 0,
   isLoadingFeedPosts: true,
+  likeCommentOfFeedPost(postId, commentId) {
+    set((state) => {
+      const comment = state.feedPosts
+        .find((p) => p.id === postId)
+        ?.comments.find((c) => c.id === commentId);
+      if (!comment) return;
+      comment.isLiked = !comment.isLiked;
+    });
+  },
+  addCommentToFeedPost(comment) {
+    set((state) => {
+      const post = state.feedPosts.find((p) => p.id === comment.postId);
+      if (post) {
+        post.comments.push(comment);
+        post.sumComments += 1;
+      }
+    });
+  },
+
   likeFeedPost(postId) {
     set((state) => {
       const post = state.feedPosts.find((p) => p.id === postId);

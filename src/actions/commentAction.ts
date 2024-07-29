@@ -32,6 +32,7 @@ export const commentAction = authActionClient
       parsedInput: { message },
     }) => {
       try {
+        // if no commentId passed it will create comment otherwise create reply
         if (!commentId) {
           if (!postId) return;
           const response = await createComment({
