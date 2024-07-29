@@ -1,8 +1,8 @@
-import { TComment } from "@/fetchings/type";
 import Comment from "./Comment";
+import { TFeedComment } from "@/lib/drizzle/queries/type";
 
 type Props = {
-  comments: TComment[];
+  comments: TFeedComment[];
 };
 
 const Comments = ({ comments }: Props) => {

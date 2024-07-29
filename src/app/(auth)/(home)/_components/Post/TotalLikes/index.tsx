@@ -1,13 +1,13 @@
 "use client";
 
+import Wrapper from "@/components/core/ModalWrapper";
 import MySpinner from "@/components/Spinner";
 import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
-import { useEffect, useState } from "react";
-import { fetchLikes, User } from "./action";
-import Wrapper from "@/components/core/ModalWrapper";
-import { toast } from "react-toastify";
+import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { fetchLikes, User } from "./action";
 
 type Props = {
   postId: string;
@@ -63,7 +63,6 @@ const TotalLikes = ({ postId, total }: Props) => {
               <div className="space-x-2 border-b border-skin py-2 text-center">
                 <h1 className="inline text-sm font-semibold">Likes</h1>
               </div>
-
               {isLoading ? (
                 <div className="flex items-center justify-center py-4">
                   <MySpinner className="w-6 fill-indigo-500" />

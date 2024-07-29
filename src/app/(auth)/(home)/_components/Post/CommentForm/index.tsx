@@ -1,8 +1,7 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TPost } from "@/fetchings/type";
-import { TComment } from "@/lib/drizzle/queries/type";
+import { TFeedComment, TFeedPost } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
 import usePostsStore from "@/stores/Posts";
 import { useAction } from "next-safe-action/hooks";
@@ -10,43 +9,35 @@ import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { action } from "./action";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { useSessionStore } from "@/stores/Session";
 
 type Props = {
-  post: TPost;
+  post: TFeedPost;
 };
 
 export default function CommentForm({ post }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
-  const { session: auth } = useSessionStore();
+  const { theme } = useTheme();
+  const { session } = useSessionStore();
   const { addCommentToFeedPost } = usePostsStore();
 
   const newCommentAction = action.bind(null, post.id);
-  const { theme } = useTheme();
-
   const { execute, isExecuting } = useAction(newCommentAction, {
     onError: () => {
       toast.error("Something went wrong", { theme });
     },
     onSuccess: ({ data }) => {
       if (data) {
-        const newComment: TComment = {
+        const newComment: TFeedComment = {
           ...data,
           isLiked: false,
-          owner: {
-            avatar: auth?.user.image ?? "",
-            id: auth?.user.id ?? "",
-            name: auth?.user.name ?? "",
-            username: auth?.user.username ?? "",
-          },
-          replies: [],
-          sumLikes: 0,
-          sumReplies: 0,
-          sumRepliesRemaining: 0,
+          username: session?.user.username ?? "",
         };
         addCommentToFeedPost(newComment);
       }
+      formRef.current?.reset();
+      setMessage("");
     },
   });
 
@@ -70,6 +61,7 @@ export default function CommentForm({ post }: Props) {
           placeholder="Add a comment..."
         />
         <button
+          disabled={!message}
           className={cn(
             "p-1 text-sm",
             !message ? "text-skin-muted" : "text-skin-inverted",

@@ -1,4 +1,4 @@
-import { TPost } from "@/lib/drizzle/queries/type";
+import { TFeedPost } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
 import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import Owner from "./Owner";
 import TotalLikes from "./TotalLikes";
 
 type Props = {
-  post: TPost;
+  post: TFeedPost;
   isFirst?: boolean;
 };
 

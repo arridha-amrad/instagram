@@ -1,4 +1,4 @@
-import { TComment, TPost } from "@/lib/drizzle/queries/type";
+import { TFeedComment, TFeedPost } from "@/lib/drizzle/queries/type";
 import { StateCreator } from "zustand";
 import { DetailSlice } from "./detailSlice";
 import { ProfileSlice } from "./profileSlice";
@@ -6,12 +6,12 @@ import { ProfileSlice } from "./profileSlice";
 export type FeedSlice = {
   totalFeedPosts: number;
   pageFeedPosts: number;
-  feedPosts: TPost[];
   isLoadingFeedPosts: boolean;
+  feedPosts: TFeedPost[];
   likeFeedPost: (postId: string) => void;
-  setFeedPosts: (posts: TPost[], total: number) => void;
-  addFeedPosts: (feedPosts: TPost[]) => void;
-  addCommentToFeedPost: (comment: TComment) => void;
+  setFeedPosts: (posts: TFeedPost[], total: number) => void;
+  addFeedPosts: (feedPosts: TFeedPost[]) => void;
+  addCommentToFeedPost: (comment: TFeedComment) => void;
   likeCommentOfFeedPost: (postId: string, commentId: string) => void;
 };
 

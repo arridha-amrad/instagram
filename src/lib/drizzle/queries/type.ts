@@ -42,6 +42,12 @@ export type TPost = TPostSchema & {
   sumComments: number;
 };
 
+export type TFeedComment = TCommentSchema & {
+  username: string;
+  isLiked: boolean;
+};
+export type TFeedPost = Omit<TPost, "comments"> & { comments: TFeedComment[] };
+
 export type TReply = TReplySchema & { owner: TOwner } & {
   isLiked: boolean;
   sumLikes: number;

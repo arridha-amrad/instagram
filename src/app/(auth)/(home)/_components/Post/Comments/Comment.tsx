@@ -1,13 +1,13 @@
 import { likeCommentAction } from "@/actions/likeCommentAction";
-import { TComment } from "@/fetchings/type";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { TFeedComment } from "@/lib/drizzle/queries/type";
 import usePostsStore from "@/stores/Posts";
+import { useSessionStore } from "@/stores/Session";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 type Props = {
-  comment: TComment;
+  comment: TFeedComment;
 };
 
 const Comment = ({ comment }: Props) => {
@@ -26,10 +26,10 @@ const Comment = ({ comment }: Props) => {
     <div className="flex items-start justify-between" key={comment.id}>
       <div>
         <Link
-          href={`/${comment.owner.username}`}
+          href={`/user/${comment.username}`}
           className="inline pr-2 text-sm font-semibold"
         >
-          {comment.owner.username}
+          {comment.username}
         </Link>
         <p className="inline text-sm text-skin-muted">{comment.message}</p>
       </div>

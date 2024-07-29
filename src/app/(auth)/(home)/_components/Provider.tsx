@@ -1,14 +1,14 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TPost } from "@/fetchings/type";
+import { TFeedPost } from "@/lib/drizzle/queries/type";
 import usePostsStore from "@/stores/Posts";
 import { ReactNode, useEffect } from "react";
 
 type Data = {
   page: number;
   total: number;
-  posts: TPost[];
+  posts: TFeedPost[];
 };
 
 type Props = {
@@ -26,7 +26,7 @@ export default function Provider({ children, data }: Props) {
   if (isLoadingFeedPosts) {
     return (
       <div className="mx-auto flex items-center justify-center py-4">
-        <Spinner className="w-7" />
+        <Spinner className="w-5" />
       </div>
     );
   }

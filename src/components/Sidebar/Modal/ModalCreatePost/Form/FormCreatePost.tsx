@@ -10,9 +10,9 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useCreatePost } from "../CreatePostContext";
 import { createPostAction } from "./actionCreatePost";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
 import { useHomePageStore } from "@/lib/zustand/homePageStore";
 import useBoundProfileStore from "@/lib/zustand/profilePageStore";
+import { useSessionStore } from "@/stores/Session";
 
 const FormCreatePost = () => {
   const { step, files, setSubmitSuccessful } = useCreatePost();

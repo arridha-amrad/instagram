@@ -3,7 +3,7 @@
 import { followAction } from "@/actions/follow";
 import Button from "@/components/core/Button";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { useSessionStore } from "@/stores/Session";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";

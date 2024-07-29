@@ -2,7 +2,7 @@ import { followAction } from "@/actions/follow";
 import Avatar from "@/components/Avatar";
 import { TOwner } from "@/fetchings/type";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

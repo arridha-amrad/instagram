@@ -1,6 +1,6 @@
-import { TPost, TComment } from "@/fetchings/type";
 import { sumComments } from "@/helpers/comments";
 import db from "@/lib/drizzle/db";
+import { TFeedComment, TFeedPost } from "@/lib/drizzle/queries/type";
 import { PostsTable } from "@/lib/drizzle/schema";
 import { sql } from "drizzle-orm";
 
@@ -14,7 +14,7 @@ type Args = {
 const fetchPosts = async ({
   page,
   userId,
-}: Args): Promise<{ posts: TPost[]; total: number; page: number }> => {
+}: Args): Promise<{ posts: TFeedPost[]; total: number; page: number }> => {
   const [result] = await db
     .select({
       total: sql<number>`cast(count(${PostsTable.id}) as int)`,
@@ -60,7 +60,7 @@ const fetchPosts = async ({
       sumLikes: result.likes.length,
       sumComments: sumComments(result.comments),
       sumCommentsOnly: result.comments.length,
-      comments: [] as TComment[],
+      comments: [] as TFeedComment[],
     }));
   });
 

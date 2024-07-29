@@ -32,7 +32,6 @@ const Logout = () => {
       <button onClick={() => setOpen(true)} className="py-3">
         Logout
       </button>
-
       {open && (
         <Modal closeModal={closeModal}>
           <div className="relative max-w-sm overflow-hidden rounded-md border border-skin bg-background">

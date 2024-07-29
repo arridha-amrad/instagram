@@ -2,9 +2,9 @@
 
 import { followAction } from "@/actions/follow";
 import Avatar from "@/components/Avatar";
-import { TOwner } from "@/fetchings/type";
+import { TOwner } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
+import { useSessionStore } from "@/stores/Session";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";

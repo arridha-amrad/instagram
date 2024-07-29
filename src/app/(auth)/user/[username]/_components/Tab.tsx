@@ -19,7 +19,13 @@ export default function Tab({ href, name, username }: Props) {
 
   return (
     <div className={cn("p-4", isActive ? "border-t" : "")} key={name}>
-      <Link href={target}>{name}</Link>
+      <Link
+        scroll={false}
+        className={cn(isActive ? "font-semibold" : "font-normal")}
+        href={target}
+      >
+        {name}
+      </Link>
     </div>
   );
 }

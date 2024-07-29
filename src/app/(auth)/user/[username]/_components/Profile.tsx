@@ -13,7 +13,7 @@ type Props = {
   username: string;
 };
 
-export default async function UserProfile({ username }: Props) {
+export default async function Profile({ username }: Props) {
   const session = await auth();
   const u = await fetchUserProfile({
     username: username,
@@ -63,11 +63,11 @@ export default async function UserProfile({ username }: Props) {
             <h1>{u?.sumPosts} Posts</h1>
           </div>
 
-          <Link href={`/user/${username}/followers`}>
+          <Link scroll={false} href={`/user/${username}/followers`}>
             {u.followers} Followers
           </Link>
 
-          <Link href={`/user/${username}/followings`}>
+          <Link scroll={false} href={`/user/${username}/followings`}>
             {u.followings} Followings
           </Link>
         </div>

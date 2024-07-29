@@ -1,10 +1,10 @@
 import Avatar from "@/components/Avatar";
-import { TPost } from "@/fetchings/type";
+import { TFeedPost } from "@/lib/drizzle/queries/type";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 
 type Props = {
-  post: TPost;
+  post: TFeedPost;
 };
 
 const Owner = ({ post }: Props) => {
