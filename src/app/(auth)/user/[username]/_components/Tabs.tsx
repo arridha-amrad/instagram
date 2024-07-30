@@ -23,7 +23,12 @@ export default function Tabs({ username }: Props) {
   return (
     <section className="my-10 flex items-center justify-center gap-10 border-t border-skin">
       {tabs.map((tab) => (
-        <Tab href={tab.href} name={tab.name} username={username} />
+        <Tab
+          href={tab.href}
+          key={tab.name}
+          name={tab.name}
+          username={username}
+        />
       ))}
     </section>
   );
