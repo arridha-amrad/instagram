@@ -1,19 +1,18 @@
 "use client";
 
-import { TPost } from "@/fetchings/type";
 import Link from "next/link";
 import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
-  post: TPost;
+  postId: string;
 };
 
-const PostLink = ({ children, post }: Props) => {
+const PostLink = ({ children, postId }: Props) => {
   return (
     <Link
       scroll={false}
-      href={`/post/${post.id}`}
+      href={`/post/${postId}`}
       className="relative aspect-square overflow-hidden"
     >
       {children}

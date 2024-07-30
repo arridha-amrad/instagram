@@ -23,7 +23,7 @@ export type TInfiniteResult<T> = {
   total: number;
   page: number;
 } & {
-  users: T;
+  data: T[];
 };
 
 export type TComment = TCommentSchema & { owner: TOwner } & {
@@ -41,6 +41,11 @@ export type TPost = TPostSchema & {
   sumLikes: number;
   sumComments: number;
 };
+
+export type TUserPost = Omit<
+  TPostSchema,
+  "createdAt" | "updatedAt" | "location" | "description" | "userId"
+> & { sumLikes: number; sumComments: number };
 
 export type TFeedComment = TCommentSchema & {
   username: string;

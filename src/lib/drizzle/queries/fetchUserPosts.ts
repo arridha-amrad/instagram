@@ -1,27 +1,21 @@
-import { TPost } from "@/fetchings/type";
 import { sumComments } from "@/helpers/comments";
 import db from "@/lib/drizzle/db";
+import { TInfiniteResult, TUserPost } from "@/lib/drizzle/queries/type";
+import { eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { PostsTable } from "../schema";
-import { eq, sql } from "drizzle-orm";
-
-export type TUserPosts = {
-  posts: TPost[];
-  total: number;
-  page: number;
-};
 
 type Args = {
   username: string;
   page: number;
 };
 
-const LIMIT = 3;
+const LIMIT = 6;
 
 const fetchUserPosts = async ({
   username,
   page,
-}: Args): Promise<TUserPosts> => {
+}: Args): Promise<TInfiniteResult<TUserPost>> => {
   const user = await db.query.UsersTable.findFirst({
     where(fields, operators) {
       return operators.eq(fields.username, username);
@@ -30,7 +24,7 @@ const fetchUserPosts = async ({
 
   if (!user) {
     return {
-      posts: [],
+      data: [],
       total: 0,
       page: 1,
     };
@@ -46,16 +40,11 @@ const fetchUserPosts = async ({
   const posts = await db.query.PostsTable.findMany({
     limit: LIMIT,
     offset: LIMIT * (page - 1),
+    columns: {
+      id: true,
+      urls: true,
+    },
     with: {
-      owner: {
-        columns: {
-          avatar: true,
-          email: true,
-          id: true,
-          name: true,
-          username: true,
-        },
-      },
       comments: {
         columns: {
           id: true,
@@ -68,27 +57,34 @@ const fetchUserPosts = async ({
           },
         },
       },
-      likes: true,
+      likes: {
+        columns: {
+          postId: true,
+        },
+      },
     },
-    orderBy(fields, operators) {
-      return operators.desc(fields.createdAt);
+    orderBy({ createdAt }, { desc }) {
+      return desc(createdAt);
     },
-    where(fields, operators) {
-      return operators.eq(fields.userId, user.id);
+    where({ userId }, { eq }) {
+      return eq(userId, user.id);
     },
-  }).then((result) => {
-    return result.map((data) => ({
-      ...data,
-      sumComments: sumComments(data.comments),
-      isLiked: !!data.likes.find((like) => like.userId === user.id),
-      sumLikes: data.likes.length,
-      comments: [],
-    }));
   });
+
+  const populatedPosts = posts.map((post) => {
+    const data: TUserPost = {
+      id: post.id,
+      urls: post.urls,
+      sumLikes: post.likes.length,
+      sumComments: sumComments(post.comments),
+    };
+    return data;
+  });
+
   return {
-    posts,
-    total: result.total,
+    data: populatedPosts,
     page,
+    total: result.total,
   };
 };
 

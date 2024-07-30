@@ -1,7 +1,7 @@
 import { TPost } from "@/lib/drizzle/queries/type";
 import { StateCreator } from "zustand";
 import { FeedSlice } from "./feedSlice";
-import { ProfileSlice } from "./profileSlice";
+import { ProfileSlice } from "./userSlice";
 
 export type DetailSlice = {
   post: TPost | null;

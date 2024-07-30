@@ -1,4 +1,3 @@
-import { TPost } from "@/fetchings/type";
 import {
   ChatBubbleOvalLeftIcon,
   DocumentDuplicateIcon,
@@ -6,14 +5,15 @@ import {
 } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import PostLink from "./PostLink";
+import { TUserPost } from "@/lib/drizzle/queries/type";
 
 type Props = {
-  post: TPost;
+  post: TUserPost;
 };
 
 const Post = ({ post }: Props) => {
   return (
-    <PostLink post={post}>
+    <PostLink postId={post.id}>
       <Image
         src={post.urls[0].url}
         alt="post_image"

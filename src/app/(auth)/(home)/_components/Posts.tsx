@@ -16,6 +16,7 @@ export default function Posts() {
 
   const [currPage, setCurrPage] = useState(pageFeedPosts);
   const [loading, setLoading] = useState(false);
+  const { theme } = useTheme();
 
   const lastElementRef = useLastElement({
     callback: () => setCurrPage((val) => val + 1),
@@ -23,8 +24,6 @@ export default function Posts() {
     loading,
     total: totalFeedPosts,
   });
-
-  const { theme } = useTheme();
 
   useEffect(() => {
     const loadPosts = async () => {

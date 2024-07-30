@@ -1,33 +1,31 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
-import useBoundProfileStore from "@/lib/zustand/profilePageStore";
+import { TInfiniteResult, TUserPost } from "@/lib/drizzle/queries/type";
+import usePostsStore from "@/stores/Posts";
 import { ReactNode, useEffect } from "react";
 
 type Props = {
   children: ReactNode;
-  data: TUserPosts;
+  data: TInfiniteResult<TUserPost>;
 };
 
 const Provider = ({ children, data }: Props) => {
-  const { setPosts, isLoading } = useBoundProfileStore();
+  const { setUserPosts, isLoadingUserPosts } = usePostsStore();
 
   useEffect(() => {
-    setPosts(data.posts, data.total);
+    setUserPosts(data.data, data.total);
   }, []);
 
-  return (
-    <>
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <Spinner className="w-6" />
-        </div>
-      ) : (
-        children
-      )}
-    </>
-  );
+  if (isLoadingUserPosts) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner className="w-6" />
+      </div>
+    );
+  }
+
+  return children;
 };
 
 export default Provider;

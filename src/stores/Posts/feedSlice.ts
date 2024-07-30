@@ -1,7 +1,7 @@
 import { TFeedComment, TFeedPost } from "@/lib/drizzle/queries/type";
 import { StateCreator } from "zustand";
 import { DetailSlice } from "./detailSlice";
-import { ProfileSlice } from "./profileSlice";
+import { UserSlice } from "./userSlice";
 
 export type FeedSlice = {
   totalFeedPosts: number;
@@ -16,7 +16,7 @@ export type FeedSlice = {
 };
 
 export const createFeedSlice: StateCreator<
-  DetailSlice & FeedSlice & ProfileSlice,
+  DetailSlice & FeedSlice & UserSlice,
   [["zustand/devtools", never], ["zustand/immer", never]],
   [],
   FeedSlice
