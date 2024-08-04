@@ -9,29 +9,30 @@ import { toast } from "react-toastify";
 import { likeCommentAction } from "./action";
 
 type Props = {
-  comment: TComment;
+  isLiked: boolean;
+  commentId: string;
 };
 
-const ButtonLikeComment = ({ comment }: Props) => {
+const ButtonLikeComment = ({ commentId, isLiked }: Props) => {
   const { likeComment: lc } = useCommentsStore();
   const pathname = usePathname();
   const like = async () => {
-    lc(comment.id);
+    lc(commentId);
     try {
       const result = await likeCommentAction({
-        commentId: comment.id,
+        commentId: commentId,
         pathname,
       });
       if (result?.serverError) {
         toast.error("Something went wrong");
       }
     } catch (err) {
-      lc(comment.id);
+      lc(commentId);
     }
   };
   return (
     <button onClick={like} type="submit">
-      {comment.isLiked ? (
+      {isLiked ? (
         <Heart className="aspect-square w-4 fill-pink-600" />
       ) : (
         <HeartIcon className="aspect-square w-4" />

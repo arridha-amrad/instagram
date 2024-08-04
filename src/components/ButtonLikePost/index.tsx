@@ -1,16 +1,16 @@
 "use client";
 
-import { TPost } from "@/fetchings/type";
 import { useHomePageStore } from "@/lib/zustand/homePageStore";
 
 import { usePostPageStore } from "@/lib/zustand/postPageStore";
-import { useSessionStore } from "@/lib/zustand/sessionStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { likePostAction } from "./actionLike";
+import { useSessionStore } from "@/stores/Session";
+import { TPost } from "@/lib/drizzle/queries/type";
 
 type Props = {
   post: TPost;

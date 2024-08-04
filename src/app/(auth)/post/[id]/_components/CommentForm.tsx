@@ -4,15 +4,24 @@ import Avatar from "@/components/Avatar";
 import Button from "@/components/core/Button";
 import { useCreateComment } from "@/hooks/useCreateComment";
 import { cn } from "@/lib/utils";
-import { usePostStore } from "@/stores/PostStore";
-import { useSessionStore } from "@/stores/SessionStore";
+import usePostsStore from "@/stores/Posts";
+import { useSessionStore } from "@/stores/Session";
+
 import { useState } from "react";
 
 export default function CommentForm() {
   const [isFocus, setFocus] = useState(false);
   const { session } = useSessionStore();
-  const { post } = usePostStore();
-  const { execute, formRef, inputRef, isExecuting, message, setFocusToCommentForm, setMessage } = useCreateComment({
+  const { post } = usePostsStore();
+  const {
+    execute,
+    formRef,
+    inputRef,
+    isExecuting,
+    message,
+    setFocusToCommentForm,
+    setMessage,
+  } = useCreateComment({
     post: post!,
     session,
   });
@@ -51,7 +60,11 @@ export default function CommentForm() {
               isFocus && "opacity-100",
             )}
           >
-            <Button onClick={() => setMessage("")} disabled={isExecuting} className="bg-background">
+            <Button
+              onClick={() => setMessage("")}
+              disabled={isExecuting}
+              className="bg-background"
+            >
               Clear
             </Button>
             <Button type="submit" isLoading={isExecuting}>

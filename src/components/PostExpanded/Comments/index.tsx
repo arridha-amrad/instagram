@@ -4,12 +4,15 @@ import { useCommentsStore } from "@/stores/CommentsStore";
 import Comment from "@/components/Comment";
 import { loadMoreComments } from "./action";
 import { useParams } from "next/navigation";
-import { useSessionStore } from "@/stores/SessionStore";
 import { useState } from "react";
 import MySpinner from "@/components/Spinner";
+import { useSessionStore } from "@/stores/Session";
+import usePostsStore from "@/stores/Posts";
 
 const Comments = () => {
-  const { comments, total, page, addMoreComments } = useCommentsStore();
+  const { total, page, addMoreComments } = useCommentsStore();
+  const { post } = usePostsStore();
+  if (!post) return null;
   const { session } = useSessionStore();
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -34,10 +37,10 @@ const Comments = () => {
 
   return (
     <>
-      {comments.map((comment) => (
+      {post.comments.map((comment) => (
         <Comment comment={comment} key={comment.id} />
       ))}
-      {comments.length < total && (
+      {post.comments.length < post.sumComments && (
         <button
           disabled={loading}
           onClick={loadMore}

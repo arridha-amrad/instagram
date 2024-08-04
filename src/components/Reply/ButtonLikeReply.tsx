@@ -1,11 +1,11 @@
 import { TReply } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
-import { useSessionStore } from "@/stores/SessionStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
 import { toast } from "react-toastify";
 import { likeReplyAction } from "./action";
+import { useSessionStore } from "@/stores/Session";
 
 type Props = {
   reply: TReply;
@@ -19,7 +19,7 @@ const ButtonLikeReply = ({ reply }: Props) => {
   const like = async () => {
     likeReply({ commentId: reply.commentId, replyId: reply.id });
     const result = await likeReplyAction({
-      replyId: reply.id
+      replyId: reply.id,
     });
     if (result?.serverError) {
       toast.error("Something went wrong", { theme });

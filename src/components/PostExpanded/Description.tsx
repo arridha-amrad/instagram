@@ -1,29 +1,36 @@
 import Avatar from "@/components/Avatar";
-import { TPost } from "@/fetchings/type";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 
 type Props = {
-  post: TPost;
+  avatar?: string | null;
+  username: string;
+  description: string | null;
+  createdAt: Date;
 };
 
-const PostDescription = ({ post }: Props) => {
+const PostDescription = ({
+  createdAt,
+  description,
+  username,
+  avatar,
+}: Props) => {
   return (
     <section id="post_description" className="flex gap-2">
       <div>
-        <Avatar url={post.owner.avatar} />
+        <Avatar url={avatar} />
       </div>
       <div className="pt-0.5">
         <Link
-          href={`/${post.owner.username}`}
+          href={`/${username}`}
           className="inline pr-2 text-sm font-semibold"
         >
-          {post.owner.username}
+          {username}
         </Link>
-        <p className="inline text-sm text-skin-muted">{post.description}</p>
+        <p className="inline text-sm text-skin-muted">{description}</p>
         <div className="py-2">
           <p className="text-xs text-skin-muted">
-            {formatDistanceToNowStrict(post.createdAt)}
+            {formatDistanceToNowStrict(createdAt)}
           </p>
         </div>
       </div>

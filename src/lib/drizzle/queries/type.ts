@@ -11,11 +11,9 @@ import { fetchSearchHistories } from "@/components/Sidebar/fetchSearchHistories"
 export type TPostSchema = typeof PostsTable.$inferSelect;
 export type TCommentSchema = typeof CommentsTable.$inferSelect;
 export type TReplySchema = typeof RepliesTable.$inferSelect;
+export type TUserSchema = typeof UsersTable.$inferSelect;
 
-export type TOwner = Pick<
-  typeof UsersTable.$inferSelect,
-  "id" | "avatar" | "name" | "username"
->;
+export type TOwner = Pick<TUserSchema, "id" | "avatar" | "name" | "username">;
 
 export type TOwnerIsFollow = TOwner & { isFollow: boolean };
 
@@ -26,16 +24,15 @@ export type TInfiniteResult<T> = {
   data: T[];
 };
 
-export type TComment = TCommentSchema & { owner: TOwner } & {
+export type TUser = Pick<TUserSchema, "avatar" | "username" | "id">;
+export type TComment = TCommentSchema & { owner: TUser } & {
   isLiked: boolean;
   sumLikes: number;
   sumReplies: number;
-  sumRepliesRemaining: number;
   replies: TReply[];
 };
-
 export type TPost = TPostSchema & {
-  owner: TOwner;
+  owner: TUser;
   comments: TComment[];
   isLiked: boolean;
   sumLikes: number;

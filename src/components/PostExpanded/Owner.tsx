@@ -1,22 +1,19 @@
 import Avatar from "@/components/Avatar";
-import { TPost } from "@/fetchings/type";
+import { TUser } from "@/lib/drizzle/queries/type";
 import Link from "next/link";
 
 type Props = {
-  post: TPost;
+  user: TUser;
 };
 
-const PostOwner = ({ post }: Props) => {
+const PostOwner = ({ user }: Props) => {
   return (
     <section id="post_owner" className="px-4 py-2">
       <div className="flex items-center gap-3">
-        <Avatar url={post.owner.avatar} />
+        <Avatar url={user.avatar} />
         <div>
-          <Link
-            href={`/${post.owner.username}`}
-            className="text-sm font-semibold"
-          >
-            {post.owner.username}
+          <Link href={`/${user.username}`} className="text-sm font-semibold">
+            {user.username}
           </Link>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import Avatar from "@/components/Avatar";
-import { TComment } from "@/fetchings/type";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import ButtonFetchReplies from "./ButtonFetchReplies";
 import ButtonLikeComment from "./ButtonLikeComment";
 import Replies from "./Replies";
+import { TComment } from "@/lib/drizzle/queries/type";
 
 type Props = {
   comment: TComment;
@@ -33,7 +33,10 @@ const CommentCard = ({ comment }: Props) => {
             <p className="inline">{comment.message}</p>
           </div>
           <div className="flex aspect-square w-5 flex-none items-start justify-end">
-            <ButtonLikeComment comment={comment} />
+            <ButtonLikeComment
+              commentId={comment.id}
+              isLiked={comment.isLiked}
+            />
           </div>
         </div>
         <div className="flex gap-4 py-2 text-xs font-semibold text-skin-muted">
@@ -59,13 +62,13 @@ const CommentCard = ({ comment }: Props) => {
             </button>
           </div>
         </div>
-        {comment.sumReplies > 0 && (
+        {/* {comment.sumReplies > 0 && (
           <ButtonFetchReplies
             isShowReplies={isShowReplies}
             setIsShowReplies={setIsShowReplies}
             comment={comment}
           />
-        )}
+        )} */}
         {isShowReplies && <Replies replies={comment.replies} />}
       </div>
     </article>

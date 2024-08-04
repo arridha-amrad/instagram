@@ -4,7 +4,7 @@ import { fetchRepliesAction } from "@/actions/replyAction";
 import MySpinner from "@/components/Spinner";
 import { TComment } from "@/fetchings/type";
 import { useCommentsStore } from "@/stores/CommentsStore";
-import { useSessionStore } from "@/stores/SessionStore";
+import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";

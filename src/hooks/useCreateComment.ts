@@ -1,5 +1,9 @@
 import { commentAction } from "@/actions/commentAction";
-import { TCommentSchema, TPost, TReplySchema } from "@/fetchings/type";
+import {
+  TCommentSchema,
+  TPost,
+  TReplySchema,
+} from "@/lib/drizzle/queries/type";
 import setNewCommentOnClient from "@/helpers/setNewCommentOnClient";
 import setNewReplyOnClient from "@/helpers/setNewReplyOnClient";
 import { useHomePageStore } from "@/lib/zustand/homePageStore";

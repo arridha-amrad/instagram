@@ -1,10 +1,10 @@
 "use client";
 
 import ButtonLikePost from "@/components/ButtonLikePost";
-import { usePostStore } from "@/stores/PostStore";
+import usePostsStore from "@/stores/Posts";
 
 export default function Action() {
-  const { post } = usePostStore();
+  const { post } = usePostsStore();
   if (!post) return null;
   return (
     <section className="flex items-center gap-2 py-4">
