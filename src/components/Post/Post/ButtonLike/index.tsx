@@ -14,7 +14,7 @@ export default function ButtonLikePost({ isLiked, postId }: Props) {
   return (
     <button onClick={like}>
       {isLiked ? (
-        <Heart className="aspect-square w-7 fill-pink-600" />
+        <Heart className="aspect-square w-7 fill-green-600" />
       ) : (
         <HeartIcon className="aspect-square w-7" />
       )}

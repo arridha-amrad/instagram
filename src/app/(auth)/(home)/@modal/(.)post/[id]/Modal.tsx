@@ -1,25 +1,30 @@
 "use client";
 
-import PostExpanded from "@/components/PostExpanded";
+import PostExpanded from "@/components/Post/Post";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-type Props = {
-  currPathname: string;
-};
-
-const Modal = ({ currPathname }: Props) => {
+const Modal = () => {
   const router = useRouter();
   const { reset } = useReplySetter();
   const { post } = usePostsStore();
-  const pathname = usePathname();
+
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.add("overflow-y-hidden", "pr-4");
+    setOpen(true);
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.documentElement.classList.add("overflow-y-hidden", "pr-4");
+    } else {
+      document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
+    }
+  }, [open]);
 
   const closeModal = () => {
     router.back();
@@ -27,22 +32,20 @@ const Modal = ({ currPathname }: Props) => {
     reset();
   };
 
-  if (pathname !== currPathname) {
-    document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
-    return null;
-  }
-
-  return createPortal(
-    <section className="fixed inset-0 flex items-center justify-center">
-      <div
-        onClick={closeModal}
-        className="absolute inset-0 bg-background/50 backdrop-blur"
-      />
-      <div className="relative">
-        {!post ? <p>Post not found</p> : <PostExpanded post={post} />}
-      </div>
-    </section>,
-    document.body,
+  return (
+    open &&
+    createPortal(
+      <section className="fixed inset-0 flex items-center justify-center">
+        <div
+          onClick={closeModal}
+          className="absolute inset-0 bg-background/50 backdrop-blur"
+        />
+        <div className="relative">
+          {!post ? <p>Post not found</p> : <PostExpanded post={post} />}
+        </div>
+      </section>,
+      document.body,
+    )
   );
 };
 

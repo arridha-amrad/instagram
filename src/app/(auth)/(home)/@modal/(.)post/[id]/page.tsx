@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
   }
   return (
     <PostProvider post={post}>
-      <Modal currPathname={`/post/${params.id}`} />
+      <Modal />
     </PostProvider>
   );
 };

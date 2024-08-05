@@ -9,7 +9,7 @@ import PostOwner from "./Owner";
 import { TPost } from "@/lib/drizzle/queries/type";
 import { formatDistanceToNowStrict } from "date-fns";
 import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
-import ButtonLikePost from "./ButtonLikePost";
+import ButtonLikePost from "./ButtonLike";
 
 type Props = {
   post: TPost;

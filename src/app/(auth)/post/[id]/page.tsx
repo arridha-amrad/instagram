@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
-import Comments from "@/components/PostExpanded/Comments";
+import Comments from "@/components/Post/Post/Comments";
 import { fetchComments } from "@/fetchings/comments";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
