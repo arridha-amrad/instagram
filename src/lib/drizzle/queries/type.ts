@@ -29,11 +29,12 @@ export type TComment = TCommentSchema & { owner: TUser } & {
   isLiked: boolean;
   sumLikes: number;
   sumReplies: number;
-  replies: TReply[];
+  sumRepliesRemaining: number;
+  replies: TInfiniteResult<TReply>;
 };
 export type TPost = TPostSchema & {
   owner: TUser;
-  comments: TComment[];
+  comments: TInfiniteResult<TComment>;
   isLiked: boolean;
   sumLikes: number;
   sumComments: number;

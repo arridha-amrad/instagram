@@ -1,6 +1,5 @@
 "use client";
 
-import { useCommentsStore } from "@/stores/CommentsStore";
 import Comment from "@/components/Comment";
 import { loadMoreComments } from "./action";
 import { useParams } from "next/navigation";
@@ -10,9 +9,10 @@ import { useSessionStore } from "@/stores/Session";
 import usePostsStore from "@/stores/Posts";
 
 const Comments = () => {
-  const { total, page, addMoreComments } = useCommentsStore();
-  const { post } = usePostsStore();
+  const { post, addMoreComments } = usePostsStore();
   if (!post) return null;
+
+  const page = post.comments.page;
   const { session } = useSessionStore();
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -22,11 +22,11 @@ const Comments = () => {
     try {
       const response = await loadMoreComments({
         postId: id as string,
-        userId: session?.user.id,
+        authUserId: session?.user.id,
         page: page + 1,
       });
       if (response?.data) {
-        addMoreComments(response.data.comments);
+        addMoreComments(response.data);
       }
     } catch (err) {
       console.log(err);
@@ -37,10 +37,10 @@ const Comments = () => {
 
   return (
     <>
-      {post.comments.map((comment) => (
+      {post.comments.data.map((comment) => (
         <Comment comment={comment} key={comment.id} />
       ))}
-      {post.comments.length < post.sumComments && (
+      {post.comments.data.length < post.comments.total && (
         <button
           disabled={loading}
           onClick={loadMore}

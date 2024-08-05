@@ -2,7 +2,8 @@
 
 import { fetchRepliesAction } from "@/actions/replyAction";
 import MySpinner from "@/components/Spinner";
-import { TComment } from "@/fetchings/type";
+import { TComment } from "@/lib/drizzle/queries/type";
+
 import { useCommentsStore } from "@/stores/CommentsStore";
 import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";

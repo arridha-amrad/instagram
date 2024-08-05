@@ -62,13 +62,13 @@ const CommentCard = ({ comment }: Props) => {
             </button>
           </div>
         </div>
-        {/* {comment.sumReplies > 0 && (
+        {comment.sumReplies > 0 && (
           <ButtonFetchReplies
             isShowReplies={isShowReplies}
             setIsShowReplies={setIsShowReplies}
             comment={comment}
           />
-        )} */}
+        )}
         {isShowReplies && <Replies replies={comment.replies} />}
       </div>
     </article>
