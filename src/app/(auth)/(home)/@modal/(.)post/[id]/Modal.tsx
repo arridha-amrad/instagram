@@ -1,6 +1,6 @@
 "use client";
 
-import PostExpanded from "@/components/Post/Post";
+import Post from "@/components/Post/Post";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { useRouter } from "next/navigation";
@@ -41,7 +41,7 @@ const Modal = () => {
           className="absolute inset-0 bg-background/50 backdrop-blur"
         />
         <div className="relative">
-          {!post ? <p>Post not found</p> : <PostExpanded post={post} />}
+          {!post ? <p>Post not found</p> : <Post post={post} />}
         </div>
       </section>,
       document.body,

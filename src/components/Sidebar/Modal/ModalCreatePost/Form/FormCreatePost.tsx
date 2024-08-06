@@ -40,10 +40,6 @@ const FormCreatePost = () => {
 
   useEffect(() => {
     if (hasErrored) {
-      console.log("fe ", result.fetchError);
-      console.log("ve : ", result.validationErrors);
-      console.log("se : ", result.serverError);
-
       toast.error("Somethng went wrong", { theme });
     }
   }, [hasErrored]);

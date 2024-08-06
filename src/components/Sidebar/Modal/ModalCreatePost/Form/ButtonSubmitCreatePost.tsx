@@ -8,7 +8,7 @@ const ButtonSubmitCreatePost = () => {
   const { pending } = useFormStatus();
   return (
     <Button
-      className="w-full inline-flex justify-center"
+      className="inline-flex w-full justify-center"
       disabled={pending}
       type="submit"
     >
