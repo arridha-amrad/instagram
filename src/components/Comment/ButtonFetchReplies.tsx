@@ -1,10 +1,9 @@
 "use client";
 
-import { fetchRepliesAction } from "@/actions/replyAction";
 import MySpinner from "@/components/Spinner";
 import { TComment } from "@/lib/drizzle/queries/type";
-
-import { useCommentsStore } from "@/stores/CommentsStore";
+import { actionFetchReplies } from "@/lib/next-safe-action/actionFetchReplies";
+import usePostsStore from "@/stores/Posts";
 import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -21,26 +20,25 @@ const ButtonFetchReplies = ({
   isShowReplies,
   setIsShowReplies,
 }: Props) => {
-  const { setReplies } = useCommentsStore();
+  const { addReplies } = usePostsStore();
   const { session } = useSessionStore();
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const { theme } = useTheme();
 
   const fetchReplies = async () => {
     setIsLoading(true);
     try {
-      const result = await fetchRepliesAction({
+      const result = await actionFetchReplies({
         commentId: comment.id,
-        userId: session?.user.id,
-        page: page + 1,
+        page,
+        authUserId: session?.user.id,
       });
       if (result?.data) {
-        setReplies(comment.id, result?.data);
+        addReplies(result.data.data, comment.id);
         setPage((v) => v + 1);
       }
     } catch (err) {
-      console.log(err);
       toast.error("Something went wrong", { theme });
     } finally {
       setIsLoading(false);

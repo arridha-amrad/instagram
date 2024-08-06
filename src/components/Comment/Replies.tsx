@@ -1,6 +1,5 @@
-import Reply from "@/components/Reply";
-import { TReply } from "@/fetchings/type";
-import { TInfiniteResult } from "@/lib/drizzle/queries/type";
+import { TInfiniteResult, TReply } from "@/lib/drizzle/queries/type";
+import Reply from "./Reply";
 
 type Props = {
   replies: TInfiniteResult<TReply>;

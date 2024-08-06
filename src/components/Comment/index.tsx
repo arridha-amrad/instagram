@@ -4,7 +4,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
 import ButtonFetchReplies from "./ButtonFetchReplies";
-import ButtonLikeComment from "./ButtonLikeComment";
+import ButtonLikeComment from "./ButtonLike";
 import Replies from "./Replies";
 import { TComment } from "@/lib/drizzle/queries/type";
 

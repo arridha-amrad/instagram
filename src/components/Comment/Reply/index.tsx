@@ -1,16 +1,17 @@
 import Avatar from "@/components/Avatar";
-import { TReply } from "@/fetchings/type";
+import { TReply } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
-import ButtonLikeReply from "./ButtonLikeReply";
+import ButtonLikeReply from "./ButtonLike";
 
 type Props = {
   reply: TReply;
 };
 
 const Reply = ({ reply }: Props) => {
+  //
   const {
     owner: { avatar, username },
     sumLikes,
@@ -64,7 +65,11 @@ const Reply = ({ reply }: Props) => {
         </div>
       </div>
       <div className="pt-1">
-        <ButtonLikeReply reply={reply} />
+        <ButtonLikeReply
+          commentId={reply.commentId}
+          isLiked={reply.isLiked}
+          replyId={reply.id}
+        />
       </div>
     </div>
   );

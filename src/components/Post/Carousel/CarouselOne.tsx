@@ -7,11 +7,10 @@ import Image from "next/image";
 import { useState } from "react";
 
 type Props = {
-  height: number;
   urls: string[];
 };
 
-const Carousel = ({ height, urls }: Props) => {
+const CarouselOne = ({ urls }: Props) => {
   const [index, setIndex] = useState(0);
   const next = () => {
     setIndex((val) => (val += 1));
@@ -21,7 +20,7 @@ const Carousel = ({ height, urls }: Props) => {
   };
 
   return (
-    <div className="relative" style={{ height }}>
+    <div className="relative h-[90vh]">
       <Image
         alt="post"
         loading="lazy"
@@ -56,4 +55,4 @@ const Carousel = ({ height, urls }: Props) => {
   );
 };
 
-export default Carousel;
+export default CarouselOne;

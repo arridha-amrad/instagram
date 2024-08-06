@@ -1,5 +1,6 @@
 "use client";
 
+import CarouselOne from "@/components/Post/Carousel/CarouselOne";
 import Post from "@/components/Post/Post";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
@@ -41,7 +42,13 @@ const Modal = () => {
           className="absolute inset-0 bg-background/50 backdrop-blur"
         />
         <div className="relative">
-          {!post ? <p>Post not found</p> : <Post post={post} />}
+          {!post ? (
+            <p>Post not found</p>
+          ) : (
+            <Post post={post}>
+              <CarouselOne urls={post.urls.map((u) => u.url)} />
+            </Post>
+          )}
         </div>
       </section>,
       document.body,

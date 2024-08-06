@@ -1,49 +1,72 @@
 "use client";
 
-import useMeasure from "react-use-measure";
-import Preview from "./Carousel";
+import { TPost } from "@/lib/drizzle/queries/type";
+import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
+import { formatDistanceToNowStrict } from "date-fns";
+import ButtonLikePost from "./ButtonLike";
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
-import PostDescription from "./Description";
-import PostOwner from "./Owner";
-import { TPost } from "@/lib/drizzle/queries/type";
-import { formatDistanceToNowStrict } from "date-fns";
-import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
-import ButtonLikePost from "./ButtonLike";
+import Avatar from "@/components/Avatar";
+import Link from "next/link";
+import { ReactNode } from "react";
 
 type Props = {
   post: TPost;
+  children: ReactNode;
 };
 
-const PostExpanded = ({ post }: Props) => {
-  const [ref, { height }] = useMeasure();
-  const urls = post.urls.map(({ url }) => url);
-
+const PostExpanded = ({ post, children }: Props) => {
   return (
-    <div className="flex">
+    <div className="flex overflow-hidden rounded-md border-[3px] border-skin">
       <section
         id="post_carousel"
-        ref={ref}
         className="h-[90vh] w-max border-r border-skin bg-background"
       >
-        <Preview urls={urls} height={height} />
+        {children}
       </section>
       <section
         id="post_detail"
         className="flex w-[500px] flex-col bg-background"
       >
-        <PostOwner user={post.owner} />
+        <section id="post_owner" className="px-4 py-2">
+          <div className="flex items-center gap-3">
+            <Avatar url={post.owner.avatar} />
+            <div>
+              <Link
+                href={`/${post.owner.username}`}
+                className="text-sm font-semibold"
+              >
+                {post.owner.username}
+              </Link>
+            </div>
+          </div>
+        </section>
         <section
           id="post_description_and_comments"
           className="flex flex-1 basis-0 flex-col items-start overflow-y-auto px-4 py-4"
         >
           {post.description && (
-            <PostDescription
-              username={post.owner.username}
-              avatar={post.owner.avatar}
-              createdAt={post.createdAt}
-              description={post.description}
-            />
+            <section id="post_description" className="flex gap-2">
+              <div>
+                <Avatar url={post.owner.avatar} />
+              </div>
+              <div className="pt-0.5">
+                <Link
+                  href={`/${post.owner.username}`}
+                  className="inline pr-2 text-sm font-semibold"
+                >
+                  {post.owner.username}
+                </Link>
+                <p className="inline text-sm text-skin-muted">
+                  {post.description}
+                </p>
+                <div className="py-2">
+                  <p className="text-xs text-skin-muted">
+                    {formatDistanceToNowStrict(post.createdAt)}
+                  </p>
+                </div>
+              </div>
+            </section>
           )}
           <Comments />
         </section>

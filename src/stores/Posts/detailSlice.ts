@@ -19,6 +19,7 @@ export type DetailSlice = {
   addMoreComments: (data: TInfiniteResult<TComment>) => void;
   addComment: (comment: TComment) => void;
   addReply: (commentId: string, reply: TReply) => void;
+  addReplies: (replies: TReply[], commentId: string) => void;
 };
 
 export const createDetailSlice: StateCreator<
@@ -29,6 +30,18 @@ export const createDetailSlice: StateCreator<
 > = (set) => ({
   post: null,
   isLoadingPost: true,
+  addReplies(replies, commentId) {
+    set((state) => {
+      const post = state.post;
+      if (!post) return;
+      const comment = post.comments.data.find((c) => c.id === commentId);
+      if (!comment) return;
+      comment.replies.data = [...comment.replies.data, ...replies].filter(
+        (v, i, arr) => arr.findIndex((x) => x.id === v.id) === i,
+      );
+      comment.replies.page += 1;
+    });
+  },
   addReply(commentId, reply) {
     set((state) => {
       const post = state.post;
