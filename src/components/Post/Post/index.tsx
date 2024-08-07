@@ -1,7 +1,6 @@
 "use client";
 
 import { TPost } from "@/lib/drizzle/queries/type";
-import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import ButtonLikePost from "./ButtonLike";
 import CommentForm from "./CommentForm";
@@ -9,6 +8,7 @@ import Comments from "./Comments";
 import Avatar from "@/components/Avatar";
 import Link from "next/link";
 import { ReactNode } from "react";
+import ButtonComment from "./ButtonComment";
 
 type Props = {
   post: TPost;
@@ -26,7 +26,7 @@ const PostExpanded = ({ post, children }: Props) => {
       </section>
       <section
         id="post_detail"
-        className="flex w-[500px] flex-col bg-background"
+        className="flex w-[400px] flex-col bg-background pb-2"
       >
         <section id="post_owner" className="px-4 py-2">
           <div className="flex items-center gap-3">
@@ -74,9 +74,7 @@ const PostExpanded = ({ post, children }: Props) => {
           <div className="w-full px-4 py-2">
             <div className="flex items-center gap-3 pt-2">
               <ButtonLikePost isLiked={post.isLiked} postId={post.id} />
-              <button>
-                <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
-              </button>
+              <ButtonComment />
             </div>
             <div className="px-1 pt-2">
               <h1 className="font-semibold">

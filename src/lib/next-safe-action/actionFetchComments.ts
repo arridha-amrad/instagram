@@ -1,8 +1,8 @@
 "use server";
 
 import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
-import { actionClient } from "@/lib/safe-action";
 import { z } from "zod";
+import { optionalAuthActionClient } from "./init";
 
 const schema = z.object({
   postId: z.string(),
@@ -10,7 +10,7 @@ const schema = z.object({
   page: z.number(),
 });
 
-export const actionFetchComments = actionClient
+export const actionFetchComments = optionalAuthActionClient
   .schema(schema)
   .action(async ({ parsedInput: { postId, authUserId, page } }) => {
     const comments = await fetchComments({

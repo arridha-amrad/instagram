@@ -1,10 +1,10 @@
-import { likeCommentAction } from "@/actions/likeCommentAction";
 import { TFeedComment } from "@/lib/drizzle/queries/type";
+import { actionLikeComment } from "@/lib/next-safe-action/actionLikeComment";
 import usePostsStore from "@/stores/Posts";
-import { useSessionStore } from "@/stores/Session";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Props = {
   comment: TFeedComment;
@@ -12,12 +12,12 @@ type Props = {
 
 const Comment = ({ comment }: Props) => {
   const { likeCommentOfFeedPost } = usePostsStore();
-  const { session } = useSessionStore();
+  const pathname = usePathname();
 
   const like = async () => {
     likeCommentOfFeedPost(comment.postId, comment.id);
-    await likeCommentAction({
-      userId: session?.user.id ?? "",
+    await actionLikeComment({
+      pathname,
       commentId: comment.id,
     });
   };

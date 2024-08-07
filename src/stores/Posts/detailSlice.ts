@@ -40,6 +40,8 @@ export const createDetailSlice: StateCreator<
         (v, i, arr) => arr.findIndex((x) => x.id === v.id) === i,
       );
       comment.replies.page += 1;
+      comment.sumRepliesRemaining =
+        comment.sumReplies - comment.replies.data.length;
     });
   },
   addReply(commentId, reply) {

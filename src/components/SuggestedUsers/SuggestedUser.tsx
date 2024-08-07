@@ -1,10 +1,9 @@
 "use client";
 
-import { followAction } from "@/actions/follow";
 import Avatar from "@/components/Avatar";
 import { TOwner } from "@/lib/drizzle/queries/type";
+import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/Session";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -16,15 +15,13 @@ type Props = {
 
 const SuggestedUser = ({ user: { name, username, avatar, id } }: Props) => {
   const pathname = usePathname();
-  const { session } = useSessionStore();
   const [isFollow, setFollow] = useState(false);
   const follow = async () => {
+    setFollow((val) => !val);
     try {
-      setFollow((val) => !val);
-      await followAction({
-        authId: session?.user.id ?? "",
+      await actionFollowUser({
         pathname,
-        userId: id,
+        followId: id,
       });
     } catch (err) {
       console.log(err);

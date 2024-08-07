@@ -1,4 +1,4 @@
-"user server";
+"use server";
 
 import { zfd } from "zod-form-data";
 import { authActionClient } from "./init";

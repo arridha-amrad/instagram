@@ -1,10 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { safeActionClient } from "./init";
+import { optionalAuthActionClient } from "./init";
 import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
 
-export const actionFetchFollowers = safeActionClient
+export const actionFetchFollowers = optionalAuthActionClient
   .schema(
     z.object({
       username: z.string(),

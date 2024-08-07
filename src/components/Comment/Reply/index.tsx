@@ -1,17 +1,16 @@
 import Avatar from "@/components/Avatar";
 import { TReply } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
-import { useReplySetter } from "@/stores/ReplySetter";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import ButtonLikeReply from "./ButtonLike";
+import ButtonReply from "./ButtonReply";
 
 type Props = {
   reply: TReply;
 };
 
 const Reply = ({ reply }: Props) => {
-  //
   const {
     owner: { avatar, username },
     sumLikes,
@@ -19,7 +18,6 @@ const Reply = ({ reply }: Props) => {
     message,
   } = reply;
 
-  const { setCommentTarget } = useReplySetter();
   return (
     <div className="flex w-full items-start gap-2 py-2 text-sm">
       <Avatar url={avatar} />
@@ -51,17 +49,10 @@ const Reply = ({ reply }: Props) => {
               {sumLikes} {sumLikes > 1 ? "likes" : "like"}
             </p>
           )}
-          <button
-            onClick={() =>
-              setCommentTarget({
-                commentId: reply.commentId,
-                userId: reply.owner.id,
-                username: reply.owner.username,
-              })
-            }
-          >
-            Reply
-          </button>
+          <ButtonReply
+            commentId={reply.commentId}
+            username={reply.owner.username}
+          />
         </div>
       </div>
       <div className="pt-1">

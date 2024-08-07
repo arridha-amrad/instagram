@@ -1,6 +1,6 @@
-import { followAction } from "@/actions/follow";
 import Avatar from "@/components/Avatar";
 import { TOwner } from "@/fetchings/type";
+import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
 import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
@@ -23,10 +23,9 @@ const UserWithFollowButtonCard = ({ user, isFollow: isF = true }: Props) => {
   const follow = async () => {
     setIsFollow((val) => !val);
     try {
-      await followAction({
-        authId: session?.user.id ?? "",
+      await actionFollowUser({
         pathname,
-        userId: user.id,
+        followId: user.id,
       });
     } catch (err) {
       toast.error("something went wrong", { theme });

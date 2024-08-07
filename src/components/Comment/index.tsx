@@ -1,5 +1,4 @@
 import Avatar from "@/components/Avatar";
-import { useReplySetter } from "@/stores/ReplySetter";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
@@ -7,13 +6,13 @@ import ButtonFetchReplies from "./ButtonFetchReplies";
 import ButtonLikeComment from "./ButtonLike";
 import Replies from "./Replies";
 import { TComment } from "@/lib/drizzle/queries/type";
+import ButtonReply from "./ButtonReply";
 
 type Props = {
   comment: TComment;
 };
 
 const CommentCard = ({ comment }: Props) => {
-  const { setCommentTarget } = useReplySetter();
   const [isShowReplies, setIsShowReplies] = useState(true);
 
   return (
@@ -49,17 +48,10 @@ const CommentCard = ({ comment }: Props) => {
             </p>
           )}
           <div>
-            <button
-              onClick={() => {
-                setCommentTarget({
-                  commentId: comment.id,
-                  userId: comment.owner.id,
-                  username: comment.owner.username,
-                });
-              }}
-            >
-              Reply
-            </button>
+            <ButtonReply
+              commentId={comment.id}
+              username={comment.owner.username}
+            />
           </div>
         </div>
         {comment.sumReplies > 0 && (

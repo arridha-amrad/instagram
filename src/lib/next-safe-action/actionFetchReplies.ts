@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { fetchReplies } from "../drizzle/queries/fetchReplies";
-import { safeActionClient } from "./init";
+import { optionalAuthActionClient } from "./init";
 
-export const actionFetchReplies = safeActionClient
+export const actionFetchReplies = optionalAuthActionClient
   .schema(
     z.object({
       commentId: z.string(),
