@@ -8,8 +8,8 @@ import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { action } from "./action";
 import { useSessionStore } from "@/stores/Session";
+import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
 
 type Props = {
   post: TFeedPost;
@@ -22,8 +22,8 @@ export default function CommentForm({ post }: Props) {
   const { session } = useSessionStore();
   const { addCommentToFeedPost } = usePostsStore();
 
-  const newCommentAction = action.bind(null, post.id);
-  const { execute, isExecuting } = useAction(newCommentAction, {
+  const action = actionCreateComment.bind(null, post.id);
+  const { execute, isExecuting } = useAction(action, {
     onError: () => {
       toast.error("Something went wrong", { theme });
     },

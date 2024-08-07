@@ -16,7 +16,7 @@ type Props = {
   data: Data;
 };
 
-export default function Provider({ children, data }: Props) {
+export default function FeedPostProvider({ children, data }: Props) {
   const { setFeedPosts, isLoadingFeedPosts } = usePostsStore();
 
   useEffect(() => {

@@ -7,7 +7,8 @@ import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { fetchLikes, User } from "./action";
+import { actionFetchLikedPostUsers } from "@/lib/next-safe-action/actionFetchLikedPostUsers";
+import { TUserIsFollow } from "@/lib/drizzle/queries/type";
 
 type Props = {
   postId: string;
@@ -16,7 +17,7 @@ type Props = {
 
 const TotalLikes = ({ postId, total }: Props) => {
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<TUserIsFollow[]>([]);
   const { session } = useSessionStore();
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = useTheme();
@@ -24,12 +25,12 @@ const TotalLikes = ({ postId, total }: Props) => {
     setOpen(true);
     setIsLoading(true);
     try {
-      const response = await fetchLikes({
+      const response = await actionFetchLikedPostUsers({
         postId,
         authUserId: session?.user.id,
       });
       if (response?.data) {
-        setUsers(response?.data);
+        setUsers(response.data.data);
       }
     } catch (err) {
       toast.error("Something went wrong", { theme });
@@ -71,8 +72,8 @@ const TotalLikes = ({ postId, total }: Props) => {
                 users.map((user) => (
                   <UserWithFollowButtonCard
                     isFollow={user.isFollow}
-                    key={user.user.id}
-                    user={user.user}
+                    key={user.id}
+                    user={user}
                   />
                 ))
               )}

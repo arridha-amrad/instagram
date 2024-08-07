@@ -9,7 +9,7 @@ export class CustomServerError extends Error {}
 
 export const actionClient = createSafeActionClient();
 
-export const safeActionClient = createSafeActionClient({
+export const optionalAuthActionClient = createSafeActionClient({
   handleReturnedServerError(e) {
     if (e instanceof CustomServerError) {
       return e.message;
@@ -18,7 +18,7 @@ export const safeActionClient = createSafeActionClient({
   },
 });
 
-export const authActionClient = safeActionClient.use(
+export const authActionClient = optionalAuthActionClient.use(
   async ({ next, clientInput }) => {
     const session = await auth();
 

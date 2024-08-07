@@ -5,10 +5,10 @@ import Link from "next/link";
 import { forwardRef, Ref } from "react";
 import ButtonLike from "./ButtonLike";
 import Carousel from "./Carousel";
-import CommentForm from "./CommentForm";
+import CommentForm from "./FormComment";
 import Comments from "./Comments";
 import Owner from "./Owner";
-import TotalLikes from "./TotalLikes";
+import TotalLikes from "./Likes";
 
 type Props = {
   post: TFeedPost;

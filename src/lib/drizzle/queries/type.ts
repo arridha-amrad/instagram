@@ -40,6 +40,8 @@ export type TPost = TPostSchema & {
   sumComments: number;
 };
 
+export type TUserIsFollow = TUser & { name: string; isFollow: boolean };
+
 export type TUserPost = Omit<
   TPostSchema,
   "createdAt" | "updatedAt" | "location" | "description" | "userId"

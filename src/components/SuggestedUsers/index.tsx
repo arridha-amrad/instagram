@@ -1,5 +1,5 @@
 import Link from "next/link";
-import DummySuggestedUser from "./DummySuggestedUser";
+import SuggestedUser from "./SuggestedUser";
 import { TOwner } from "@/fetchings/type";
 
 type Props = {
@@ -20,7 +20,7 @@ const SuggestedUsers = ({ users }: Props) => {
       </div>
       <div className="mt-2 space-y-3">
         {users.map((user) => (
-          <DummySuggestedUser user={user} key={user.id} />
+          <SuggestedUser user={user} key={user.id} />
         ))}
       </div>
     </div>

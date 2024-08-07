@@ -8,9 +8,9 @@ import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Post from "./Post";
+import FeedPost from "./FeedPost";
 
-export default function Posts() {
+export default function FeedPosts() {
   const { feedPosts, pageFeedPosts, totalFeedPosts, addFeedPosts } =
     usePostsStore();
 
@@ -93,7 +93,7 @@ export default function Posts() {
                   <Spinner />
                 </div>
               ) : (
-                <Post isFirst={virtualRow.index === 0} post={post} />
+                <FeedPost isFirst={virtualRow.index === 0} post={post} />
               )}
             </div>
           </div>

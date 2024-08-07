@@ -14,9 +14,7 @@ type Props = {
   user: TOwner;
 };
 
-const DummySuggestedUser = ({
-  user: { name, username, avatar, id },
-}: Props) => {
+const SuggestedUser = ({ user: { name, username, avatar, id } }: Props) => {
   const pathname = usePathname();
   const { session } = useSessionStore();
   const [isFollow, setFollow] = useState(false);
@@ -60,4 +58,4 @@ const DummySuggestedUser = ({
   );
 };
 
-export default DummySuggestedUser;
+export default SuggestedUser;
