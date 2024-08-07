@@ -10,7 +10,7 @@ const schema = z.object({
   page: z.number(),
 });
 
-export const loadMoreComments = actionClient
+export const actionFetchComments = actionClient
   .schema(schema)
   .action(async ({ parsedInput: { postId, authUserId, page } }) => {
     const comments = await fetchComments({

@@ -1,4 +1,3 @@
-import { TReply } from "@/fetchings/type";
 import { actionLikeReply } from "@/lib/next-safe-action/actionLikeReply";
 import usePostsStore from "@/stores/Posts";
 import { useSessionStore } from "@/stores/Session";

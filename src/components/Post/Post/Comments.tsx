@@ -1,12 +1,13 @@
 "use client";
 
 import Comment from "@/components/Comment";
-import { loadMoreComments } from "./action";
+
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import MySpinner from "@/components/Spinner";
 import { useSessionStore } from "@/stores/Session";
 import usePostsStore from "@/stores/Posts";
+import { actionFetchComments } from "@/lib/next-safe-action/actionFetchComments";
 
 const Comments = () => {
   const { post, addMoreComments } = usePostsStore();
@@ -20,7 +21,7 @@ const Comments = () => {
   const loadMore = async () => {
     setLoading(true);
     try {
-      const response = await loadMoreComments({
+      const response = await actionFetchComments({
         postId: id as string,
         authUserId: session?.user.id,
         page: page + 1,

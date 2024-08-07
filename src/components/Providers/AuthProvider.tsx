@@ -9,7 +9,7 @@ type Props = {
   session: Session | null;
 };
 
-export default function AppProvider({ children, session }: Props) {
+export default function AuthProvider({ children, session }: Props) {
   const { setSession } = useSessionStore();
 
   useEffect(() => {

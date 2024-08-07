@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import AuthProvider from "@/components/Providers/AuthProvider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
@@ -7,7 +8,6 @@ import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AppProvider from "./AppProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,7 +27,7 @@ export default async function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body className={cn(inter.className, "bg-background text-skin-base")}>
         <NextTopLoader showSpinner={false} color="#2B38C9" />
-        <AppProvider session={session}>
+        <AuthProvider session={session}>
           <SessionProvider>
             <ThemeProvider enableColorScheme={false} attribute="class">
               {children}
@@ -38,7 +38,7 @@ export default async function RootLayout({
             hideProgressBar={true}
             position="bottom-right"
           />
-        </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   );
