@@ -11,7 +11,7 @@ export type FollowerSlice = {
   total: number;
   page: number;
   isLoadingFollowers: boolean;
-  setFollowers: (data: TInfiniteResult<TOwnerIsFollow[]>) => void;
+  setFollowers: (data: TInfiniteResult<TOwnerIsFollow>) => void;
   setMoreFollowers: (followers: Data[]) => void;
 };
 
@@ -26,9 +26,9 @@ export const createFollowerSlice: StateCreator<
   page: 0,
   total: 0,
   users: [],
-  setFollowers({ page, total, users }) {
+  setFollowers({ page, total, data }) {
     set((state) => {
-      state.followers = users;
+      state.followers = data;
       state.page = page;
       state.total = total;
       state.isLoadingFollowers = false;

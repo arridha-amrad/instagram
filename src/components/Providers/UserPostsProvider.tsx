@@ -10,7 +10,7 @@ type Props = {
   data: TInfiniteResult<TUserPost>;
 };
 
-const Provider = ({ children, data }: Props) => {
+const UserPostsProvider = ({ children, data }: Props) => {
   const { setUserPosts, isLoadingUserPosts } = usePostsStore();
 
   useEffect(() => {
@@ -28,4 +28,4 @@ const Provider = ({ children, data }: Props) => {
   return children;
 };
 
-export default Provider;
+export default UserPostsProvider;

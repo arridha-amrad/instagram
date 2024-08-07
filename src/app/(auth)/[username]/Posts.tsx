@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import useMeasure from "react-use-measure";
-import Post from "./Post";
+import Post from "../../../components/Post/UserPost";
 
 export default function Posts() {
   const { userPosts, totalUserPosts, pageUserPosts, addUserPosts } =

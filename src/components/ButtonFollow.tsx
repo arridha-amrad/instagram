@@ -1,9 +1,8 @@
 "use client";
 
-import { followAction } from "@/actions/follow";
 import Button from "@/components/core/Button";
+import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/Session";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -15,17 +14,12 @@ type Props = {
 
 const ButtonFollow = ({ userId, isFollow }: Props) => {
   const pathname = usePathname();
-  const { session } = useSessionStore();
   const [isPending, setPending] = useState(false);
 
   const follow = async () => {
     setPending(true);
     try {
-      await followAction({
-        authId: session?.user.id ?? "",
-        pathname,
-        userId,
-      });
+      await actionFollowUser({ followId: userId, pathname });
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");

@@ -4,8 +4,8 @@ import {
   HeartIcon,
 } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import PostLink from "./PostLink";
 import { TUserPost } from "@/lib/drizzle/queries/type";
+import Link from "next/link";
 
 type Props = {
   post: TUserPost;
@@ -13,7 +13,11 @@ type Props = {
 
 const Post = ({ post }: Props) => {
   return (
-    <PostLink postId={post.id}>
+    <Link
+      scroll={false}
+      href={`/post/${post.id}`}
+      className="relative aspect-square overflow-hidden"
+    >
       <Image
         src={post.urls[0].url}
         alt="post_image"
@@ -38,7 +42,7 @@ const Post = ({ post }: Props) => {
           </div>
         </div>
       </div>
-    </PostLink>
+    </Link>
   );
 };
 

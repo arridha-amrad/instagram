@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
 import ModalFollowers from "./ModalFollowers";
-import Provider from "./Provider";
 
 type Props = {
   params: {
@@ -17,11 +16,7 @@ const Page = async ({ params: { username } }: Props) => {
     username,
   });
 
-  return (
-    <Provider data={data}>
-      <ModalFollowers />
-    </Provider>
-  );
+  return <ModalFollowers data={data} />;
 };
 
 export default Page;

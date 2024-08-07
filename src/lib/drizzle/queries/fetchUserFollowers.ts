@@ -15,14 +15,14 @@ export const fetchUserFollowers = async ({
   authUserId,
   username,
   page = 1,
-}: Args): Promise<TInfiniteResult<TOwnerIsFollow[]>> => {
+}: Args): Promise<TInfiniteResult<TOwnerIsFollow>> => {
   const user = await db.query.UsersTable.findFirst({
     where: eq(UsersTable.username, username),
   });
 
   if (!user) {
     return {
-      users: [],
+      data: [],
       page: 0,
       total: 0,
     };
@@ -55,22 +55,35 @@ export const fetchUserFollowers = async ({
     where(fields, { eq }) {
       return eq(fields.followId, user.id);
     },
-  }).then((result) => {
-    const data = result.map(({ user }) => {
-      const a = {
-        ...user,
-        isFollow: !!user.followers.find(
-          (f) => f.followId === user.id && f.userId === authUserId,
-        ),
-      };
-      const { followers, ...rest } = a;
-      return rest;
-    });
-    return data;
   });
 
+  const populatedUsers: TOwnerIsFollow[] = followers
+    .map(({ user: f }) => {
+      const user = {
+        ...f,
+        isFollow: !!f.followers.find(
+          (x) => x.followId === user.id && x.userId === authUserId,
+        ),
+      };
+      return user;
+    })
+
+    .then((result) => {
+      const data = result.map(({ user }) => {
+        const a = {
+          ...user,
+          isFollow: !!user.followers.find(
+            (f) => f.followId === user.id && f.userId === authUserId,
+          ),
+        };
+        const { followers, ...rest } = a;
+        return rest;
+      });
+      return data;
+    });
+
   return {
-    users: followers,
+    data: followers,
     total: result.total,
     page,
   };

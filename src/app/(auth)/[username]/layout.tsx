@@ -1,8 +1,8 @@
+import Profile from "@/components/Profile";
+import Tabs from "@/components/Tabs";
 import { fetchUser } from "@/fetchings/user";
 import { Metadata } from "next";
 import { ReactNode } from "react";
-import Tabs from "./_components/Tabs";
-import Profile from "./_components/Profile";
 
 type Props = {
   params: {

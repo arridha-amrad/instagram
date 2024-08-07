@@ -6,8 +6,8 @@ import SvgFemale from "@/components/svg/SvgFemale";
 import SvgMale from "@/components/svg/SvgMale";
 import { fetchUserProfile } from "@/lib/drizzle/queries/fetchUserProfile";
 import Link from "next/link";
-import ButtonFollow from "./ButtonFollow";
 import Settings from "./Settings";
+import ButtonFollow from "@/components/ButtonFollow";
 
 type Props = {
   username: string;
