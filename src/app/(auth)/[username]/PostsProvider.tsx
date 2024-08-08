@@ -1,5 +1,5 @@
-import { getUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
-import Posts from "./Posts";
+import { fetchUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
+import UserPosts from "@/components/Post/UserPosts";
 import UserPostsProvider from "@/components/Providers/UserPostsProvider";
 
 type Params = {
@@ -7,11 +7,11 @@ type Params = {
 };
 
 export default async function PostsProvider({ username }: Params) {
-  const data = await getUserPosts({ username, page: 1 });
+  const data = await fetchUserPosts({ username, page: 1 });
 
   return (
     <UserPostsProvider data={data}>
-      <Posts />
+      <UserPosts />
     </UserPostsProvider>
   );
 }

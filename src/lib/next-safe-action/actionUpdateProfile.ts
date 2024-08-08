@@ -15,7 +15,7 @@ const schema = zfd.formData({
   gender: zfd.text(z.string().optional()),
 });
 
-export const editProfileAction = authActionClient
+export const actionUpdateProfile = authActionClient
   .schema(schema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
@@ -26,7 +26,7 @@ export const editProfileAction = authActionClient
       parsedInput: { name, bio, gender, occupation, website },
     }) => {
       try {
-        await updateProfile({
+        const result = await updateProfile({
           authUserId: userId,
           name,
           bio,
@@ -35,6 +35,8 @@ export const editProfileAction = authActionClient
           website,
         });
         revalidateTag("fetchUserProfile");
+        revalidateTag("fetchUserProfileDetails");
+        return result.name;
       } catch (err) {
         console.log(err);
         throw err;

@@ -1,13 +1,13 @@
 "use client";
 
 import UsersContainer from "@/components/UsersContainer";
-import { TInfiniteResult, TOwnerIsFollow } from "@/lib/drizzle/queries/type";
+import { TInfiniteResult, TUserIsFollow } from "@/lib/drizzle/queries/type";
 import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 type Props = {
-  data: TInfiniteResult<TOwnerIsFollow>;
+  data: TInfiniteResult<TUserIsFollow>;
 };
 
 export default function ModalFollowers({ data }: Props) {

@@ -1,17 +1,19 @@
 "use client";
 
-import EditableAvatar from "@/components/EditableAvatar";
+import AvatarEditable from "@/components/AvatarEditable";
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
 import { TProfile } from "@/fetchings/type";
-import { useSessionStore } from "@/stores/SessionStore";
+
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { editProfileAction } from "./action";
+
+import { useSessionStore } from "@/stores/Session";
+import { actionUpdateProfile } from "@/lib/next-safe-action/actionUpdateProfile";
 
 type Props = {
   user: TProfile;
@@ -25,37 +27,41 @@ const FormEditProfile = ({ user }: Props) => {
   const { theme } = useTheme();
 
   const { execute, isExecuting, hasSucceeded, result } = useAction(
-    editProfileAction,
+    actionUpdateProfile,
     {
       onError: ({ error }) => {
         console.log(error);
         toast.error("Something went wrong", { theme });
       },
+      async onSuccess({ data }) {
+        if (!data || !session) return;
+        toast.success("Profile updated", { theme });
+        await update({
+          ...session.user,
+          name: data,
+        });
+        router.refresh();
+      },
     },
   );
 
-  useEffect(() => {
-    if (hasSucceeded && result.data?.message) {
-      const { name } = result.data.user;
-      toast.success(result.data.message, { theme });
-      if (name !== user?.name) {
-        update({
-          id: session?.user.id,
-          image: session?.user.image,
-          username: session?.user.username,
-          name,
-        }).then(() => {
-          router.refresh();
-        });
-      }
-    }
-  }, [hasSucceeded]);
+  // useEffect(() => {
+  //   if (hasSucceeded && result.data && session) {
+  //     toast.success("Profile updated", { theme });
+  //     update({
+  //       ...session.user,
+  //       name: result.data,
+  //     }).then(() => {
+  //       router.refresh();
+  //     });
+  //   }
+  // }, [hasSucceeded]);
 
   return (
     <div className="relative w-full max-w-md space-y-6">
       <div className="flex items-center justify-center gap-6">
         <div className="">
-          <EditableAvatar
+          <AvatarEditable
             ref={inputRef}
             className="w-20 lg:w-20"
             avatar={user?.avatar}

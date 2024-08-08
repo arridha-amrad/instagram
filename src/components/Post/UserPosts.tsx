@@ -11,9 +11,9 @@ import { useParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import useMeasure from "react-use-measure";
-import Post from "../../../components/Post/UserPost";
+import Post from "./UserPost";
 
-export default function Posts() {
+export default function UserPosts() {
   const { userPosts, totalUserPosts, pageUserPosts, addUserPosts } =
     usePostsStore();
   const [currPage, setCurrPage] = useState(pageUserPosts);
@@ -167,52 +167,7 @@ export default function Posts() {
             </div>
           );
         })}
-        {/* {rowVirtualizer.getVirtualItems().map((row) => {
-        const post = userPosts[virtualRow.index];
-        const isLoaderRow = virtualRow.index > userPosts.length / 3 - 1;
-        return (
-          <div
-            key={virtualRow.index}
-            data-index={virtualRow.index}
-            ref={windowRowVirtualizer.measureElement}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: `${virtualRow.size}px`,
-              transform: `translateY(${virtualRow.start}px)`,
-            }}
-          >
-            <div
-              data-index={virtualRow.index}
-              ref={windowRowVirtualizer.measureElement}
-            >
-              <Post post={post} />
-            </div>
-          </div>
-        );
-      })} */}
       </div>
     </div>
   );
-
-  // {isLoaderRow ? (
-  //   <div
-  //     ref={lastElementRef}
-  //     className="flex items-center justify-center py-10"
-  //   >
-  //     <Spinner />
-  //   </div>
-  // ) : (
-  //   <Post post={post} />
-  // )}
-
-  // return (
-  //   <section className="grid w-full grid-cols-3 gap-1">
-  //     {userPosts.map((post) => (
-  //       <Post post={post} key={post.id} />
-  //     ))}
-  //   </section>
-  // );
 }

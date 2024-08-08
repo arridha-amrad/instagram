@@ -2,17 +2,17 @@
 
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
+import { actionChangePassword } from "@/lib/next-safe-action/actionChangePassword";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRef } from "react";
 import { toast } from "react-toastify";
-import { changePasswordAction } from "./action";
 
 const FormChangePassword = () => {
   const ref = useRef<HTMLFormElement | null>(null);
   const { theme } = useTheme();
 
-  const { execute, isExecuting, result } = useAction(changePasswordAction, {
+  const { execute, isExecuting, result } = useAction(actionChangePassword, {
     onError: ({ error: { serverError } }) => {
       if (serverError) {
         toast.error(serverError, { theme });
@@ -21,7 +21,7 @@ const FormChangePassword = () => {
     onSuccess: ({ data }) => {
       ref.current?.reset();
       if (data) {
-        toast.success(data.message, { theme });
+        toast.success("Password change successfully", { theme });
       }
     },
   });

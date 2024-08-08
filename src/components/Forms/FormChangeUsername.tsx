@@ -2,25 +2,36 @@
 
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
+import { actionChangeUsername } from "@/lib/next-safe-action/actionChangeUsername";
+import { useSessionStore } from "@/stores/Session";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { changeUsernameAction } from "./action";
 
 const FormChangeUsername = () => {
   const { update } = useSession();
   const { theme } = useTheme();
   const formRef = useRef<HTMLFormElement | null>(null);
   const router = useRouter();
+  const { session } = useSessionStore();
 
   const { execute, result, hasSucceeded, isExecuting } = useAction(
-    changeUsernameAction,
+    actionChangeUsername,
     {
       onError: ({ error: { serverError } }) => {
         toast.error(serverError, { theme });
+      },
+      async onSuccess({ data }) {
+        toast.success("Username changed", { theme });
+        if (!data || !session) return;
+        await update({
+          ...session.user,
+          username: data,
+        });
+        router.refresh();
       },
     },
   );
@@ -28,21 +39,18 @@ const FormChangeUsername = () => {
   const currUsernameErrValidation = result.validationErrors?.currentUsername;
   const newUsernameErrValidation = result.validationErrors?.newUsername;
 
-  useEffect(() => {
-    if (hasSucceeded && result.data?.message) {
-      toast.success(result.data?.message, { theme });
-      formRef.current?.reset();
-      const user = result.data.data;
-      update({
-        id: user?.id,
-        username: user?.username,
-        name: user?.name,
-        image: user?.avatar,
-      }).then(() => {
-        router.refresh();
-      });
-    }
-  }, [hasSucceeded]);
+  // useEffect(() => {
+  //   if (hasSucceeded && result.data) {
+  //     toast.success("Username changed", { theme });
+  //     formRef.current?.reset();
+  //     update({
+  //       ...session?.user,
+  //       username: result.data,
+  //     }).then(() => {
+  //       router.refresh();
+  //     });
+  //   }
+  // }, [hasSucceeded]);
 
   return (
     <form
