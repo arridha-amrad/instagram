@@ -1,15 +1,7 @@
 import db from "@/lib/drizzle/db";
 import { unstable_cache } from "next/cache";
 
-export const fetchSearchHistories = unstable_cache(
-  async ({ userId }: { userId: string }) => getSearchHistories({ userId }),
-  ["histories"],
-  {
-    tags: ["fetchSearchHistories"],
-  },
-);
-
-export const getSearchHistories = async ({ userId }: { userId: string }) => {
+export const fetchHistories = async ({ userId }: { userId: string }) => {
   const result = await db.query.SearchUsersTable.findMany({
     columns: {
       searchId: false,
@@ -32,3 +24,11 @@ export const getSearchHistories = async ({ userId }: { userId: string }) => {
 
   return result;
 };
+
+export const fetchSearchHistories = unstable_cache(
+  fetchHistories,
+  ["fetchSearchHistories"],
+  {
+    tags: ["fetchSearchHistories"],
+  },
+);

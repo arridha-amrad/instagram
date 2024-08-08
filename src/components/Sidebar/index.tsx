@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import SwitchTheme from "@/components/SwitchTheme";
+import { fetchSearchHistories } from "@/lib/drizzle/queries/fetchSearchHistories";
 import LinkHome from "./Links/LinkHome";
 import LinkProfile from "./Links/LinkProfile";
 import LinkSettings from "./Links/LinkSettings";
@@ -9,7 +10,6 @@ import Logout from "./Modal/ModalLogout";
 import ButtonSearchUser from "./Search/ButtonSearchUser";
 import Histories from "./Search/Histories";
 import SidebarBrand from "./SidebarBrand";
-import { fetchSearchHistories } from "./fetchSearchHistories";
 
 export default async function Sidebar() {
   const session = await auth();
