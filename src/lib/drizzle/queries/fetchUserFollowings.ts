@@ -1,13 +1,14 @@
 import db from "@/lib/drizzle/db";
 import { eq, sql } from "drizzle-orm";
 import { FollowingsTable, UsersTable } from "../schema";
-import { TInfiniteResult, TOwnerIsFollow } from "./type";
+import { TInfiniteResult, TUserIsFollow } from "./type";
 import { unstable_cache } from "next/cache";
 
 type Args = {
   username: string;
   authUserId?: string;
   page?: number;
+  date?: Date;
 };
 
 const LIMIT = 10;
@@ -16,14 +17,17 @@ const fetchFollowings = async ({
   username,
   authUserId,
   page = 1,
-}: Args): Promise<TInfiniteResult<TOwnerIsFollow[]>> => {
+  date = new Date(),
+}: Args): Promise<TInfiniteResult<TUserIsFollow>> => {
+  //
   const user = await db.query.UsersTable.findFirst({
     where: eq(UsersTable.username, username),
   });
 
   if (!user) {
     return {
-      users: [],
+      date,
+      data: [],
       page: 0,
       total: 0,
     };
@@ -56,24 +60,24 @@ const fetchFollowings = async ({
     where(fields, operators) {
       return operators.eq(fields.userId, user.id);
     },
-  }).then((result) => {
-    const data = result.map(({ follow }) => {
-      const a = {
-        ...follow,
-        isFollow: !!follow.followers.find(
-          (f) => f.userId === authUserId && f.followId === follow.id,
-        ),
-      };
-      const { followers, ...rest } = a;
-      return rest;
-    });
-    return data;
+  });
+
+  const data: TUserIsFollow[] = users.map(({ follow: f }) => {
+    const usr = {
+      ...f,
+      isFollow: !!f.followers.find(
+        (x) => x.userId === authUserId && x.followId === f.id,
+      ),
+    };
+    const { followers, ...props } = usr;
+    return props;
   });
 
   return {
     page,
     total: result.total,
-    users,
+    data,
+    date,
   };
 };
 

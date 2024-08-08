@@ -1,26 +1,20 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TFeedPost } from "@/lib/drizzle/queries/type";
+import { TFeedPost, TInfiniteResult } from "@/lib/drizzle/queries/type";
 import usePostsStore from "@/stores/Posts";
 import { ReactNode, useEffect } from "react";
 
-type Data = {
-  page: number;
-  total: number;
-  posts: TFeedPost[];
-};
-
 type Props = {
   children: ReactNode;
-  data: Data;
+  data: TInfiniteResult<TFeedPost>;
 };
 
 export default function FeedPostProvider({ children, data }: Props) {
   const { setFeedPosts, isLoadingFeedPosts } = usePostsStore();
 
   useEffect(() => {
-    setFeedPosts(data.posts, data.total);
+    setFeedPosts(data);
   }, []);
 
   if (isLoadingFeedPosts) {

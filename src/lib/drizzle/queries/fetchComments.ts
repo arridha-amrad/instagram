@@ -1,7 +1,7 @@
 import db from "@/lib/drizzle/db";
 import { TComment, TInfiniteResult, TReply } from "@/lib/drizzle/queries/type";
 import { CommentsTable } from "@/lib/drizzle/schema";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, lte, sql } from "drizzle-orm";
 
 const LIMIT = 10;
 
@@ -9,12 +9,14 @@ type Args = {
   postId: string;
   authUserId?: string;
   page: number;
+  date?: Date;
 };
 
 export async function fetchComments({
   postId,
   authUserId,
   page,
+  date = new Date(),
 }: Args): Promise<TInfiniteResult<TComment>> {
   //
   const [total] = await db
@@ -22,7 +24,9 @@ export async function fetchComments({
       sum: sql<number>`cast(count(${CommentsTable.id}) as int)`,
     })
     .from(CommentsTable)
-    .where(eq(CommentsTable.postId, postId));
+    .where(
+      and(eq(CommentsTable.postId, postId), lte(CommentsTable.createdAt, date)),
+    );
 
   const comments = await db.query.CommentsTable.findMany({
     orderBy: ({ createdAt }, { desc }) => {
@@ -30,8 +34,8 @@ export async function fetchComments({
     },
     limit: LIMIT,
     offset: LIMIT * (page - 1),
-    where(fields, { eq }) {
-      return eq(fields.postId, postId);
+    where(fields, { eq, lte }) {
+      return and(eq(fields.postId, postId), lte(fields.createdAt, date));
     },
     with: {
       replies: {
@@ -58,6 +62,7 @@ export async function fetchComments({
       sumReplies: comment.replies.length,
       sumRepliesRemaining: comment.replies.length,
       replies: {
+        date,
         data: [] as TReply[],
         page: 0,
         total: comment.replies.length,
@@ -67,5 +72,5 @@ export async function fetchComments({
     return props;
   });
 
-  return { data: populatedComments, total: total.sum, page };
+  return { date, data: populatedComments, total: total.sum, page };
 }

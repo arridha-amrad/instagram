@@ -11,8 +11,13 @@ import { toast } from "react-toastify";
 import FeedPost from "./FeedPost";
 
 export default function FeedPosts() {
-  const { feedPosts, pageFeedPosts, totalFeedPosts, addFeedPosts } =
-    usePostsStore();
+  const {
+    feedPosts,
+    pageFeedPosts,
+    latestFeedPostsDate,
+    totalFeedPosts,
+    addFeedPosts,
+  } = usePostsStore();
 
   const [currPage, setCurrPage] = useState(pageFeedPosts);
   const [loading, setLoading] = useState(false);
@@ -31,9 +36,10 @@ export default function FeedPosts() {
       try {
         const result = await actionFetchPosts({
           page: currPage,
+          date: latestFeedPostsDate,
         });
         if (result?.data) {
-          addFeedPosts(result.data.posts);
+          addFeedPosts(result.data.data);
         }
       } catch (err) {
         toast.error("Something went wrong", { theme });

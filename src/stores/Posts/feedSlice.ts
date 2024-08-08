@@ -1,4 +1,8 @@
-import { TFeedComment, TFeedPost } from "@/lib/drizzle/queries/type";
+import {
+  TFeedComment,
+  TFeedPost,
+  TInfiniteResult,
+} from "@/lib/drizzle/queries/type";
 import { StateCreator } from "zustand";
 import { DetailSlice } from "./detailSlice";
 import { UserSlice } from "./userSlice";
@@ -6,10 +10,11 @@ import { UserSlice } from "./userSlice";
 export type FeedSlice = {
   totalFeedPosts: number;
   pageFeedPosts: number;
+  latestFeedPostsDate: Date;
   isLoadingFeedPosts: boolean;
   feedPosts: TFeedPost[];
   likeFeedPost: (postId: string) => void;
-  setFeedPosts: (posts: TFeedPost[], total: number) => void;
+  setFeedPosts: (data: TInfiniteResult<TFeedPost>) => void;
   addFeedPosts: (feedPosts: TFeedPost[]) => void;
   addCommentToFeedPost: (comment: TFeedComment) => void;
   likeCommentOfFeedPost: (postId: string, commentId: string) => void;
@@ -21,6 +26,7 @@ export const createFeedSlice: StateCreator<
   [],
   FeedSlice
 > = (set) => ({
+  latestFeedPostsDate: new Date(),
   feedPosts: [],
   pageFeedPosts: 0,
   totalFeedPosts: 0,
@@ -60,12 +66,13 @@ export const createFeedSlice: StateCreator<
       state.pageFeedPosts += 1;
     });
   },
-  setFeedPosts(posts, total) {
+  setFeedPosts(data) {
     set((state) => {
-      state.feedPosts = posts;
+      state.feedPosts = data.data;
       state.pageFeedPosts = 1;
-      state.totalFeedPosts = total;
+      state.totalFeedPosts = data.total;
       state.isLoadingFeedPosts = false;
+      state.latestFeedPostsDate = data.date;
     });
   },
 });

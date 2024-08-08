@@ -8,13 +8,15 @@ import { PostsTable } from "../schema";
 type Args = {
   username: string;
   page: number;
+  date?: Date;
 };
 
 const LIMIT = 6;
 
-const fetchUserPosts = async ({
+const getPosts = async ({
   username,
   page,
+  date = new Date(),
 }: Args): Promise<TInfiniteResult<TUserPost>> => {
   const user = await db.query.UsersTable.findFirst({
     where(fields, operators) {
@@ -27,6 +29,7 @@ const fetchUserPosts = async ({
       data: [],
       total: 0,
       page: 1,
+      date,
     };
   }
 
@@ -85,9 +88,10 @@ const fetchUserPosts = async ({
     data: populatedPosts,
     page,
     total: result.total,
+    date,
   };
 };
 
-export const getUserPosts = unstable_cache(fetchUserPosts, ["user-posts"], {
+export const fetchUserPosts = unstable_cache(getPosts, ["fetchUserPosts"], {
   tags: ["fetchUserPosts"],
 });

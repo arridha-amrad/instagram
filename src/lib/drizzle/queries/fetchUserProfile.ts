@@ -8,7 +8,7 @@ type Args = {
   authUserId?: string;
 };
 
-const getUserProfile = async ({ username, authUserId }: Args) => {
+const getProfile = async ({ username, authUserId }: Args) => {
   const user = await db.query.UsersTable.findFirst({
     with: {
       followers: true,
@@ -50,7 +50,7 @@ const getUserProfile = async ({ username, authUserId }: Args) => {
 };
 
 export const fetchUserProfile = unstable_cache(
-  getUserProfile,
+  getProfile,
   ["fetchUserProfile"],
   {
     tags: ["fetchUserProfile"],

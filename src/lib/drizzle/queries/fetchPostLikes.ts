@@ -20,12 +20,14 @@ type Args = {
   postId: string;
   authUserId?: string;
   page?: number;
+  date?: Date;
 };
 
 export const fetchPostLikes = async ({
   postId,
   authUserId,
   page = 1,
+  date = new Date(),
 }: Args): Promise<TInfiniteResult<TUserIsFollow>> => {
   //
   const getTotalLikes = async () => {
@@ -73,6 +75,7 @@ export const fetchPostLikes = async ({
   });
 
   return {
+    date,
     data: populatedUsers,
     page,
     total,

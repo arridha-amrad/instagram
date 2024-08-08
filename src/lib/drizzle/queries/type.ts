@@ -14,11 +14,11 @@ export type TReplySchema = typeof RepliesTable.$inferSelect;
 export type TUserSchema = typeof UsersTable.$inferSelect;
 
 export type TOwner = Pick<TUserSchema, "id" | "avatar" | "name" | "username">;
-export type TOwnerIsFollow = TOwner & { isFollow: boolean };
 
 export type TInfiniteResult<T> = {
   total: number;
   page: number;
+  date: Date;
 } & {
   data: T[];
 };

@@ -1,27 +1,31 @@
 import db from "@/lib/drizzle/db";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { FollowingsTable, UsersTable } from "@/lib/drizzle/schema";
-import { TInfiniteResult, TOwnerIsFollow } from "./type";
+import { TInfiniteResult, TUserIsFollow } from "./type";
+import { unstable_cache } from "next/cache";
 
 type Args = {
   username: string;
   authUserId?: string;
   page?: number;
+  date?: Date;
 };
 
 const LIMIT = 10;
 
-export const fetchUserFollowers = async ({
+export const fetchFollowers = async ({
   authUserId,
   username,
   page = 1,
-}: Args): Promise<TInfiniteResult<TOwnerIsFollow>> => {
+  date = new Date(),
+}: Args): Promise<TInfiniteResult<TUserIsFollow>> => {
   const user = await db.query.UsersTable.findFirst({
     where: eq(UsersTable.username, username),
   });
 
   if (!user) {
     return {
+      date,
       data: [],
       page: 0,
       total: 0,
@@ -33,7 +37,7 @@ export const fetchUserFollowers = async ({
       total: sql<number>`cast(count(${FollowingsTable.followId}) as int)`,
     })
     .from(FollowingsTable)
-    .where(eq(FollowingsTable.followId, user.id));
+    .where(and(eq(FollowingsTable.followId, user.id)));
 
   const followers = await db.query.FollowingsTable.findMany({
     columns: {},
@@ -57,34 +61,27 @@ export const fetchUserFollowers = async ({
     },
   });
 
-  const populatedUsers: TOwnerIsFollow[] = followers
-    .map(({ user: f }) => {
-      const user = {
-        ...f,
-        isFollow: !!f.followers.find(
-          (x) => x.followId === user.id && x.userId === authUserId,
-        ),
-      };
-      return user;
-    })
-
-    .then((result) => {
-      const data = result.map(({ user }) => {
-        const a = {
-          ...user,
-          isFollow: !!user.followers.find(
-            (f) => f.followId === user.id && f.userId === authUserId,
-          ),
-        };
-        const { followers, ...rest } = a;
-        return rest;
-      });
-      return data;
-    });
+  const populatedFollowers: TUserIsFollow[] = followers.map(({ user: u }) => {
+    const usr = {
+      ...u,
+      isFollow: !!u.followers.find(
+        (x) => x.followId === user.id && x.userId === authUserId,
+      ),
+    };
+    const { followers, ...props } = usr;
+    return props;
+  });
 
   return {
-    data: followers,
+    data: populatedFollowers,
     total: result.total,
     page,
+    date,
   };
 };
+
+export const fetchUserFollowers = unstable_cache(
+  fetchFollowers,
+  ["fetchUserFollowers"],
+  { tags: ["fetchUserFollowers"] },
+);
