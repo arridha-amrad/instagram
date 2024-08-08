@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
-import EditableAvatar from "@/components/EditableAvatar";
 import Button from "@/components/core/Button";
 import SvgFemale from "@/components/svg/SvgFemale";
 import SvgMale from "@/components/svg/SvgMale";
@@ -8,6 +7,7 @@ import { fetchUserProfile } from "@/lib/drizzle/queries/fetchUserProfile";
 import Link from "next/link";
 import Settings from "./Settings";
 import ButtonFollow from "@/components/ButtonFollow";
+import AvatarEditable from "./AvatarEditable";
 
 type Props = {
   username: string;
@@ -34,7 +34,7 @@ export default async function Profile({ username }: Props) {
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center">
       <div className="flex flex-1 items-center justify-start sm:justify-center">
         {isAuthUser ? (
-          <EditableAvatar avatar={u?.avatar} />
+          <AvatarEditable avatar={u?.avatar} />
         ) : (
           <Avatar className="w-24 sm:w-40" url={u?.avatar} />
         )}

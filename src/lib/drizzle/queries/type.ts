@@ -6,7 +6,6 @@ import {
   UsersTable,
 } from "@/lib/drizzle/schema";
 import { fetchUserProfile } from "./fetchUserProfile";
-import { fetchSearchHistories } from "@/components/Sidebar/fetchSearchHistories";
 
 export type TPostSchema = typeof PostsTable.$inferSelect;
 export type TCommentSchema = typeof CommentsTable.$inferSelect;
@@ -59,6 +58,5 @@ export type TReply = TReplySchema & { owner: TUser } & {
 
 export type TProfile = Awaited<ReturnType<typeof fetchUserProfile>>;
 export type TUserInfo = typeof UserInfoTable.$inferSelect;
-export type TSearchUser = Awaited<
-  ReturnType<typeof fetchSearchHistories>
->[number];
+
+export type TSearchUser = TUser & { name: string };

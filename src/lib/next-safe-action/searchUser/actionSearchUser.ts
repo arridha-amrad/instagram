@@ -3,11 +3,12 @@
 import { findUsers } from "@/lib/drizzle/mutations/searchUser/findUsers";
 import { z } from "zod";
 import { optionalAuthActionClient } from "../init";
+import { zfd } from "zod-form-data";
 
 export const actionSearchUser = optionalAuthActionClient
   .schema(
-    z.object({
-      searchKey: z.string(),
+    zfd.formData({
+      searchKey: zfd.text(z.string()),
     }),
   )
   .action(async ({ parsedInput: { searchKey } }) => {

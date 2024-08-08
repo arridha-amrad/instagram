@@ -24,27 +24,29 @@ const getProfile = async ({ username, authUserId }: Args) => {
     where(fields, operators) {
       return operators.eq(fields.username, username);
     },
-  }).then(async (user) => {
-    if (user) {
-      const [{ sumPosts }] = await db
-        .select({
-          sumPosts: sql<number>`count(${PostsTable.id})`,
-        })
-        .from(PostsTable)
-        .where(eq(PostsTable.userId, user.id));
-      return {
-        ...user,
-        followers: user.followers.length,
-        followings: user.followings.length,
-        isFollowed: !authUserId
-          ? false
-          : !!user.followers.find((f) => f.userId === authUserId),
-        sumPosts,
-      };
-    } else {
-      return null;
-    }
-  });
+  })
+
+    .then(async (user) => {
+      if (user) {
+        const [{ sumPosts }] = await db
+          .select({
+            sumPosts: sql<number>`count(${PostsTable.id})`,
+          })
+          .from(PostsTable)
+          .where(eq(PostsTable.userId, user.id));
+        return {
+          ...user,
+          followers: user.followers.length,
+          followings: user.followings.length,
+          isFollowed: !authUserId
+            ? false
+            : !!user.followers.find((f) => f.userId === authUserId),
+          sumPosts,
+        };
+      } else {
+        return null;
+      }
+    });
 
   return user;
 };

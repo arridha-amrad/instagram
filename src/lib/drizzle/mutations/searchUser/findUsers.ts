@@ -1,6 +1,7 @@
 import db from "../../db";
+import { TSearchUser } from "../../queries/type";
 
-export const findUsers = async (searchKey: string) => {
+export const findUsers = async (searchKey: string): Promise<TSearchUser[]> => {
   const result = await db.query.UsersTable.findMany({
     columns: {
       avatar: true,

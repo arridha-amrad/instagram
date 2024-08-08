@@ -7,8 +7,8 @@ import LinkSettings from "./Links/LinkSettings";
 import NewPostModal from "./Modal/ModalCreatePost";
 import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
 import Logout from "./Modal/ModalLogout";
-import ButtonSearchUser from "./Search/ButtonSearchUser";
 import Histories from "./Search/Histories";
+import ButtonSearchUser from "./Search/ModalSearchUser";
 import SidebarBrand from "./SidebarBrand";
 
 export default async function Sidebar() {
@@ -28,7 +28,7 @@ export default async function Sidebar() {
       <LinkHome />
       <div className="h-2" />
       <ButtonSearchUser>
-        <Histories histories={searchHistories} />
+        <Histories data={searchHistories} />
       </ButtonSearchUser>
       <div className="h-2" />
       <CreatePostProvider>

@@ -1,7 +1,12 @@
 import db from "@/lib/drizzle/db";
 import { unstable_cache } from "next/cache";
+import { TSearchUser } from "./type";
 
-export const fetchHistories = async ({ userId }: { userId: string }) => {
+export const fetchHistories = async ({
+  userId,
+}: {
+  userId: string;
+}): Promise<TSearchUser[]> => {
   const result = await db.query.SearchUsersTable.findMany({
     columns: {
       searchId: false,
@@ -22,7 +27,11 @@ export const fetchHistories = async ({ userId }: { userId: string }) => {
     },
   });
 
-  return result;
+  const users = result.reduce((prev, curr) => {
+    prev.push(curr.searchUser);
+    return prev;
+  }, [] as TSearchUser[]);
+  return users;
 };
 
 export const fetchSearchHistories = unstable_cache(
