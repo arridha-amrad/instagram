@@ -1,8 +1,8 @@
 "use server";
 
-import { authActionClient } from "@/lib/safe-action";
 import { z } from "zod";
 import { likePost } from "../drizzle/mutations/likePost";
+import { authActionClient } from "./init";
 
 export const actionLikePost = authActionClient
   .schema(

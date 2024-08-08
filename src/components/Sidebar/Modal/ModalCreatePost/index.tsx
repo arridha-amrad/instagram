@@ -7,7 +7,7 @@ import useMeasure from "react-use-measure";
 import Preview from "./Preview";
 import Picker from "./Picker";
 import { cn } from "@/lib/utils";
-import FormCreatePost from "./Form/FormCreatePost";
+import FormCreatePost from "./FormCreatePost";
 import ModalTitle from "./ModalTitle";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Modal from "@/components/core/ModalWrapper";

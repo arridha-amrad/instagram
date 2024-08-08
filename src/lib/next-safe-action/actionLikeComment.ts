@@ -1,8 +1,8 @@
 "use server";
 
-import { authActionClient } from "@/lib/safe-action";
 import { z } from "zod";
 import { likeComment } from "../drizzle/mutations/likeComment";
+import { authActionClient } from "./init";
 
 const schema = z.object({
   pathname: z.string(),

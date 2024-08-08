@@ -1,55 +1,34 @@
 "use client";
 
 import Button from "@/components/core/Button";
-import setNewPostOnClient from "@/helpers/setNewPostOnClient";
+import { actionCreatePost } from "@/lib/next-safe-action/actionCreatePost";
 import { cn } from "@/lib/utils";
-
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
-import { useCreatePost } from "../CreatePostContext";
-import { createPostAction } from "./actionCreatePost";
-import { useHomePageStore } from "@/lib/zustand/homePageStore";
-import useBoundProfileStore from "@/lib/zustand/profilePageStore";
-import { useSessionStore } from "@/stores/Session";
+import { useCreatePost } from "./CreatePostContext";
 
 const FormCreatePost = () => {
   const { step, files, setSubmitSuccessful } = useCreatePost();
-  const { session } = useSessionStore();
-  const cpa = createPostAction.bind(null, session?.user.id ?? "");
-  const { result, isExecuting, hasErrored, hasSucceeded, execute } =
-    useAction(cpa);
   const { theme } = useTheme();
-  const { addPost } = useHomePageStore();
-  const { addPost: adp } = useBoundProfileStore();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    if (hasSucceeded && result.data?.message) {
-      toast.success(result.data.message, { theme });
+  const { isExecuting, execute } = useAction(actionCreatePost, {
+    onError: () => {
+      toast.error("Something went wrong", { theme });
+    },
+    onSuccess: () => {
+      toast.success("New post created successfully");
       setSubmitSuccessful(true);
-      const authUser = session?.user;
-      if (!authUser) return;
-      setNewPostOnClient({
-        authUser,
-        post: result.data.data,
-        setterFn: addPost,
-      });
-    }
-  }, [hasSucceeded]);
-
-  useEffect(() => {
-    if (hasErrored) {
-      toast.error("Somethng went wrong", { theme });
-    }
-  }, [hasErrored]);
+    },
+  });
 
   return (
     <form
       className={cn("flex w-full max-w-sm flex-col p-2", step < 1 && "hidden")}
       action={(data) => {
         files.map((file) => data.append("images", file));
-        console.log("location : ", data.get("location"));
         execute(data);
       }}
     >
@@ -60,6 +39,7 @@ const FormCreatePost = () => {
           className="mt-2 w-full resize-none rounded-lg border-transparent bg-skin-input align-top shadow-sm focus:border-transparent focus:ring focus:ring-skin-primary sm:text-sm"
           rows={5}
         ></textarea>
+        <input name="pathname" hidden defaultValue={pathname} readOnly />
         <input
           name="location"
           placeholder="location"

@@ -19,8 +19,8 @@ const Picker = () => {
     }
   };
   return (
-    <div className="w-full h-full flex items-center justify-center flex-col gap-4">
-      <PhotoIcon className="w-24 stroke-1 aspect-square" />
+    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+      <PhotoIcon className="aspect-square w-24 stroke-1" />
       <h1>Drag photos here</h1>
       <input
         onChange={onChangeFileInput}

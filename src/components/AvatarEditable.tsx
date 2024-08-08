@@ -2,6 +2,7 @@
 
 import Avatar from "@/components/Avatar";
 import MySpinner from "@/components/Spinner";
+import { actionChangeAvatar } from "@/lib/next-safe-action/actionChangeAvatar";
 import { cn } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import mergeRefs from "merge-refs";
@@ -18,7 +19,6 @@ import {
   useRef,
 } from "react";
 import { toast } from "react-toastify";
-import { changeAvatarAction } from "./action";
 
 type Props = {
   avatar?: string | null;
@@ -35,28 +35,40 @@ const EditableAvatar = (
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const { execute, result, isExecuting, hasSucceeded } = useAction(
-    changeAvatarAction,
+    actionChangeAvatar,
     {
-      onError: ({ error: { serverError } }) => {
-        toast.error(serverError, { theme });
+      onError: () => {
+        toast.error("Something went wrong", { theme });
+      },
+      async onSuccess({ data }) {
+        if (!data) return;
+        const { id, image, name, username } = data.user;
+        await update({
+          id,
+          username,
+          image,
+          name,
+        });
+        router.refresh();
+        toast.success(data.message, { theme });
       },
     },
   );
 
-  useEffect(() => {
-    if (hasSucceeded) {
-      const user = result.data?.user;
-      update({
-        id: user?.id,
-        username: user?.username,
-        image: user?.image,
-        name: user?.name,
-      }).then(() => {
-        router.refresh();
-        toast.success("Avatar updated", { theme });
-      });
-    }
-  }, [hasSucceeded]);
+  // useEffect(() => {
+  //   if (hasSucceeded) {
+  //     const user = result.data?.user;
+  //     update({
+  //       id: user?.id,
+  //       username: user?.username,
+  //       image: user?.image,
+  //       name: user?.name,
+  //     }).then(() => {
+  //       router.refresh();
+  //       toast.success("Avatar updated", { theme });
+  //     });
+  //   }
+  // }, [hasSucceeded]);
 
   const onChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
