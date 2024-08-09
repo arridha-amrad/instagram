@@ -3,60 +3,79 @@
 import Button from "@/components/core/Button";
 import CheckboxWithLabel from "@/components/core/CheckboxWithLabel";
 import TextInput from "@/components/core/TextInput";
+import { actionRegister } from "@/lib/next-safe-action/actionRegisterUser";
 import { cn } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
-import { useEffect, useRef, useState } from "react";
-import { registerAction } from "./actionRegister";
+import { useRef, useState } from "react";
 
 const FormRegister = () => {
   const [isShow, setShow] = useState(false);
-  const { execute, hasErrored, hasSucceeded, isExecuting, result } =
-    useAction(registerAction);
-  const nameError = result.validationErrors?.name;
-  const emailError = result.validationErrors?.email;
-  const passwordError = result.validationErrors?.password;
-  const usernameError = result.validationErrors?.username;
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState({
+    general: "",
+    name: "",
+    email: "",
+    password: "",
+    username: "",
+  });
+
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  const error = result.data?.err;
-  const message = result.data?.message;
-
-  useEffect(() => {
-    if (message) {
+  const { execute, isExecuting } = useAction(actionRegister, {
+    onSuccess: () => {
       formRef.current?.reset();
-    }
-  }, [message]);
+      setMessage("Registration is successful");
+    },
+    onError: ({ error: { serverError, validationErrors } }) => {
+      if (serverError) {
+        setError({
+          ...error,
+          general: serverError,
+        });
+      }
+      if (validationErrors) {
+        const { email, name, password, username } = validationErrors;
+        setError({
+          ...error,
+          email: email ? email[0] : "",
+          name: name ? name[0] : "",
+          password: password ? password[0] : "",
+          username: username ? username[0] : "",
+        });
+      }
+    },
+  });
 
   return (
     <form ref={formRef} className="space-y-3" action={execute}>
       <section className="text-center text-sm">
         <p className={cn(message && "text-green-500", error && "text-red-500")}>
-          {error}
+          {error.general}
           {message}
         </p>
       </section>
       <fieldset className="space-y-3" disabled={isExecuting}>
         <TextInput
-          errorMessage={nameError && nameError[0]}
+          errorMessage={error.name}
           label="Name"
           name="name"
           id="name"
         />
         <TextInput
-          errorMessage={emailError && emailError[0]}
+          errorMessage={error.email}
           label="Email"
           name="email"
           id="email"
         />
         <TextInput
-          errorMessage={usernameError && usernameError[0]}
+          errorMessage={error.username}
           label="Username"
           name="username"
           id="username"
         />
 
         <TextInput
-          errorMessage={passwordError && passwordError[0]}
+          errorMessage={error.password}
           label="Password"
           type={isShow ? "text" : "password"}
           name="password"

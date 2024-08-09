@@ -1,10 +1,10 @@
+import FormRegister from "@/components/Forms/FormRegisterUser";
 import FacebookButton from "@/components/SocialButtons/FacebookButton";
 import GithubButton from "@/components/SocialButtons/GithubButton";
 import GoogleButton from "@/components/SocialButtons/GoogleButton";
 import SvgInstagram from "@/components/svg/SvgInstagram";
-import Link from "next/link";
-import FormRegister from "./FormRegister";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Instagram | Register",

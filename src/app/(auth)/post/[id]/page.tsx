@@ -1,13 +1,10 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
-import Comments from "@/components/Post/Post/Comments";
-import { formatDistanceToNowStrict } from "date-fns";
-import Link from "next/link";
-import CommentForm from "./_components/CommentForm";
-import TotalComments from "./_components/SumComments";
-import { Metadata } from "next";
-import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
 import PostProvider from "@/components/Providers/PostProvider";
+import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
+import { formatDistanceToNowStrict } from "date-fns";
+import { Metadata } from "next";
+import Link from "next/link";
 
 type Props = {
   params: {

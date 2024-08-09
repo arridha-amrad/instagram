@@ -2,7 +2,6 @@
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/core/Button";
-import { useCreateComment } from "@/hooks/useCreateComment";
 import { cn } from "@/lib/utils";
 import usePostsStore from "@/stores/Posts";
 import { useSessionStore } from "@/stores/Session";
@@ -13,18 +12,6 @@ export default function CommentForm() {
   const [isFocus, setFocus] = useState(false);
   const { session } = useSessionStore();
   const { post } = usePostsStore();
-  const {
-    execute,
-    formRef,
-    inputRef,
-    isExecuting,
-    message,
-    setFocusToCommentForm,
-    setMessage,
-  } = useCreateComment({
-    post: post!,
-    session,
-  });
 
   return (
     <div className="flex items-start gap-4">

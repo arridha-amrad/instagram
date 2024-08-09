@@ -3,36 +3,53 @@
 import Button from "@/components/core/Button";
 import CheckboxWithLabel from "@/components/core/CheckboxWithLabel";
 import TextInput from "@/components/core/TextInput";
+import { actionLogin } from "@/lib/next-safe-action/actionLogin";
 import { useAction } from "next-safe-action/hooks";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { loginAction } from "./actionLogin";
 
 const FormLogin = () => {
   const [isShow, setShow] = useState(false);
+  const [error, setError] = useState({
+    general: "",
+    identity: "",
+    password: "",
+  });
   const params = useSearchParams();
-  const la = loginAction.bind(null, params.get("cbUrl"));
-  const { execute, isExecuting, result } = useAction(la);
-  const identityError = result.validationErrors?.identity;
-  const passwordError = result.validationErrors?.password;
+  const la = actionLogin.bind(null, params.get("cbUrl"));
+  const { execute, isExecuting, result } = useAction(la, {
+    onError: ({ error: { serverError, validationErrors } }) => {
+      if (serverError) {
+        setError({
+          ...error,
+          general: serverError,
+        });
+      }
+      if (validationErrors) {
+        const { identity, password } = validationErrors;
+        setError({
+          ...error,
+          identity: identity ? identity[0] : "",
+          password: password ? password[0] : "",
+        });
+      }
+    },
+  });
 
   return (
     <form className="space-y-3" action={execute}>
       <section className="text-center text-sm">
-        <p className="text-red-500">
-          {result.data?.err}
-          {result.serverError}
-        </p>
+        <p className="text-red-500">{error.general}</p>
       </section>
       <fieldset className="space-y-3" disabled={isExecuting}>
         <TextInput
-          errorMessage={identityError && identityError[0]}
+          errorMessage={error.identity}
           label="Username or email"
           name="identity"
           id="identity"
         />
         <TextInput
-          errorMessage={passwordError && passwordError[0]}
+          errorMessage={error.password}
           label="Password"
           type={isShow ? "text" : "password"}
           name="password"

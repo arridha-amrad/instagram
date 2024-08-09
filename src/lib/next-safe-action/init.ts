@@ -1,11 +1,10 @@
 import { auth } from "@/auth";
+import { CustomServerError } from "@/helpers/CustomServerError";
 import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-safe-action";
 import { redirect } from "next/navigation";
-
-export class CustomServerError extends Error {}
 
 export const actionClient = createSafeActionClient();
 

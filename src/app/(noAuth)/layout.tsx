@@ -6,7 +6,7 @@ type Props = {
 };
 const Layout = ({ children }: Props) => {
   return (
-    <main className="">
+    <main>
       {children}
       <div className="fixed bottom-4 right-4">
         <SwitchTheme />

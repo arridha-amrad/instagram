@@ -5,9 +5,9 @@ import SvgInstagram from "@/components/svg/SvgInstagram";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import FormLogin from "./FormLogin";
 import { auth } from "@/auth";
 import { RedirectType, redirect } from "next/navigation";
+import FormLogin from "@/components/Forms/FormLogin";
 
 export const metadata: Metadata = {
   title: "Instagram | Login",

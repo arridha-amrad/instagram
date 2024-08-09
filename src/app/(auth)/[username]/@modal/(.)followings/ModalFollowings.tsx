@@ -1,15 +1,23 @@
 "use client";
 
 import UsersContainer from "@/components/UsersContainer";
-import useBoundProfileStore from "@/lib/zustand/profilePageStore";
+import { TInfiniteResult, TUserIsFollow } from "@/lib/drizzle/queries/type";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default function ModalFollowings() {
-  const { followings } = useBoundProfileStore();
+interface Props {
+  data: TInfiniteResult<TUserIsFollow>;
+}
+
+export default function ModalFollowings({ data }: Props) {
+  const [followings, setFollowings] = useState<TUserIsFollow[]>(data.data);
+
   const router = useRouter();
+
   const closeModal = () => {
     router.back();
   };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <div

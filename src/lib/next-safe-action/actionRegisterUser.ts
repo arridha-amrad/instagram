@@ -1,13 +1,10 @@
 "use server";
 
-import db from "@/lib/drizzle/db";
-import { UsersTable } from "@/lib/drizzle/schema";
-import { actionClient } from "@/lib/safe-action";
-import argon from "argon2";
-import { eq } from "drizzle-orm";
 import { flattenValidationErrors } from "next-safe-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
+import { registerUser } from "../drizzle/mutations/registerUser";
+import { optionalAuthActionClient } from "./init";
 
 const registrationSchema = zfd.formData({
   name: zfd.text(
@@ -31,48 +28,19 @@ const registrationSchema = zfd.formData({
   ),
 });
 
-export const registerAction = actionClient
+export const actionRegister = optionalAuthActionClient
   .schema(registrationSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { email, name, password, username } }) => {
     try {
-      const [userWithSameEmail] = await db
-        .select()
-        .from(UsersTable)
-        .where(eq(UsersTable.email, email));
-
-      if (userWithSameEmail) {
-        return {
-          err: "Email is already taken",
-        };
-      }
-
-      const [userWithSameUsername] = await db
-        .select()
-        .from(UsersTable)
-        .where(eq(UsersTable.username, username));
-
-      if (userWithSameUsername) {
-        return {
-          err: "Username is already taken",
-        };
-      }
-
-      const hashedPassword = await argon.hash(password);
-
-      await db.insert(UsersTable).values({
+      await registerUser({
         email,
         name,
-        provider: "credentials",
+        password,
         username,
-        password: hashedPassword,
       });
-
-      return {
-        message: "Registration is successful",
-      };
     } catch (err) {
       throw err;
     }

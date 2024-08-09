@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import ModalFollowings from "./ModalFollowings";
-import Provider from "./Provider";
 import { fetchUserFollowings } from "@/lib/drizzle/queries/fetchUserFollowings";
 
 type Props = {
@@ -17,13 +16,7 @@ const Page = async ({ params: { username } }: Props) => {
     username,
   });
 
-  console.log(JSON.stringify(data, null, 2));
-
-  return (
-    <Provider data={data}>
-      <ModalFollowings />
-    </Provider>
-  );
+  return <ModalFollowings data={data} />;
 };
 
 export default Page;
