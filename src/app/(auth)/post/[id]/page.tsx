@@ -4,10 +4,10 @@ import Comments from "@/components/Post/Post/Comments";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import CommentForm from "./_components/CommentForm";
-import Provider from "./_components/Provider";
 import TotalComments from "./_components/SumComments";
 import { Metadata } from "next";
 import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
+import PostProvider from "@/components/Providers/PostProvider";
 
 type Props = {
   params: {
@@ -30,7 +30,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const Page = async ({ params }: Props) => {
   const session = await auth();
-  const post = fetchPost({ postId: params.id, authUserId: session?.user.id });
+
+  const post = await fetchPost({
+    postId: params.id,
+    authUserId: session?.user.id,
+  });
 
   if (!post) {
     return (
@@ -43,7 +47,7 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <Provider comments={comments} post={post}>
+    <PostProvider post={post}>
       <main className="px flex min-h-screen w-full max-w-xl flex-col px-4 pb-20">
         <section className="flex h-[80px] w-max items-center gap-3">
           <Avatar url={post.owner.avatar} />
@@ -61,15 +65,15 @@ const Page = async ({ params }: Props) => {
             {formatDistanceToNowStrict(post.createdAt)}
           </h2>
         </section>
-        <Carousel urls={post.urls.map((u) => u.url)} />
-        <Action />
-        <CommentForm />
-        <TotalComments />
-        <section className="py-3">
+        {/* <Carousel urls={post.urls.map((u) => u.url)} />
+        <Action /> */}
+        {/* <CommentForm />
+        <TotalComments /> */}
+        {/* <section className="py-3">
           <Comments />
-        </section>
+        </section> */}
       </main>
-    </Provider>
+    </PostProvider>
   );
 };
 

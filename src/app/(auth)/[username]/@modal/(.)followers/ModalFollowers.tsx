@@ -2,24 +2,26 @@
 
 import UsersContainer from "@/components/UsersContainer";
 import { TInfiniteResult, TUserIsFollow } from "@/lib/drizzle/queries/type";
-import useBoundProfileStore from "@/lib/zustand/profilePageStore";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   data: TInfiniteResult<TUserIsFollow>;
 };
 
 export default function ModalFollowers({ data }: Props) {
-  const { followers, setFollowers } = useBoundProfileStore();
+  const [followers, setFollowers] = useState<TUserIsFollow[]>([]);
+
   useEffect(() => {
-    setFollowers(data);
+    setFollowers(data.data);
   }, []);
   const router = useRouter();
+
   const closeModal = () => {
     router.back();
   };
-  return (
+  return createPortal(
     <div className="fixed inset-0 flex items-center justify-center">
       <div
         onClick={closeModal}
@@ -30,6 +32,7 @@ export default function ModalFollowers({ data }: Props) {
         users={followers}
         closeCallback={closeModal}
       />
-    </div>
+    </div>,
+    document.body,
   );
 }

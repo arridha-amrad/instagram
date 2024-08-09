@@ -1,6 +1,7 @@
 import Profile from "@/components/Profile";
 import Tabs from "@/components/Tabs";
-import { fetchUser } from "@/fetchings/user";
+import { fetchUserProfile } from "@/lib/drizzle/queries/fetchUserProfile";
+
 import { Metadata } from "next";
 import { ReactNode } from "react";
 
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const user = await fetchUser({
+  const user = await fetchUserProfile({
     username: params.username,
   });
   return {

@@ -13,8 +13,7 @@ type Props = {
 
 export default function Tab({ href, name, username }: Props) {
   const pathname = usePathname();
-  const target =
-    href === "" ? `/user/${username}` : `/user/${username}/${href}`;
+  const target = href === "" ? `/${username}` : `/${username}/${href}`;
   const isActive = target === pathname;
 
   return (

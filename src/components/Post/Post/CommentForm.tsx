@@ -27,7 +27,7 @@ const CommentForm = ({ post }: Props) => {
   const { reply, setReply } = useReplySetter();
   const { addReply, addComment } = usePostsStore();
 
-  const replyAction = actionCreateReply.bind(null, reply!.commentId);
+  const replyAction = actionCreateReply.bind(null, reply?.commentId ?? "");
   const commentAction = actionCreateComment.bind(null, post.id);
 
   const { execute: exeReply, isExecuting: isExeReply } = useAction(
@@ -69,6 +69,7 @@ const CommentForm = ({ post }: Props) => {
             username,
           },
           replies: {
+            date: new Date(),
             data: [],
             page: 0,
             total: 0,

@@ -1,12 +1,12 @@
 "use client";
 
-import { TOwnerIsFollow } from "@/lib/drizzle/queries/type";
+import { TUserIsFollow } from "@/lib/drizzle/queries/type";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import UserWithFollowButtonCard from "./UserWithFollowButtonCard";
 
 type Props = {
   closeCallback?: VoidFunction;
-  users: TOwnerIsFollow[];
+  users: TUserIsFollow[];
   title: string;
 };
 

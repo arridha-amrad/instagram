@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
+import { fetchUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
 import { authActionClient } from "@/lib/next-safe-action/init";
 import { z } from "zod";
 
@@ -12,7 +12,7 @@ export const actionFetchUserPosts = authActionClient
     }),
   )
   .action(async ({ parsedInput: { page, username } }) => {
-    const result = await getUserPosts({
+    const result = await fetchUserPosts({
       page,
       username,
     });

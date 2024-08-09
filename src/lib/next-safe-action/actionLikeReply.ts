@@ -1,8 +1,8 @@
 "use server";
 
-import { authActionClient } from "@/lib/safe-action";
 import { z } from "zod";
 import { likeReply } from "../drizzle/mutations/likeReply";
+import { authActionClient } from "./init";
 
 const schema = z.object({
   replyId: z.string(),
