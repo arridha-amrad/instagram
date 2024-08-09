@@ -1,8 +1,8 @@
-import { CustomServerError } from "@/lib/next-safe-action/init";
 import { hash } from "argon2";
 import { eq } from "drizzle-orm";
 import db from "../db";
 import { UsersTable } from "../schema";
+import { CustomServerError } from "@/helpers/CustomServerError";
 
 type Param = Required<
   Pick<

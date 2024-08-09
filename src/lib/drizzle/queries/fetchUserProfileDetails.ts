@@ -1,6 +1,4 @@
 import db from "@/lib/drizzle/db";
-import { PostsTable } from "@/lib/drizzle/schema";
-import { eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { TUserProfile } from "./type";
 

@@ -1,7 +1,7 @@
-import { CustomServerError } from "@/lib/next-safe-action/init";
 import { eq } from "drizzle-orm";
 import db from "../db";
 import { UsersTable } from "../schema";
+import { CustomServerError } from "@/helpers/CustomServerError";
 
 type Params = {
   currentUsername: string;

@@ -1,5 +1,6 @@
 import Avatar from "@/components/Avatar";
-import { TOwner } from "@/fetchings/type";
+import { TOwner } from "@/lib/drizzle/queries/type";
+
 import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
 import { useSessionStore } from "@/stores/Session";

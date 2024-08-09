@@ -1,9 +1,8 @@
-import { CustomServerError } from "@/lib/next-safe-action/init";
-
 import { eq } from "drizzle-orm";
 import db from "../db";
 import { UsersTable } from "../schema";
 import { verify, hash } from "argon2";
+import { CustomServerError } from "@/helpers/CustomServerError";
 
 type Params = {
   authUserId: string;

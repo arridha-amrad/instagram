@@ -42,7 +42,7 @@ const EditableAvatar = (
       },
       async onSuccess({ data }) {
         if (!data) return;
-        const { id, image, name, username } = data.user;
+        const { id, image, name, username } = data;
         await update({
           id,
           username,
@@ -50,7 +50,7 @@ const EditableAvatar = (
           name,
         });
         router.refresh();
-        toast.success(data.message, { theme });
+        toast.success("Avatar changed successfully", { theme });
       },
     },
   );

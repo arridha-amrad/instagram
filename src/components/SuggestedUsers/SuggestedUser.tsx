@@ -1,7 +1,7 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
-import { TOwner } from "@/lib/drizzle/queries/type";
+import { TSearchUser } from "@/lib/drizzle/queries/type";
 import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 type Props = {
-  user: TOwner;
+  user: TSearchUser;
 };
 
 const SuggestedUser = ({ user: { name, username, avatar, id } }: Props) => {

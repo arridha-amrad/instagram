@@ -102,7 +102,7 @@ const CommentForm = ({ post }: Props) => {
             </div>
           ))}
         <div className="flex-1 px-2">
-          <fieldset disabled={false}>
+          <fieldset disabled={isExeReply || isExeComment}>
             <input
               // onBlur={() => setFocusToCommentForm(false)}
               // ref={inputRef}

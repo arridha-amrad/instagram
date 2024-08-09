@@ -118,6 +118,7 @@ export const createDetailSlice: StateCreator<
         (v, i, arr) => arr.findIndex((a) => a.id === v.id) === i,
       );
       post.comments = {
+        date: data.date,
         data: newComments,
         page: data.page,
         total: data.total,

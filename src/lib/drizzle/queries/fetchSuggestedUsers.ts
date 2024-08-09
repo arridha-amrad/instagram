@@ -1,6 +1,9 @@
 import db from "@/lib/drizzle/db";
+import { TSearchUser } from "./type";
 
-const fetchSuggestedUsers = async (authUserId: string) => {
+const fetchSuggestedUsers = async (
+  authUserId: string,
+): Promise<TSearchUser[]> => {
   const followings = await db.query.FollowingsTable.findMany({
     columns: {},
     with: {

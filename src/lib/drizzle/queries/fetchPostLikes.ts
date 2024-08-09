@@ -1,4 +1,3 @@
-import { TOwner } from "@/fetchings/type";
 import db from "@/lib/drizzle/db";
 import { TInfiniteResult, TUserIsFollow } from "./type";
 import { PostLikesTable } from "../schema";

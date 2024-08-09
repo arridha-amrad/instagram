@@ -1,9 +1,9 @@
 import Link from "next/link";
 import SuggestedUser from "./SuggestedUser";
-import { TOwner } from "@/fetchings/type";
+import { TSearchUser } from "@/lib/drizzle/queries/type";
 
 type Props = {
-  users: TOwner[];
+  users: TSearchUser[];
 };
 
 const SuggestedUsers = ({ users }: Props) => {
