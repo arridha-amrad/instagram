@@ -1,6 +1,5 @@
 import { upload } from "@/lib/cloudinary";
 import { eq } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
 import db from "../db";
 import { UsersTable } from "../schema";
 
@@ -23,6 +22,5 @@ export const updatedAvatar = async ({ authUserId, image }: Param) => {
       image: UsersTable.avatar,
       username: UsersTable.username,
     });
-  revalidateTag("fetch-user");
   return result;
 };

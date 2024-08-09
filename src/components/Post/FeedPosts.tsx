@@ -36,7 +36,7 @@ export default function FeedPosts() {
       try {
         const result = await actionFetchPosts({
           page: currPage,
-          date: latestFeedPostsDate,
+          date: new Date(latestFeedPostsDate),
         });
         if (result?.data) {
           addFeedPosts(result.data.data);
