@@ -11,16 +11,14 @@ type Props = {
 };
 
 export default function ModalFollowers({ data }: Props) {
-  const [followers, setFollowers] = useState<TUserIsFollow[]>([]);
+  const [followers, setFollowers] = useState<TUserIsFollow[]>(data.data);
 
-  useEffect(() => {
-    setFollowers(data.data);
-  }, []);
   const router = useRouter();
 
   const closeModal = () => {
     router.back();
   };
+
   return createPortal(
     <div className="fixed inset-0 flex items-center justify-center">
       <div

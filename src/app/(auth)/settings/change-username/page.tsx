@@ -1,4 +1,4 @@
-import FormChangeUsername from "../../../../components/Forms/FormChangeUsername";
+import FormChangeUsername from "@/components/Forms/FormChangeUsername";
 
 const Page = () => {
   return (

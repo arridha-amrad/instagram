@@ -5,12 +5,12 @@ import {
   UserInfoTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
-import { fetchUserProfile } from "./fetchUserProfile";
 
 export type TPostSchema = typeof PostsTable.$inferSelect;
 export type TCommentSchema = typeof CommentsTable.$inferSelect;
 export type TReplySchema = typeof RepliesTable.$inferSelect;
 export type TUserSchema = typeof UsersTable.$inferSelect;
+export type TUserInfo = typeof UserInfoTable.$inferSelect;
 
 export type TOwner = Pick<TUserSchema, "id" | "avatar" | "name" | "username">;
 
@@ -23,6 +23,7 @@ export type TInfiniteResult<T> = {
 };
 
 export type TUser = Pick<TUserSchema, "avatar" | "username" | "id">;
+
 export type TComment = TCommentSchema & { owner: TUser } & {
   isLiked: boolean;
   sumLikes: number;
@@ -56,7 +57,8 @@ export type TReply = TReplySchema & { owner: TUser } & {
   sumLikes: number;
 };
 
-export type TProfile = Awaited<ReturnType<typeof fetchUserProfile>>;
-export type TUserInfo = typeof UserInfoTable.$inferSelect;
-
 export type TSearchUser = TUser & { name: string };
+export type TUserProfile = { userInfo: TUserInfo | null } & Pick<
+  TUserSchema,
+  "name" | "avatar" | "id"
+>;

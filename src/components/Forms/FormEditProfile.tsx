@@ -3,20 +3,20 @@
 import AvatarEditable from "@/components/AvatarEditable";
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
-import { TProfile } from "@/fetchings/type";
 
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { useSessionStore } from "@/stores/Session";
 import { actionUpdateProfile } from "@/lib/next-safe-action/actionUpdateProfile";
+import { TUserProfile } from "@/lib/drizzle/queries/type";
 
 type Props = {
-  user: TProfile;
+  user: TUserProfile;
 };
 
 const FormEditProfile = ({ user }: Props) => {
@@ -25,13 +25,32 @@ const FormEditProfile = ({ user }: Props) => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { theme } = useTheme();
+  const [error, setError] = useState({
+    fullName: "",
+    website: "",
+    occupation: "",
+    bio: "",
+    gender: "",
+  });
 
   const { execute, isExecuting, hasSucceeded, result } = useAction(
     actionUpdateProfile,
     {
-      onError: ({ error }) => {
-        console.log(error);
-        toast.error("Something went wrong", { theme });
+      onError: ({ error: { serverError, validationErrors } }) => {
+        if (serverError) {
+          toast.error("Something went wrong", { theme });
+        }
+        if (validationErrors) {
+          const { bio, gender, name, occupation, website } = validationErrors;
+          setError({
+            ...error,
+            bio: bio ? bio[0] : "",
+            fullName: name ? name[0] : "",
+            gender: gender ? gender[0] : "",
+            occupation: occupation ? occupation[0] : "",
+            website: website ? website[0] : "",
+          });
+        }
       },
       async onSuccess({ data }) {
         if (!data || !session) return;
@@ -77,7 +96,8 @@ const FormEditProfile = ({ user }: Props) => {
       <form action={execute}>
         <fieldset className="flex flex-col gap-6" disabled={isExecuting}>
           <TextInput
-            label="Full name"
+            errorMessage={error.fullName}
+            label="Fullname"
             variant="normal"
             type="text"
             id="fullName"
@@ -85,6 +105,7 @@ const FormEditProfile = ({ user }: Props) => {
             defaultValue={user?.name}
           />
           <TextInput
+            errorMessage={error.website}
             label="Website"
             variant="normal"
             type="text"
@@ -93,6 +114,7 @@ const FormEditProfile = ({ user }: Props) => {
             defaultValue={user?.userInfo?.website ?? ""}
           />
           <TextInput
+            errorMessage={error.occupation}
             label="Occupation"
             variant="normal"
             type="text"
@@ -114,6 +136,9 @@ const FormEditProfile = ({ user }: Props) => {
               defaultValue={user?.userInfo?.bio ?? ""}
               className="w-full resize-none rounded-md border border-skin bg-skin-input outline-none focus:border-transparent focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
             ></textarea>
+            <div className="text-red-500">
+              <small>{error.bio}</small>
+            </div>
           </div>
           <div className="space-y-1.5">
             <label
@@ -132,6 +157,9 @@ const FormEditProfile = ({ user }: Props) => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
+            <div className="text-red-500">
+              <small>{error.gender}</small>
+            </div>
           </div>
           <div className="flex items-center gap-3 self-end">
             <Button type="submit" className="h-10 w-24" isLoading={isExecuting}>

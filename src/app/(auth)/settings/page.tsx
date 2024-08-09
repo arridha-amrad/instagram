@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import FormEditProfile from "@/components/Forms/FormEditProfile";
-import { fetchUser } from "@/fetchings/user";
+import { fetchUserProfileDetails } from "@/lib/drizzle/queries/fetchUserProfileDetails";
+
 import { redirect } from "next/navigation";
 
 const Page = async () => {
@@ -10,9 +11,8 @@ const Page = async () => {
     redirect("/login?cbUrl=/settings");
   }
 
-  const profile = await fetchUser({
+  const profile = await fetchUserProfileDetails({
     username: session.user.username,
-    authUserId: session.user.id,
   });
 
   return (
@@ -21,7 +21,7 @@ const Page = async () => {
         <h1 className="text-xl font-semibold">Edit profile</h1>
       </div>
       <div className="h-6" />
-      <FormEditProfile user={profile} />
+      {profile && <FormEditProfile user={profile} />}
     </div>
   );
 };
