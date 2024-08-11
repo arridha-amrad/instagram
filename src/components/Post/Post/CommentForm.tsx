@@ -1,86 +1,38 @@
 import MySpinner from "@/components/Spinner";
+import { useActionCreateComment } from "@/hooks/useActionCreateComment";
+import { useActionCreateReply } from "@/hooks/useActionCreateReply";
 import { TPost } from "@/lib/drizzle/queries/type";
-import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
-import { actionCreateReply } from "@/lib/next-safe-action/actionCreateReply";
 import { cn } from "@/lib/utils";
-import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
-import { useSessionStore } from "@/stores/Session";
-import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
 
 type Props = {
   post: TPost;
 };
 
 const CommentForm = ({ post }: Props) => {
-  const { session } = useSessionStore();
-  const avatar = session?.user.image ?? null;
-  const id = session?.user.id ?? "";
-  const username = session?.user.username ?? "";
-
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
-  const { theme } = useTheme();
   const { reply, setReply } = useReplySetter();
-  const { addReply, addComment } = usePostsStore();
 
-  const replyAction = actionCreateReply.bind(null, reply?.commentId ?? "");
-  const commentAction = actionCreateComment.bind(null, post.id);
+  const {
+    execute: exeReply,
+    hasSucceeded: isSuccessCreateReply,
+    isExecuting: isExeReply,
+  } = useActionCreateReply(reply?.commentId ?? "");
 
-  const { execute: exeReply, isExecuting: isExeReply } = useAction(
-    replyAction,
-    {
-      onError: () => {
-        toast.error("Something went wrong", { theme });
-      },
-      onSuccess: ({ data }) => {
-        if (!data) return;
-        addReply(data.commentId, {
-          ...data,
-          isLiked: false,
-          owner: {
-            avatar,
-            id,
-            username,
-          },
-          sumLikes: 0,
-        });
-      },
-    },
-  );
+  const {
+    exeComment,
+    isExeComment,
+    isSuccess: isSuccessCreateComment,
+  } = useActionCreateComment(post.id);
 
-  const { execute: exeComment, isExecuting: isExeComment } = useAction(
-    commentAction,
-    {
-      onError: () => {
-        toast.error("Something went wrong", { theme });
-      },
-      onSuccess: ({ data }) => {
-        if (!data) return;
-        addComment({
-          ...data,
-          isLiked: false,
-          owner: {
-            avatar,
-            id,
-            username,
-          },
-          replies: {
-            date: new Date(),
-            data: [],
-            page: 0,
-            total: 0,
-          },
-          sumLikes: 0,
-          sumReplies: 0,
-          sumRepliesRemaining: 0,
-        });
-      },
-    },
-  );
+  useEffect(() => {
+    if (isSuccessCreateComment || isSuccessCreateReply) {
+      formRef.current?.reset();
+      setMessage("");
+    }
+  }, [isSuccessCreateComment, isSuccessCreateReply]);
 
   useEffect(() => {
     if (message === "") {
@@ -95,12 +47,11 @@ const CommentForm = ({ post }: Props) => {
       className="flex h-full items-center pt-1"
     >
       <div className="relative flex h-full w-full items-center">
-        {isExeComment ||
-          (isExeReply && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-              <MySpinner />
-            </div>
-          ))}
+        {(isExeComment || isExeReply) && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+            <MySpinner />
+          </div>
+        )}
         <div className="flex-1 px-2">
           <fieldset disabled={isExeReply || isExeComment}>
             <input
@@ -125,7 +76,7 @@ const CommentForm = ({ post }: Props) => {
               : "text-skin-muted/50",
           )}
         >
-          {false ? <MySpinner /> : "Send"}
+          Send
         </button>
       </div>
     </form>
