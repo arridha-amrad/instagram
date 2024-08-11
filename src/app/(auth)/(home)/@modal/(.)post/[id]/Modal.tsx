@@ -10,7 +10,7 @@ import { createPortal } from "react-dom";
 
 const Modal = () => {
   const router = useRouter();
-  const { reset } = useReplySetter();
+  const { setReply } = useReplySetter();
   const { post } = usePostsStore();
 
   const [open, setOpen] = useState(false);
@@ -29,8 +29,8 @@ const Modal = () => {
 
   const closeModal = () => {
     router.back();
-    document.documentElement.classList.remove("overflow-y-hidden", "pr-4");
-    reset();
+    setOpen(false);
+    setReply(null);
   };
 
   return (

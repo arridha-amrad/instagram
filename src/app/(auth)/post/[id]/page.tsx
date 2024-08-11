@@ -1,7 +1,9 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
+import Carousel from "@/components/Post/FeedPost/Carousel";
 import PostProvider from "@/components/Providers/PostProvider";
 import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
+import { HeartIcon } from "@heroicons/react/24/solid";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -62,8 +64,13 @@ const Page = async ({ params }: Props) => {
             {formatDistanceToNowStrict(post.createdAt)}
           </h2>
         </section>
-        {/* <Carousel urls={post.urls.map((u) => u.url)} />
-        <Action /> */}
+        <Carousel urls={post.urls.map((u) => u.url)} />
+        <section className="flex items-center justify-center">
+          <button>
+            <HeartIcon className="w-7 fill-pink-500" />
+          </button>
+        </section>
+        {/* <Action /> */}
         {/* <CommentForm />
         <TotalComments /> */}
         {/* <section className="py-3">

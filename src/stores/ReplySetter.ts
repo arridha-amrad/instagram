@@ -59,6 +59,7 @@ export const useReplySetter = create<State & Action>()(
     {
       enabled: process.env.NODE_ENV === "development",
       anonymousActionType: "useReplySetter",
+      name: "Reply Setter",
     },
   ),
 );

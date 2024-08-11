@@ -14,6 +14,14 @@ const CommentForm = ({ post }: Props) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { reply, setReply } = useReplySetter();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (reply?.commentId) {
+      setMessage(`@${reply.username} `);
+      inputRef.current?.focus();
+    }
+  }, [reply?.commentId]);
 
   const {
     execute: exeReply,
@@ -55,8 +63,7 @@ const CommentForm = ({ post }: Props) => {
         <div className="flex-1 px-2">
           <fieldset disabled={isExeReply || isExeComment}>
             <input
-              // onBlur={() => setFocusToCommentForm(false)}
-              // ref={inputRef}
+              ref={inputRef}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               name="message"

@@ -51,7 +51,7 @@ export const createDetailSlice: StateCreator<
       const comment = post.comments.data.find((c) => c.id === commentId);
       if (!comment) return;
       comment.replies.data.unshift(reply);
-      comment.replies.total += 1;
+      comment.sumReplies += 1;
     });
   },
   addComment(newComment) {
