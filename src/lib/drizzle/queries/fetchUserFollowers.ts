@@ -61,11 +61,13 @@ export const fetchFollowers = async ({
     },
   });
 
+  console.log(JSON.stringify(followers, null, 2));
+
   const populatedFollowers: TUserIsFollow[] = followers.map(({ user: u }) => {
     const usr = {
       ...u,
       isFollow: !!u.followers.find(
-        (x) => x.followId === user.id && x.userId === authUserId,
+        (x) => x.followId === authUserId && x.userId === u.id,
       ),
     };
     const { followers, ...props } = usr;

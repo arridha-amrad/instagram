@@ -63,11 +63,11 @@ export default async function Profile({ username }: Props) {
             <h1>{u?.sumPosts} Posts</h1>
           </div>
 
-          <Link scroll={false} href={`/user/${username}/followers`}>
+          <Link scroll={false} href={`/${username}/followers`}>
             {u.followers} Followers
           </Link>
 
-          <Link scroll={false} href={`/user/${username}/followings`}>
+          <Link scroll={false} href={`/${username}/followings`}>
             {u.followings} Followings
           </Link>
         </div>

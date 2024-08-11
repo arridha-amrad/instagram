@@ -9,9 +9,10 @@ import Link from "next/link";
 
 type Props = {
   post: TUserPost;
+  isFirstPost?: boolean;
 };
 
-const Post = ({ post }: Props) => {
+const Post = ({ post, isFirstPost = false }: Props) => {
   return (
     <Link
       scroll={false}
@@ -19,6 +20,8 @@ const Post = ({ post }: Props) => {
       className="relative aspect-square overflow-hidden"
     >
       <Image
+        priority={isFirstPost}
+        loading={isFirstPost ? "eager" : "lazy"}
         src={post.urls[0].url}
         alt="post_image"
         width={300}

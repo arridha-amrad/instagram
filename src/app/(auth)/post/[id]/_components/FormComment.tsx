@@ -2,91 +2,54 @@
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/core/Button";
-import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
-import { actionCreateReply } from "@/lib/next-safe-action/actionCreateReply";
+import Spinner from "@/components/Spinner";
+import { useActionCreateComment } from "@/hooks/useActionCreateComment";
+import { useActionCreateReply } from "@/hooks/useActionCreateReply";
 import { cn } from "@/lib/utils";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { useSessionStore } from "@/stores/Session";
-import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
+import mergeRefs from "merge-refs";
 
-import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 
-export default function CommentForm() {
+const CommentForm = ({}, ref: Ref<HTMLInputElement>) => {
   const [isFocus, setFocus] = useState(false);
 
   const { session } = useSessionStore();
-  const avatar = session?.user.image ?? null;
-  const id = session?.user.id ?? "";
-  const username = session?.user.username ?? "";
 
   const { post } = usePostsStore();
 
   if (!post) return null;
 
-  const { theme } = useTheme();
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState("");
 
   const { reply, setReply } = useReplySetter();
-  const { addReply, addComment } = usePostsStore();
 
-  const replyAction = actionCreateReply.bind(null, reply?.commentId ?? "");
-  const commentAction = actionCreateComment.bind(null, post.id);
-
-  const { execute: exeReply, isExecuting: isExeReply } = useAction(
-    replyAction,
-    {
-      onError: () => {
-        toast.error("Something went wrong", { theme });
-      },
-      onSuccess: ({ data }) => {
-        if (!data) return;
-        addReply(data.commentId, {
-          ...data,
-          isLiked: false,
-          owner: {
-            avatar,
-            id,
-            username,
-          },
-          sumLikes: 0,
-        });
-      },
-    },
+  const { exeComment, isExeComment, isSuccess } = useActionCreateComment(
+    post.id,
   );
 
-  const { execute: exeComment, isExecuting: isExeComment } = useAction(
-    commentAction,
-    {
-      onError: () => {
-        toast.error("Something went wrong", { theme });
-      },
-      onSuccess: ({ data }) => {
-        if (!data) return;
-        addComment({
-          ...data,
-          isLiked: false,
-          owner: {
-            avatar,
-            id,
-            username,
-          },
-          replies: {
-            date: new Date(),
-            data: [],
-            page: 0,
-            total: 0,
-          },
-          sumLikes: 0,
-          sumReplies: 0,
-          sumRepliesRemaining: 0,
-        });
-      },
-    },
+  const { execute, hasSucceeded, isExecuting } = useActionCreateReply(
+    reply?.commentId ?? "",
   );
+
+  useEffect(() => {
+    if (reply?.commentId) {
+      setMessage(`@${reply.username} `);
+      inputRef.current?.focus();
+      window.scroll({ top: inputRef.current?.scrollTop, behavior: "smooth" });
+    }
+  }, [reply?.commentId]);
+
+  useEffect(() => {
+    if (isSuccess || hasSucceeded) {
+      formRef.current?.reset();
+      setMessage("");
+    }
+  }, [isSuccess, hasSucceeded]);
 
   useEffect(() => {
     if (message === "") {
@@ -100,7 +63,7 @@ export default function CommentForm() {
         <Avatar url={session?.user.image} />
       </section>
       <form
-        action={reply ? exeReply : exeComment}
+        action={reply ? execute : exeComment}
         ref={formRef}
         className="flex-1 basis-0"
       >
@@ -108,19 +71,21 @@ export default function CommentForm() {
           Add new comment
         </label>
 
-        <div className="overflow-hidden">
-          <fieldset disabled={isExeReply || isExeComment}>
+        <div className="relative overflow-hidden">
+          {(isExeComment || isExecuting) && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+              <Spinner />
+            </div>
+          )}
+          <fieldset disabled={isExecuting || isExeComment}>
             <input
               name="message"
-              // ref={inputRef}
+              ref={mergeRefs(ref, inputRef)}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onFocus={() => {
                 setFocus(true);
               }}
-              // onBlur={() => {
-              //   setFocusToCommentForm(false);
-              // }}
               id="NewComment"
               className="w-full border-x-0 border-t-0 border-skin bg-background px-0 align-top sm:text-sm"
               placeholder="Add new comment"
@@ -132,7 +97,11 @@ export default function CommentForm() {
                 isFocus && "opacity-100",
               )}
             >
-              <Button onClick={() => setMessage("")} className="bg-background">
+              <Button
+                type="button"
+                onClick={() => setMessage("")}
+                className="bg-background"
+              >
                 Clear
               </Button>
               <Button type="submit">Add</Button>
@@ -142,4 +111,6 @@ export default function CommentForm() {
       </form>
     </div>
   );
-}
+};
+
+export default forwardRef(CommentForm);

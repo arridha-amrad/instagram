@@ -1,12 +1,19 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
 import Carousel from "@/components/Post/FeedPost/Carousel";
+import ButtonComment from "@/components/Post/Post/ButtonComment";
+import ButtonLikePost from "@/components/Post/Post/ButtonLike";
 import PostProvider from "@/components/Providers/PostProvider";
 import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
+import CommentForm from "./_components/FormComment";
+import SumComment from "./_components/SumComments";
+import Comments from "@/components/Post/Post/Comments";
+import ActionsWithCommentForm from "./_components/ActionsWithCommentForm";
 
 type Props = {
   params: {
@@ -64,18 +71,12 @@ const Page = async ({ params }: Props) => {
             {formatDistanceToNowStrict(post.createdAt)}
           </h2>
         </section>
-        <Carousel urls={post.urls.map((u) => u.url)} />
-        <section className="flex items-center justify-center">
-          <button>
-            <HeartIcon className="w-7 fill-pink-500" />
-          </button>
-        </section>
-        {/* <Action /> */}
-        {/* <CommentForm />
-        <TotalComments /> */}
-        {/* <section className="py-3">
+        <Carousel isFirstPost urls={post.urls.map((u) => u.url)} />
+        <ActionsWithCommentForm post={post} />
+        <SumComment />
+        <section className="py-3">
           <Comments />
-        </section> */}
+        </section>
       </main>
     </PostProvider>
   );

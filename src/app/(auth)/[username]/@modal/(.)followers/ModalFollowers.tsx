@@ -12,6 +12,7 @@ type Props = {
 
 export default function ModalFollowers({ data }: Props) {
   const [followers, setFollowers] = useState<TUserIsFollow[]>(data.data);
+  console.log({ followers });
 
   const router = useRouter();
 

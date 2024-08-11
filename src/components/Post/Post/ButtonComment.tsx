@@ -1,12 +1,17 @@
 "use client";
 
-import React from "react";
 import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
 
-export default function ButtonComment() {
+type Props = {
+  focusToCommentInput: VoidFunction;
+};
+
+const ButtonComment = ({ focusToCommentInput }: Props) => {
   return (
-    <button>
+    <button onClick={focusToCommentInput}>
       <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
     </button>
   );
-}
+};
+
+export default ButtonComment;
