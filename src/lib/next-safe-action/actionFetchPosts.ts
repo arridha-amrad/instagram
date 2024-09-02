@@ -9,13 +9,15 @@ export const actionFetchPosts = authActionClient
     z.object({
       page: z.number(),
       date: z.date(),
+      total: z.number(),
     }),
   )
-  .action(async ({ ctx: { userId }, parsedInput: { page, date } }) => {
+  .action(async ({ ctx: { userId }, parsedInput: { page, date, total } }) => {
     const result = await fetchFeedPosts({
       page,
       userId,
       date,
+      total
     });
     return result;
   });

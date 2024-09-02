@@ -4,7 +4,7 @@ import CarouselOne from "@/components/Post/Carousel/CarouselOne";
 import Post from "@/components/Post/Post";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -12,12 +12,19 @@ const Modal = () => {
   const router = useRouter();
   const { setReply } = useReplySetter();
   const { post } = usePostsStore();
+  const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setOpen(true);
   }, []);
+
+  useEffect(() => {
+    if (!pathname.startsWith("/post")) {
+      setOpen(false);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (open) {

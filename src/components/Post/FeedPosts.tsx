@@ -14,7 +14,7 @@ export default function FeedPosts() {
   const {
     feedPosts,
     pageFeedPosts,
-    latestFeedPostsDate,
+    lastPostDate,
     totalFeedPosts,
     addFeedPosts,
   } = usePostsStore();
@@ -36,7 +36,8 @@ export default function FeedPosts() {
       try {
         const result = await actionFetchPosts({
           page: currPage,
-          date: new Date(latestFeedPostsDate),
+          date: new Date(lastPostDate),
+          total: totalFeedPosts,
         });
         if (result?.data) {
           addFeedPosts(result.data.data);

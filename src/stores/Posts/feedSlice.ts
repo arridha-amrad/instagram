@@ -10,7 +10,7 @@ import { UserSlice } from "./userSlice";
 export type FeedSlice = {
   totalFeedPosts: number;
   pageFeedPosts: number;
-  latestFeedPostsDate: Date;
+  lastPostDate: Date;
   isLoadingFeedPosts: boolean;
   feedPosts: TFeedPost[];
   likeFeedPost: (postId: string) => void;
@@ -26,7 +26,7 @@ export const createFeedSlice: StateCreator<
   [],
   FeedSlice
 > = (set) => ({
-  latestFeedPostsDate: new Date(),
+  lastPostDate: new Date(),
   feedPosts: [],
   pageFeedPosts: 0,
   totalFeedPosts: 0,
@@ -64,6 +64,7 @@ export const createFeedSlice: StateCreator<
         (p, i, arr) => arr.findIndex((v) => v.id === p.id) === i,
       );
       state.pageFeedPosts += 1;
+      state.lastPostDate = feedPosts[feedPosts.length - 1].createdAt;
     });
   },
   setFeedPosts(data) {
@@ -72,7 +73,7 @@ export const createFeedSlice: StateCreator<
       state.pageFeedPosts = 1;
       state.totalFeedPosts = data.total;
       state.isLoadingFeedPosts = false;
-      state.latestFeedPostsDate = data.date;
+      state.lastPostDate = data.data[data.data.length - 1].createdAt;
     });
   },
 });

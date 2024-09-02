@@ -13,7 +13,7 @@ const Owner = ({ post }: Props) => {
       <Avatar className="w-9" url={post.owner.avatar} />
       <div>
         <Link
-          href={`/user/${post.owner.username}`}
+          href={`/${post.owner.username}`}
           className="font-semibold hover:underline"
         >
           {post.owner.username}

@@ -4,9 +4,10 @@ import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
+  modal: ReactNode;
 };
 
-const Layout = async ({ children }: Props) => {
+const Layout = async ({ children, modal }: Props) => {
   const session = await auth();
   return (
     <main className="mx-auto flex w-full max-w-[1200px]">
@@ -17,6 +18,7 @@ const Layout = async ({ children }: Props) => {
       )}
       <section className="mx-auto w-full max-w-[900px] flex-1 basis-0 px-4">
         {children}
+        {modal}
       </section>
     </main>
   );

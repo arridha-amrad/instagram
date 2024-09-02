@@ -157,10 +157,7 @@ export default function UserPosts() {
                           padding: "0.25rem",
                         }}
                       >
-                        <Post
-                          isFirstPost={row.index === 0 && column.index === 0}
-                          post={post}
-                        />
+                        <Post isFirstPost={row.index === 0} post={post} />
                       </div>
                     );
                   })}

@@ -11,12 +11,11 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  modal: ReactNode;
   children: ReactNode;
   suggestedUsers: ReactNode;
 };
 
-const Layout = async ({ children, suggestedUsers, modal }: Props) => {
+const Layout = async ({ children, suggestedUsers }: Props) => {
   const session = await auth();
   if (!session) {
     redirect("/login");
@@ -30,7 +29,6 @@ const Layout = async ({ children, suggestedUsers, modal }: Props) => {
     <section className="flex w-full">
       <section className="mx-auto min-h-screen w-full max-w-md flex-1">
         {children}
-        {modal}
       </section>
       <section className="sticky inset-y-0 hidden h-screen min-h-[500px] w-full max-w-xs flex-shrink-0 lg:block">
         <div className="flex items-center">

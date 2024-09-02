@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChatBubbleOvalLeftIcon,
   DocumentDuplicateIcon,
@@ -5,7 +7,7 @@ import {
 } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { TUserPost } from "@/lib/drizzle/queries/type";
-import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
 
 type Props = {
   post: TUserPost;
@@ -13,15 +15,14 @@ type Props = {
 };
 
 const Post = ({ post, isFirstPost = false }: Props) => {
+  const router = useRouter();
   return (
-    <Link
-      scroll={false}
-      href={`/post/${post.id}`}
-      className="relative aspect-square overflow-hidden"
+    <div
+      onClick={() => router.push(`/post/${post.id}`, { scroll: false })}
+      className="relative aspect-square cursor-pointer overflow-hidden"
     >
       <Image
         priority={isFirstPost}
-        loading={isFirstPost ? "eager" : "lazy"}
         src={post.urls[0].url}
         alt="post_image"
         width={300}
@@ -45,7 +46,7 @@ const Post = ({ post, isFirstPost = false }: Props) => {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
