@@ -1,8 +1,9 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TFeedPost, TInfiniteResult } from "@/lib/drizzle/queries/type";
-import usePostsStore from "@/stores/Posts";
+import { TFeedPost } from "@/lib/drizzle/queries/fetchFeedPosts";
+import { TInfiniteResult } from "@/lib/drizzle/queries/type";
+import { useFeedPosts } from "@/stores/useFeedPosts";
 import { ReactNode, useEffect } from "react";
 
 type Props = {
@@ -11,13 +12,13 @@ type Props = {
 };
 
 export default function FeedPostProvider({ children, data }: Props) {
-  const { setFeedPosts, isLoadingFeedPosts } = usePostsStore();
+  const { setPosts, isLoading } = useFeedPosts();
 
   useEffect(() => {
-    setFeedPosts(data);
+    setPosts(data);
   }, []);
 
-  if (isLoadingFeedPosts) {
+  if (isLoading) {
     return (
       <div className="mx-auto flex items-center justify-center py-4">
         <Spinner className="w-5" />

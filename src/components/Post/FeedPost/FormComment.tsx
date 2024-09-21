@@ -1,40 +1,42 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TFeedComment, TFeedPost } from "@/lib/drizzle/queries/type";
 import { cn } from "@/lib/utils";
-import usePostsStore from "@/stores/Posts";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useSessionStore } from "@/stores/Session";
 import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
+import { useFeedPosts } from "@/stores/useFeedPosts";
 
 type Props = {
-  post: TFeedPost;
+  postId: string;
 };
 
-export default function CommentForm({ post }: Props) {
+export default function CommentForm({ postId }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { theme } = useTheme();
   const { session } = useSessionStore();
-  const { addCommentToFeedPost } = usePostsStore();
 
-  const action = actionCreateComment.bind(null, post.id);
+  const { addComment } = useFeedPosts();
+
+  const action = actionCreateComment.bind(null, postId);
   const { execute, isExecuting } = useAction(action, {
     onError: () => {
       toast.error("Something went wrong", { theme });
     },
     onSuccess: ({ data }) => {
       if (data) {
-        const newComment: TFeedComment = {
-          ...data,
+        console.log(data);
+        addComment({
+          body: data.message,
+          id: data.id,
           isLiked: false,
+          postId: data.postId,
           username: session?.user.username ?? "",
-        };
-        addCommentToFeedPost(newComment);
+        });
       }
       formRef.current?.reset();
       setMessage("");

@@ -1,15 +1,14 @@
+import { FeedComment } from "@/stores/useFeedPosts";
 import Comment from "./Comment";
-import { TFeedComment } from "@/lib/drizzle/queries/type";
 
 type Props = {
-  comments: TFeedComment[];
+  comments: FeedComment[];
 };
 
 const Comments = ({ comments }: Props) => {
-  if (!comments) return null;
   return (
     <section id="post_comments" className="">
-      {comments.map((comment) => (
+      {comments.map((comment, i) => (
         <Comment key={comment.id} comment={comment} />
       ))}
     </section>

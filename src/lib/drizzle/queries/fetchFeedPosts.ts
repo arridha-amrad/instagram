@@ -1,5 +1,5 @@
 import db from "@/lib/drizzle/db";
-import { TFeedPost, TInfiniteResult } from "@/lib/drizzle/queries/type";
+import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import {
   CommentsTable,
   PostLikesTable,
@@ -7,83 +7,86 @@ import {
   RepliesTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
-import { desc, eq, lte, sql } from "drizzle-orm";
-import { unstable_cache } from "next/cache";
+import { desc, eq, lt, sql } from "drizzle-orm";
 
 const LIMIT = 5;
 
-type Args = {
-  userId?: string;
-  page: number;
-  date?: Date;
-  total?: number;
+type TArgs = {
+  userId: string;
+  date: Date;
 };
-
-const fetchPosts = async ({
-  page,
-  userId,
-  date = new Date(),
-  total = 0,
-}: Args): Promise<TInfiniteResult<TFeedPost>> => {
-  //
-  if (total === 0) {
-    const [result] = await db
-      .select({
-        sum: sql<number>`CAST(COUNT(${PostsTable.id}) as int)`,
-      })
-      .from(PostsTable)
-      .where(lte(PostsTable.createdAt, date));
-    total = result.sum;
-  }
-
-  const data = await db
+const runQuery = async ({ date, userId }: TArgs) => {
+  return db
     .select({
-      owner: {
-        id: UsersTable.id,
-        username: UsersTable.username,
-        avatar: UsersTable.avatar,
-      },
       id: PostsTable.id,
+      username: UsersTable.username,
+      avatar: UsersTable.avatar,
+      userId: PostsTable.userId,
       createdAt: PostsTable.createdAt,
       updatedAt: PostsTable.updatedAt,
-      userId: PostsTable.userId,
       description: PostsTable.description,
       location: PostsTable.location,
       urls: PostsTable.urls,
       isLiked: sql<boolean>`
         CASE 
           WHEN EXISTS (
-            SELECT * FROM likes l
-            WHERE l.post_id = ${PostsTable.id}
-            AND l.user_id = ${userId}
+            SELECT 1 FROM ${PostLikesTable}
+            WHERE ${PostLikesTable.postId} = ${PostsTable.id}
+            AND ${PostLikesTable.userId} = ${userId}
           ) THEN true
           ELSE false
         END
       `,
-      sumLikes: sql<number>`CAST(COUNT(DISTINCT ${PostLikesTable}) as int)`,
+      sumLikes: sql<number>`
+        CAST(COUNT(DISTINCT ${PostLikesTable}) as int)
+      `,
       sumComments: sql<number>`
         CAST(COUNT(DISTINCT ${CommentsTable.id}) as int) +
         CAST(COUNT(DISTINCT ${RepliesTable.id}) as int)
-        `,
+      `,
     })
     .from(PostsTable)
-    .where(lte(PostsTable.createdAt, date))
-    .limit(LIMIT)
-    .orderBy(desc(PostsTable.createdAt))
+    .where(lt(PostsTable.createdAt, date))
     .leftJoin(PostLikesTable, eq(PostsTable.id, PostLikesTable.postId))
     .leftJoin(CommentsTable, eq(PostsTable.id, CommentsTable.postId))
     .leftJoin(RepliesTable, eq(CommentsTable.id, RepliesTable.commentId))
     .innerJoin(UsersTable, eq(PostsTable.userId, UsersTable.id))
-    .groupBy(PostsTable.id, UsersTable.id);
+    .groupBy(PostsTable.id, UsersTable.id)
+    .orderBy(desc(PostsTable.createdAt))
+    .limit(LIMIT);
+};
+
+export type TFeedPost = Awaited<ReturnType<typeof runQuery>>[number];
+
+type Args = {
+  userId: string;
+  page: number;
+  date?: Date;
+  total?: number;
+};
+
+export const fetchFeedPosts = async ({
+  page,
+  userId,
+  date = new Date(),
+  total = 0,
+}: Args): Promise<TInfiniteResult<TFeedPost>> => {
+  if (total === 0) {
+    const [result] = await db
+      .select({
+        sum: sql<number>`CAST(COUNT(${PostsTable.id}) as int)`,
+      })
+      .from(PostsTable)
+      .where(lt(PostsTable.createdAt, date));
+    total = result.sum;
+  }
+
+  const posts = await runQuery({ date, userId });
 
   return {
-    data: data.map((v) => ({ ...v, comments: [] })),
+    data: posts,
     date,
     total,
     page,
   };
 };
-
-export const fetchFeedPosts = unstable_cache(fetchPosts, ["fetchFeedPosts"], {
-  tags: ["fetchFeedPosts"],
-});

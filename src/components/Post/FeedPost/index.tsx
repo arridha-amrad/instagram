@@ -1,6 +1,8 @@
-import { TFeedPost } from "@/lib/drizzle/queries/type";
+import Avatar from "@/components/Avatar";
 import { cn } from "@/lib/utils";
+import { FeedPost } from "@/stores/useFeedPosts";
 import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
+import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import { forwardRef, Ref } from "react";
 import ButtonLike from "./ButtonLike";
@@ -8,22 +10,32 @@ import Carousel from "./Carousel";
 import Comments from "./Comments";
 import CommentForm from "./FormComment";
 import TotalLikes from "./Likes";
-import Owner from "./Owner";
 
 type Props = {
-  post: TFeedPost;
-  isFirst?: boolean;
+  post: FeedPost;
 };
 
-const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
+const Post = ({ post }: Props, ref: Ref<HTMLElement>) => {
   const urls = post.urls.map((u) => u.url);
   return (
-    <article
-      ref={ref}
-      className={cn("w-full space-y-2", !isFirst ? "pt-10" : "")}
-    >
-      <Owner post={post} />
-      <Carousel isFirstPost={isFirst} urls={urls} />
+    <article ref={ref} className={cn("w-full space-y-2 pb-14")}>
+      <section className="flex w-full items-center gap-3 text-sm">
+        <Avatar className="w-9" url={post.avatar} />
+        <div>
+          <Link
+            href={`/${post.username}`}
+            className="font-semibold hover:underline"
+          >
+            {post.username}
+          </Link>
+          <p className="text-skin-muted">{post.location}</p>
+        </div>
+        <div className="aspect-square w-1 rounded-full bg-neutral-500" />
+        <p className="text-skin-muted">
+          {formatDistanceToNowStrict(post.createdAt)}
+        </p>
+      </section>
+      <Carousel urls={urls} />
       <div className="flex items-center gap-3">
         <ButtonLike postId={post.id} isLiked={post.isLiked} />
         <Link scroll={false} href={`/post/${post.id}`}>
@@ -35,7 +47,7 @@ const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
       )}
       {post.description && (
         <section id="post_description" className="line-clamp-2 text-sm">
-          <h1 className="inline pr-2 font-semibold">{post.owner.username}</h1>
+          <h1 className="inline pr-2 font-semibold">{post.username}</h1>
           <p className="inline text-skin-muted">{post.description}</p>
         </section>
       )}
@@ -47,8 +59,8 @@ const Post = ({ post, isFirst = false }: Props, ref: Ref<HTMLElement>) => {
           </span>
         </Link>
       )}
-      <Comments comments={post.comments} />
-      <CommentForm post={post} />
+      {post.comments && <Comments comments={post.comments} />}
+      <CommentForm postId={post.id} />
     </article>
   );
 };

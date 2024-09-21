@@ -3,31 +3,25 @@
 import Spinner from "@/components/Spinner";
 import { useLastElement } from "@/hooks/useLastElement";
 import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchPosts";
-import usePostsStore from "@/stores/Posts";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FeedPost from "./FeedPost";
+import { useFeedPosts } from "@/stores/useFeedPosts";
 
 export default function FeedPosts() {
-  const {
-    feedPosts,
-    pageFeedPosts,
-    lastPostDate,
-    totalFeedPosts,
-    addFeedPosts,
-  } = usePostsStore();
+  const { page, posts, total, date, addPosts } = useFeedPosts();
 
-  const [currPage, setCurrPage] = useState(pageFeedPosts);
+  const [currPage, setCurrPage] = useState(page);
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
 
   const lastElementRef = useLastElement({
     callback: () => setCurrPage((val) => val + 1),
-    data: feedPosts,
+    data: posts,
     loading,
-    total: totalFeedPosts,
+    total: total,
   });
 
   useEffect(() => {
@@ -36,11 +30,11 @@ export default function FeedPosts() {
       try {
         const result = await actionFetchPosts({
           page: currPage,
-          date: new Date(lastPostDate),
-          total: totalFeedPosts,
+          date: new Date(date),
+          total: total,
         });
         if (result?.data) {
-          addFeedPosts(result.data.data);
+          addPosts(result.data);
         }
       } catch (err) {
         toast.error("Something went wrong", { theme });
@@ -49,7 +43,7 @@ export default function FeedPosts() {
       }
     };
 
-    if (pageFeedPosts === currPage) {
+    if (page === currPage) {
       return;
     } else {
       loadPosts();
@@ -57,10 +51,7 @@ export default function FeedPosts() {
   }, [currPage]);
 
   const windowRowVirtualizer = useWindowVirtualizer({
-    count:
-      feedPosts.length === totalFeedPosts
-        ? totalFeedPosts
-        : feedPosts.length + 1,
+    count: posts.length === total ? total : posts.length + 1,
     estimateSize: () => 50,
     overscan: 5,
   });
@@ -74,8 +65,8 @@ export default function FeedPosts() {
       }}
     >
       {windowRowVirtualizer.getVirtualItems().map((virtualRow) => {
-        const post = feedPosts[virtualRow.index];
-        const isLoaderRow = virtualRow.index > feedPosts.length - 1;
+        const post = posts[virtualRow.index];
+        const isLoaderRow = virtualRow.index > posts.length - 1;
         return (
           <div
             key={virtualRow.index}
@@ -100,7 +91,7 @@ export default function FeedPosts() {
                   <Spinner />
                 </div>
               ) : (
-                <FeedPost isFirst={virtualRow.index === 0} post={post} />
+                <FeedPost post={post} />
               )}
             </div>
           </div>

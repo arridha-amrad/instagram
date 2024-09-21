@@ -1,3 +1,17 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "sqltools.connections": [
+    {
+      "pgOptions": {
+        "ssl": {
+          "rejectUnauthorized": true
+        }
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "instagram",
+      "connectString": "postgresql://neondb_owner:L5SNfa8kQFrD@ep-misty-bush-a1sw28at.ap-southeast-1.aws.neon.tech/instagram?sslmode=require"
+    }
+  ]
 }
