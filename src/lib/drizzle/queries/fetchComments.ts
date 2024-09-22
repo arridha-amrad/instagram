@@ -1,76 +1,87 @@
 import db from "@/lib/drizzle/db";
-import { TComment, TInfiniteResult, TReply } from "@/lib/drizzle/queries/type";
-import { CommentsTable } from "@/lib/drizzle/schema";
-import { and, eq, lte, sql } from "drizzle-orm";
+import { TInfiniteResult } from "@/lib/drizzle/queries/type";
+import {
+  CommentLikesTable,
+  CommentsTable,
+  RepliesTable,
+  UsersTable,
+} from "@/lib/drizzle/schema";
+import { and, desc, eq, lt, sql } from "drizzle-orm";
 
 const LIMIT = 10;
 
 type Args = {
   postId: string;
-  authUserId?: string;
+  userId?: string;
   page: number;
   date?: Date;
 };
 
-export async function fetchComments({
-  postId,
-  authUserId,
-  page,
-  date = new Date(),
-}: Args): Promise<TInfiniteResult<TComment>> {
-  //
-  const [total] = await db
+const query = async (postId: string, date: Date, userId?: string) => {
+  return db
     .select({
-      sum: sql<number>`cast(count(${CommentsTable.id}) as int)`,
+      id: CommentsTable.id,
+      userId: CommentsTable.userId,
+      username: UsersTable.username,
+      avatar: UsersTable.avatar,
+      createdAt: CommentsTable.createdAt,
+      updatedAt: CommentsTable.updatedAt,
+      postId: CommentsTable.postId,
+      message: CommentsTable.message,
+      sumLikes: sql<number>`
+        CAST(COUNT(DISTINCT ${CommentLikesTable}) AS Int)
+      `,
+      sumReplies: sql<number>`
+        CAST(COUNT(DISTINCT ${RepliesTable.id}) AS Int)
+      `,
+      isLiked: sql<boolean>`
+        CASE WHEN EXISTS (
+          SELECT 1 
+          FROM ${CommentLikesTable}
+          WHERE ${CommentLikesTable.commentId} = ${CommentsTable.id}
+          AND ${CommentLikesTable.userId} = ${userId}
+        ) THEN true
+          ELSE false
+        END
+      `,
     })
     .from(CommentsTable)
     .where(
-      and(eq(CommentsTable.postId, postId), lte(CommentsTable.createdAt, date)),
+      and(eq(CommentsTable.postId, postId), lt(CommentsTable.createdAt, date)),
+    )
+    .innerJoin(UsersTable, eq(CommentsTable.userId, UsersTable.id))
+    .leftJoin(
+      CommentLikesTable,
+      eq(CommentsTable.id, CommentLikesTable.commentId),
+    )
+    .leftJoin(RepliesTable, eq(RepliesTable.commentId, CommentsTable.id))
+    .orderBy(desc(CommentsTable.createdAt))
+    .limit(LIMIT);
+};
+
+const queryTotal = async (postId: string, date: Date) => {
+  const [result] = await db
+    .select({
+      total: sql<number>`
+        CAST(COUNT(${CommentsTable.id}) AS Int)
+      `,
+    })
+    .from(CommentsTable)
+    .where(
+      and(eq(CommentsTable.postId, postId), lt(CommentsTable.createdAt, date)),
     );
+  return result.total;
+};
 
-  const comments = await db.query.CommentsTable.findMany({
-    orderBy: ({ createdAt }, { desc }) => {
-      return desc(createdAt);
-    },
-    limit: LIMIT,
-    offset: LIMIT * (page - 1),
-    where(fields, { eq, lte }) {
-      return and(eq(fields.postId, postId), lte(fields.createdAt, date));
-    },
-    with: {
-      replies: {
-        columns: {
-          id: true,
-        },
-      },
-      likes: true,
-      owner: {
-        columns: {
-          id: true,
-          avatar: true,
-          username: true,
-        },
-      },
-    },
-  });
+export type TComment = Awaited<ReturnType<typeof query>>[number];
 
-  const populatedComments = comments.map((comment) => {
-    const cmt = {
-      ...comment,
-      isLiked: !!comment.likes.find((l) => l.userId === authUserId),
-      sumLikes: comment.likes.length,
-      sumReplies: comment.replies.length,
-      sumRepliesRemaining: comment.replies.length,
-      replies: {
-        date,
-        data: [] as TReply[],
-        page: 0,
-        total: comment.replies.length,
-      },
-    };
-    const { likes, ...props } = cmt;
-    return props;
-  });
-
-  return { date, data: populatedComments, total: total.sum, page };
+export async function fetchComments({
+  postId,
+  userId,
+  page,
+  date = new Date(),
+}: Args): Promise<TInfiniteResult<TComment>> {
+  const total = await queryTotal(postId, date);
+  const data = await query(postId, date, userId);
+  return { date, data, total, page };
 }
