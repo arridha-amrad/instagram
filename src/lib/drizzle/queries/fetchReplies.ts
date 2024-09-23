@@ -1,7 +1,7 @@
 import db from "@/lib/drizzle/db";
-import { TInfiniteResult, TReply } from "./type";
-import { RepliesTable } from "../schema";
-import { and, eq, lte, sql } from "drizzle-orm";
+import { and, asc, eq, lt, sql } from "drizzle-orm";
+import { RepliesTable, ReplyLikesTable, UsersTable } from "../schema";
+import { TInfiniteResult } from "./type";
 
 const LIMIT = 5;
 
@@ -12,59 +12,74 @@ type Props = {
   date?: Date;
 };
 
+const queryTotal = async (commentId: string, date: Date) => {
+  const [result] = await db
+    .select({
+      sum: sql<number>`CAST(COUNT(${RepliesTable.id}) AS Int)`,
+    })
+    .from(RepliesTable)
+    .where(
+      and(
+        eq(RepliesTable.commentId, commentId),
+        lt(RepliesTable.createdAt, date),
+      ),
+    );
+  return result.sum;
+};
+
+const query = async (commentId: string, date: Date, userId?: string) => {
+  return db
+    .select({
+      id: RepliesTable.id,
+      userId: RepliesTable.userId,
+      username: UsersTable.username,
+      avatar: UsersTable.avatar,
+      commentId: RepliesTable.commentId,
+      message: RepliesTable.message,
+      createdAt: RepliesTable.createdAt,
+      updatedAt: RepliesTable.updatedAt,
+      isLiked: sql<boolean>`
+        CASE WHEN EXISTS (
+          SELECT 1 FROM ${ReplyLikesTable}
+          WHERE ${ReplyLikesTable.replyId} = ${RepliesTable.id}
+          AND ${ReplyLikesTable.userId} = ${userId}
+        ) 
+          THEN true
+          ELSE false
+        END
+      `,
+      sumLikes: sql<number>`
+        CAST(COUNT(DISTINCT ${ReplyLikesTable}) AS Int)
+      `,
+    })
+    .from(RepliesTable)
+    .where(
+      and(
+        eq(RepliesTable.commentId, commentId),
+        lt(RepliesTable.createdAt, date),
+      ),
+    )
+    .leftJoin(ReplyLikesTable, eq(ReplyLikesTable.replyId, RepliesTable.id))
+    .innerJoin(UsersTable, eq(UsersTable.id, RepliesTable.userId))
+    .groupBy(RepliesTable.id, UsersTable.username, UsersTable.avatar)
+    .orderBy(asc(RepliesTable.createdAt))
+    .limit(LIMIT);
+};
+
+export type TReply = Awaited<ReturnType<typeof query>>[number];
+
 export const fetchReplies = async ({
   commentId,
   userId,
   page = 1,
   date = new Date(),
 }: Props): Promise<TInfiniteResult<TReply>> => {
-  const [res] = await db
-    .select({
-      sum: sql<number>`cast(count(${RepliesTable.id}) as int)`,
-    })
-    .from(RepliesTable)
-    .where(
-      and(
-        eq(RepliesTable.commentId, commentId),
-        lte(RepliesTable.createdAt, date),
-      ),
-    );
-  //
-  const replies = await db.query.RepliesTable.findMany({
-    orderBy(fields, operators) {
-      return operators.asc(fields.createdAt);
-    },
-    where(fields, { eq }) {
-      return eq(fields.commentId, commentId);
-    },
-    limit: 5,
-    offset: LIMIT * (page - 1),
-    with: {
-      likes: true,
-      owner: {
-        columns: {
-          avatar: true,
-          id: true,
-          username: true,
-        },
-      },
-    },
-  });
-
-  const populatedReplies = replies.map((rpl) => {
-    const reply = {
-      ...rpl,
-      isLiked: !!rpl.likes.find((l) => l.userId === userId),
-      sumLikes: rpl.likes.length,
-    };
-    const { likes, ...props } = reply;
-    return props;
-  });
-
+  const total = await queryTotal(commentId, date);
+  const data = await query(commentId, date, userId);
   return {
     date,
-    data: populatedReplies,
+    data,
     page,
-    total: res.sum,
+    total,
   };
 };

@@ -1,36 +1,29 @@
 import db from "@/lib/drizzle/db";
+import { eq } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
-import { TSearchUser } from "./type";
+import { SearchUsersTable, UsersTable } from "../schema";
+
+const query = async (userId: string) => {
+  return db
+    .select({
+      id: UsersTable.id,
+      username: UsersTable.username,
+      avatar: UsersTable.avatar,
+      name: UsersTable.name,
+    })
+    .from(SearchUsersTable)
+    .where(eq(SearchUsersTable.userId, userId))
+    .innerJoin(UsersTable, eq(UsersTable.id, SearchUsersTable.searchId));
+};
+
+export type TSearchUser = Awaited<ReturnType<typeof query>>[number];
 
 export const fetchHistories = async ({
   userId,
 }: {
   userId: string;
 }): Promise<TSearchUser[]> => {
-  const result = await db.query.SearchUsersTable.findMany({
-    columns: {
-      searchId: false,
-      userId: false,
-    },
-    with: {
-      searchUser: {
-        columns: {
-          id: true,
-          avatar: true,
-          name: true,
-          username: true,
-        },
-      },
-    },
-    where({ userId: uid }, { eq }) {
-      return eq(uid, userId);
-    },
-  });
-
-  const users = result.reduce((prev, curr) => {
-    prev.push(curr.searchUser);
-    return prev;
-  }, [] as TSearchUser[]);
+  const users = await query(userId);
   return users;
 };
 
