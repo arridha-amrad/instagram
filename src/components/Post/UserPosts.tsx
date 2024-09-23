@@ -2,7 +2,7 @@
 
 import Spinner from "@/components/Spinner";
 import { useLastElement } from "@/hooks/useLastElement";
-import { TUserPost } from "@/lib/drizzle/queries/type";
+import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import { actionFetchUserPosts } from "@/lib/next-safe-action/actionFetchUserPosts";
 import usePostsStore from "@/stores/Posts";
 import { useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";
@@ -12,11 +12,29 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import useMeasure from "react-use-measure";
 import Post from "./UserPost";
+import { TUserPost } from "@/lib/drizzle/queries/fetchUserPosts";
 
-export default function UserPosts() {
-  const { userPosts, totalUserPosts, pageUserPosts, addUserPosts } =
-    usePostsStore();
-  const [currPage, setCurrPage] = useState(pageUserPosts);
+type Props = {
+  initData: TInfiniteResult<TUserPost>;
+};
+
+const filterUniquePosts = (currPosts: TUserPost[]) => {
+  const seenIds = new Set<string>();
+  const posts = [] as TUserPost[];
+  for (const post of currPosts) {
+    if (!seenIds.has(post.id)) {
+      posts.push(post);
+      seenIds.add(post.id);
+    }
+  }
+  return posts;
+};
+
+export default function UserPosts({ initData }: Props) {
+  const [currPosts, setCurrPosts] = useState<TUserPost[]>(initData.data);
+  // const { userPosts, totalUserPosts, pageUserPosts, addUserPosts } =
+  //   usePostsStore();
+  const [currPage, setCurrPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const { theme } = useTheme();
@@ -24,11 +42,11 @@ export default function UserPosts() {
   const posts = useMemo(() => {
     const createPostMatrix = (matrixLength: number) => {
       const result: TUserPost[][] = [];
-      for (let i = 0; i < userPosts.length; i++) {
+      for (let i = 0; i < currPosts.length; i++) {
         const newArr: TUserPost[] = [];
         for (let j = 0; j < matrixLength; j++) {
-          if (userPosts[i]) {
-            newArr.push(userPosts[i]);
+          if (currPosts[i]) {
+            newArr.push(currPosts[i]);
           }
           if (j === matrixLength - 1) {
             result.push(newArr);
@@ -41,7 +59,7 @@ export default function UserPosts() {
     };
     const data = createPostMatrix(3);
     return data;
-  }, [userPosts.length]);
+  }, [currPosts.length]);
 
   const parentRef = useRef<HTMLDivElement | null>(null);
   const parentOffsetRef = useRef(0);
@@ -52,9 +70,9 @@ export default function UserPosts() {
 
   const lastElementRef = useLastElement({
     callback: () => setCurrPage((val) => val + 1),
-    data: userPosts,
+    data: currPosts,
     loading,
-    total: totalUserPosts,
+    total: initData.total,
   });
 
   useEffect(() => {
@@ -64,9 +82,14 @@ export default function UserPosts() {
         const result = await actionFetchUserPosts({
           page: currPage,
           username: params.username as string,
+          date: currPosts[currPosts.length - 1].createdAt,
+          total: initData.total,
         });
-        if (result?.data) {
-          addUserPosts(result.data.data);
+        const incomingPosts = result?.data?.data;
+        if (incomingPosts) {
+          setCurrPosts((curr) => [
+            ...filterUniquePosts([...curr, ...incomingPosts]),
+          ]);
         }
       } catch (err) {
         toast.error("Something went wrong", { theme });
@@ -74,7 +97,7 @@ export default function UserPosts() {
         setLoading(false);
       }
     };
-    if (pageUserPosts === currPage) {
+    if (currPage === 1) {
       return;
     } else {
       loadPosts();
@@ -82,7 +105,7 @@ export default function UserPosts() {
   }, [currPage]);
 
   const rowVirtualizer = useWindowVirtualizer({
-    count: userPosts.length < totalUserPosts ? posts.length + 1 : posts.length,
+    count: currPosts.length < initData.total ? posts.length + 1 : posts.length,
     estimateSize: () => 100,
     overscan: 5,
     scrollMargin: parentOffsetRef.current,

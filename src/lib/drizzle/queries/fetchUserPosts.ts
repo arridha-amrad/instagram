@@ -33,6 +33,7 @@ const query = async (userId: string, date: Date) => {
     .select({
       id: PostsTable.id,
       urls: PostsTable.urls,
+      createdAt: PostsTable.createdAt,
       sumLikes: sql<number>`
         CAST(COUNT(${PostLikesTable}) AS Int)
       `,

@@ -64,11 +64,12 @@ const getProfile = async ({ username, authUserId }: Args) => {
     .select({ id: UsersTable.id })
     .from(UsersTable)
     .where(eq(UsersTable.username, username));
+
   if (!authUserId) {
     authUserId = crypto.randomUUID();
   }
   const data = await query(user.id, authUserId);
-  return data;
+  return data.length > 0 ? data[0] : null;
 };
 
 export const fetchUserProfile = unstable_cache(

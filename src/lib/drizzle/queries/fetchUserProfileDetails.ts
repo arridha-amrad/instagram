@@ -1,31 +1,33 @@
 import db from "@/lib/drizzle/db";
 import { unstable_cache } from "next/cache";
-import { TUserProfile } from "./type";
+import { UserInfoTable, UsersTable } from "../schema";
+import { eq } from "drizzle-orm";
 
 type Params = {
   username: string;
 };
 
-const fetchUser = async ({
-  username,
-}: Params): Promise<TUserProfile | null> => {
-  //
-  const user = await db.query.UsersTable.findFirst({
-    with: {
-      userInfo: true,
-    },
-    columns: {
-      id: true,
-      avatar: true,
-      name: true,
-    },
-    where(fields, operators) {
-      return operators.eq(fields.username, username);
-    },
-  });
+const query = async (username: string) => {
+  const result = await db
+    .select({
+      id: UsersTable.id,
+      username: UsersTable.username,
+      avatar: UsersTable.avatar,
+      bio: UserInfoTable.bio,
+      gender: UserInfoTable.gender,
+      occupation: UserInfoTable.occupation,
+      website: UserInfoTable.website,
+    })
+    .from(UsersTable)
+    .where(eq(UsersTable.username, username))
+    .leftJoin(UserInfoTable, eq(UserInfoTable.userId, UsersTable.id));
+  return result.length > 0 ? result[0] : null;
+};
 
-  if (!user) return null;
+export type TProfileDetail = Awaited<ReturnType<typeof query>>;
 
+const fetchUser = async ({ username }: Params): Promise<TProfileDetail> => {
+  const user = await query(username);
   return user;
 };
 

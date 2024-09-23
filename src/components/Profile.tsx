@@ -16,7 +16,7 @@ type Props = {
 export default async function Profile({ username }: Props) {
   const session = await auth();
   const u = await fetchUserProfile({
-    username: username,
+    username,
     authUserId: session?.user.id,
   });
 
@@ -64,36 +64,30 @@ export default async function Profile({ username }: Props) {
           </div>
 
           <Link scroll={false} href={`/${username}/followers`}>
-            {u.followers} Followers
+            {u.sumFollowers} Followers
           </Link>
 
           <Link scroll={false} href={`/${username}/followings`}>
-            {u.followings} Followings
+            {u.sumFollowings} Followings
           </Link>
         </div>
         <div className="spacey-2 text-sm">
           <div className="flex items-center gap-1">
             <h1 className="font-medium">{u?.name}</h1>
 
-            {u?.userInfo?.gender === "male" && (
-              <SvgMale className="fill-blue-500" />
-            )}
+            {u.gender === "male" && <SvgMale className="fill-blue-500" />}
 
-            {u?.userInfo?.gender === "female" && (
-              <SvgFemale className="fill-pink-500" />
-            )}
+            {u.gender === "female" && <SvgFemale className="fill-pink-500" />}
           </div>
-          <div className="font-medium text-skin-muted">
-            {u?.userInfo?.occupation}
-          </div>
-          <div className="whitespace-pre-line">{u?.userInfo?.bio}</div>
+          <div className="font-medium text-skin-muted">{u.occupation}</div>
+          <div className="whitespace-pre-line">{u.bio}</div>
           <div>
             <a
               target="_blank"
               className="font-semibold text-blue-500"
               href="https://www.google.com"
             >
-              {u?.userInfo?.website}
+              {u.website}
             </a>
           </div>
         </div>
