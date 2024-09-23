@@ -1,29 +1,69 @@
-import { sumComments } from "@/helpers/comments";
 import db from "@/lib/drizzle/db";
-import { TInfiniteResult, TUserPost } from "@/lib/drizzle/queries/type";
-import { eq, sql } from "drizzle-orm";
+import { TInfiniteResult } from "@/lib/drizzle/queries/type";
+import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
-import { PostsTable } from "../schema";
+import {
+  CommentsTable,
+  PostLikesTable,
+  PostsTable,
+  RepliesTable,
+} from "../schema";
 
 type Args = {
   username: string;
-  page: number;
+  page?: number;
   date?: Date;
+  total?: number;
 };
 
 const LIMIT = 6;
 
+const queryTotal = async (userId: string) => {
+  const [result] = await db
+    .select({
+      total: sql<number>`cast(count(${PostsTable.id}) as int)`,
+    })
+    .from(PostsTable)
+    .where(eq(PostsTable.userId, userId));
+  return result.total;
+};
+
+const query = async (userId: string, date: Date) => {
+  return db
+    .select({
+      id: PostsTable.id,
+      urls: PostsTable.urls,
+      sumLikes: sql<number>`
+        CAST(COUNT(${PostLikesTable}) AS Int)
+      `,
+      sumComments: sql<number>`
+        CAST(COUNT(${RepliesTable.id}) AS Int) +
+        CAST(COUNT(${CommentsTable.id}) AS Int)
+      `,
+    })
+    .from(PostsTable)
+    .where(and(eq(PostsTable.userId, userId), lt(PostsTable.createdAt, date)))
+    .leftJoin(PostLikesTable, eq(PostsTable.id, PostLikesTable.postId))
+    .leftJoin(CommentsTable, eq(CommentsTable.postId, PostsTable.id))
+    .leftJoin(RepliesTable, eq(RepliesTable.commentId, CommentsTable.id))
+    .orderBy(desc(PostsTable.createdAt))
+    .groupBy(PostsTable.id)
+    .limit(LIMIT);
+};
+
+export type TUserPost = Awaited<ReturnType<typeof query>>[number];
+
 const getPosts = async ({
   username,
-  page,
+  page = 1,
   date = new Date(),
+  total = 0,
 }: Args): Promise<TInfiniteResult<TUserPost>> => {
   const user = await db.query.UsersTable.findFirst({
     where(fields, operators) {
       return operators.eq(fields.username, username);
     },
   });
-
   if (!user) {
     return {
       data: [],
@@ -32,62 +72,14 @@ const getPosts = async ({
       date,
     };
   }
-
-  const [result] = await db
-    .select({
-      total: sql<number>`cast(count(${PostsTable.id}) as int)`,
-    })
-    .from(PostsTable)
-    .where(eq(PostsTable.userId, user.id));
-
-  const posts = await db.query.PostsTable.findMany({
-    limit: LIMIT,
-    offset: LIMIT * (page - 1),
-    columns: {
-      id: true,
-      urls: true,
-    },
-    with: {
-      comments: {
-        columns: {
-          id: true,
-        },
-        with: {
-          replies: {
-            columns: {
-              id: true,
-            },
-          },
-        },
-      },
-      likes: {
-        columns: {
-          postId: true,
-        },
-      },
-    },
-    orderBy({ createdAt }, { desc }) {
-      return desc(createdAt);
-    },
-    where({ userId }, { eq }) {
-      return eq(userId, user.id);
-    },
-  });
-
-  const populatedPosts = posts.map((post) => {
-    const data: TUserPost = {
-      id: post.id,
-      urls: post.urls,
-      sumLikes: post.likes.length,
-      sumComments: sumComments(post.comments),
-    };
-    return data;
-  });
-
+  if (total === 0) {
+    total = await queryTotal(user.id);
+  }
+  const data = await query(user.id, date);
   return {
-    data: populatedPosts,
+    data,
     page,
-    total: result.total,
+    total,
     date,
   };
 };

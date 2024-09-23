@@ -1,7 +1,7 @@
 import db from "@/lib/drizzle/db";
 import { eq, sql } from "drizzle-orm";
 import { FollowingsTable, UsersTable } from "../schema";
-import { TInfiniteResult, TUserIsFollow } from "./type";
+import { TInfiniteResult } from "./type";
 import { unstable_cache } from "next/cache";
 
 type Args = {
@@ -11,19 +11,50 @@ type Args = {
   date?: Date;
 };
 
-const LIMIT = 10;
+const queryTotal = async (userId: string) => {
+  const [result] = await db
+    .select({
+      sum: sql<number>`
+        CAST(COUNT(${FollowingsTable}) AS Int)
+      `,
+    })
+    .from(FollowingsTable)
+    .where(eq(FollowingsTable.userId, userId));
+  return result.sum;
+};
+
+const query = async (userId: string, authUserId?: string) => {
+  return db
+    .select({
+      id: UsersTable.id,
+      username: UsersTable.username,
+      avatar: UsersTable.avatar,
+      name: UsersTable.name,
+      isFollow: sql<boolean>`
+        CASE WHEN EXISTS (
+          SELECT 1
+          FROM ${FollowingsTable}
+          WHERE ${FollowingsTable.userId} = ${authUserId}
+          AND ${FollowingsTable.followId} = ${UsersTable.id}
+        )
+      `,
+    })
+    .from(FollowingsTable)
+    .innerJoin(UsersTable, eq(FollowingsTable.followId, UsersTable.id))
+    .where(eq(FollowingsTable.userId, userId));
+};
+
+export type TFollowing = Awaited<ReturnType<typeof query>>[number];
 
 const fetchFollowings = async ({
   username,
   authUserId,
   page = 1,
   date = new Date(),
-}: Args): Promise<TInfiniteResult<TUserIsFollow>> => {
-  //
+}: Args): Promise<TInfiniteResult<TFollowing>> => {
   const user = await db.query.UsersTable.findFirst({
     where: eq(UsersTable.username, username),
   });
-
   if (!user) {
     return {
       date,
@@ -32,50 +63,11 @@ const fetchFollowings = async ({
       total: 0,
     };
   }
-
-  const [result] = await db
-    .select({
-      total: sql<number>`cast(count(${FollowingsTable.followId}) as int)`,
-    })
-    .from(FollowingsTable)
-    .where(eq(FollowingsTable.userId, user.id));
-
-  const users = await db.query.FollowingsTable.findMany({
-    columns: {},
-    limit: LIMIT,
-    offset: LIMIT * (page - 1),
-    with: {
-      follow: {
-        with: {
-          followers: true,
-        },
-        columns: {
-          id: true,
-          name: true,
-          username: true,
-          avatar: true,
-        },
-      },
-    },
-    where(fields, operators) {
-      return operators.eq(fields.userId, user.id);
-    },
-  });
-
-  const data: TUserIsFollow[] = users.map(({ follow: f }) => {
-    const usr = {
-      ...f,
-      isFollow: !!f.followers.find(
-        (x) => x.userId === authUserId && x.followId === f.id,
-      ),
-    };
-    const { followers, ...props } = usr;
-    return props;
-  });
-
+  const total = await queryTotal(user.id);
+  const data = await query(user.id, authUserId);
   return {
     page,
-    total: result.total,
+    total,
     data,
     date,
   };

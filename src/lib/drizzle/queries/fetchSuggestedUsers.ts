@@ -1,5 +1,4 @@
 import db from "@/lib/drizzle/db";
-import { TSearchUser } from "./type";
 import { FollowingsTable, UsersTable } from "../schema";
 import { sql } from "drizzle-orm";
 
@@ -22,37 +21,18 @@ const query2 = async (userId: string) => {
   return result.rows;
 };
 
-// const query = async (userId: string) => {
-//   const followingIds = await db
-//     .select({
-//       followId: FollowingsTable.followId,
-//     })
-//     .from(FollowingsTable)
-//     .where(eq(FollowingsTable.userId, userId));
-
-//   const ids = followingIds.map((f) => f.followId);
-
-//   const result = await db
-//     .select({
-//       id: UsersTable.id,
-//       username: UsersTable.username,
-//       avatar: UsersTable.avatar,
-//       name: UsersTable.name,
-//     })
-//     .from(UsersTable)
-//     .where(and(not(inArray(UsersTable.id, ids)), ne(UsersTable.id, userId)));
-
-//   const r2 = await query2(userId);
-//   console.log(r2);
-
-//   return result;
-// };
+export type TSuggestedUsers = {
+  id: string;
+  username: string;
+  avatar: string;
+  name: string;
+};
 
 const fetchSuggestedUsers = async (
   authUserId: string,
-): Promise<TSearchUser[]> => {
-  const users = await query2(authUserId);
-  return users as TSearchUser[];
+): Promise<TSuggestedUsers[]> => {
+  const users = (await query2(authUserId)) as TSuggestedUsers[];
+  return users;
 };
 
 export default fetchSuggestedUsers;

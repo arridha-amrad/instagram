@@ -1,7 +1,7 @@
 import db from "@/lib/drizzle/db";
 import { eq, sql } from "drizzle-orm";
 import { FollowingsTable, UsersTable } from "@/lib/drizzle/schema";
-import { TInfiniteResult, TUserIsFollow } from "./type";
+import { TInfiniteResult } from "./type";
 import { unstable_cache } from "next/cache";
 
 type Args = {
@@ -9,6 +9,7 @@ type Args = {
   authUserId?: string;
   page?: number;
   date?: Date;
+  total?: number;
 };
 
 const query = async (userId: string, authUserId?: string) => {
@@ -47,12 +48,15 @@ const queryTotal = async (userId: string) => {
   return result.sum;
 };
 
+export type TFollower = Awaited<ReturnType<typeof query>>[number];
+
 export const fetchFollowers = async ({
   authUserId,
   username,
   page = 1,
   date = new Date(),
-}: Args): Promise<TInfiniteResult<TUserIsFollow>> => {
+  total = 0,
+}: Args): Promise<TInfiniteResult<TFollower>> => {
   const [user] = await db
     .select({
       id: UsersTable.id,
@@ -67,7 +71,9 @@ export const fetchFollowers = async ({
       total: 0,
     };
   }
-  const total = await queryTotal(user.id);
+  if (total === 0) {
+    total = await queryTotal(user.id);
+  }
   const data = await query(user.id, authUserId);
   return {
     data,
