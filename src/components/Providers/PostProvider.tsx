@@ -1,7 +1,7 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TPost } from "@/lib/drizzle/queries/type";
+import { TPost } from "@/lib/drizzle/queries/fetchPost";
 import usePostsStore from "@/stores/Posts";
 import { ReactNode, useEffect } from "react";
 

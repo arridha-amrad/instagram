@@ -14,7 +14,7 @@ const Page = async ({ params }: Props) => {
 
   const post = await fetchPost({
     postId: params.id,
-    authUserId: session?.user.id,
+    userId: session?.user.id,
   });
 
   if (!post) {

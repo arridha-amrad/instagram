@@ -10,12 +10,10 @@ type Props = {
 
 const Page = async ({ params: { username } }: Props) => {
   const session = await auth();
-
   const data = await fetchUserFollowers({
     authUserId: session?.user.id,
     username,
   });
-
   return <ModalFollowers data={data} />;
 };
 

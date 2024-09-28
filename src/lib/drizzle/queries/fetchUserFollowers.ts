@@ -8,7 +8,7 @@ type Args = {
 };
 
 const query = async (username: string, authUserId?: string) => {
-  const users = aliasedTable(UsersTable, "users");
+  const users = aliasedTable(UsersTable, "u");
   return db
     .select({
       id: users.id,

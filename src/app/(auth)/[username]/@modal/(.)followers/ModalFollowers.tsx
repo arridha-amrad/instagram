@@ -11,7 +11,6 @@ type Props = {
 
 export default function ModalFollowers({ data }: Props) {
   const router = useRouter();
-
   const closeModal = () => {
     router.back();
   };

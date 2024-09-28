@@ -26,7 +26,7 @@ type Props = {
 
 export default function UserPosts({ initData }: Props) {
   const [currPosts, setCurrPosts] = useState<TUserPost[]>(initData.data);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initData.data.length === 6);
   const { ref, inView } = useInView();
   const params = useParams();
 
