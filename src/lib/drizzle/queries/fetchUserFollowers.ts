@@ -1,90 +1,44 @@
 import db from "@/lib/drizzle/db";
-import { eq, sql } from "drizzle-orm";
+import { aliasedTable, eq, sql } from "drizzle-orm";
 import { FollowingsTable, UsersTable } from "@/lib/drizzle/schema";
-import { TInfiniteResult } from "./type";
-import { unstable_cache } from "next/cache";
 
 type Args = {
   username: string;
   authUserId?: string;
-  page?: number;
-  date?: Date;
-  total?: number;
 };
 
-const query = async (userId: string, authUserId?: string) => {
+const query = async (username: string, authUserId?: string) => {
+  const users = aliasedTable(UsersTable, "users");
   return db
     .select({
-      id: UsersTable.id,
-      username: UsersTable.username,
-      avatar: UsersTable.avatar,
-      name: UsersTable.name,
+      id: users.id,
+      username: users.username,
+      name: users.name,
+      avatar: users.avatar,
       isFollow: sql<boolean>`
-        CASE WHEN EXIST (
-          SELECT 1
+        CASE WHEN EXISTS (
+          SELECT 1 
           FROM ${FollowingsTable}
           WHERE ${FollowingsTable.userId} = ${authUserId}
-          AND ${FollowingsTable.followId} = ${UsersTable.id}
+          AND ${FollowingsTable.followId} = ${users.id}
         )
           THEN true
           ELSE false
         END
       `,
     })
-    .from(FollowingsTable)
-    .where(eq(FollowingsTable.followId, userId))
-    .innerJoin(UsersTable, eq(UsersTable.id, FollowingsTable.userId));
+    .from(UsersTable)
+    .where(eq(UsersTable.username, username))
+    .leftJoin(FollowingsTable, eq(FollowingsTable.followId, UsersTable.id))
+    .innerJoin(users, eq(users.id, FollowingsTable.userId));
 };
 
-const queryTotal = async (userId: string) => {
-  const [result] = await db
-    .select({
-      sum: sql<number>`
-        CAST(COUNT(${FollowingsTable}) AS Int)
-      `,
-    })
-    .from(FollowingsTable)
-    .where(eq(FollowingsTable.followId, userId));
-  return result.sum;
-};
+export type TFollow = Awaited<ReturnType<typeof query>>[number];
 
-export type TFollower = Awaited<ReturnType<typeof query>>[number];
-
-export const fetchFollowers = async ({
+export const fetchUserFollowers = async ({
   authUserId,
   username,
-  page = 1,
-  date = new Date(),
-  total = 0,
-}: Args): Promise<TInfiniteResult<TFollower>> => {
-  const [user] = await db
-    .select({
-      id: UsersTable.id,
-    })
-    .from(UsersTable)
-    .where(eq(UsersTable.username, username));
-  if (!user) {
-    return {
-      date,
-      data: [],
-      page: 0,
-      total: 0,
-    };
-  }
-  if (total === 0) {
-    total = await queryTotal(user.id);
-  }
-  const data = await query(user.id, authUserId);
-  return {
-    data,
-    total,
-    page,
-    date,
-  };
+}: Args): Promise<TFollow[]> => {
+  const data = await query(username, authUserId);
+  return data;
 };
-
-export const fetchUserFollowers = unstable_cache(
-  fetchFollowers,
-  ["fetchUserFollowers"],
-  { tags: ["fetchUserFollowers"] },
-);

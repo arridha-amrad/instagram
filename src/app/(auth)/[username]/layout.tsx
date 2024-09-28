@@ -1,6 +1,8 @@
 import Profile from "@/components/Profile";
 import Tabs from "@/components/Tabs";
-import { fetchUserProfile } from "@/lib/drizzle/queries/fetchUserProfile";
+import db from "@/lib/drizzle/db";
+import { UsersTable } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 import { Metadata } from "next";
 import { ReactNode } from "react";
@@ -14,9 +16,13 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const user = await fetchUserProfile({
-    username: params.username,
-  });
+  const [user] = await db
+    .select({
+      username: UsersTable.username,
+      name: UsersTable.name,
+    })
+    .from(UsersTable)
+    .where(eq(UsersTable.username, params.username));
   return {
     title: `${user?.name} (@${params.username}) • Instagram`,
     description: `${params.username} instagram profile page`,

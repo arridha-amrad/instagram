@@ -1,5 +1,5 @@
 import Avatar from "@/components/Avatar";
-import { TOwner } from "@/lib/drizzle/queries/type";
+import { TFollow } from "@/lib/drizzle/queries/fetchUserFollowers";
 
 import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
@@ -11,11 +11,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 type Props = {
-  user: TOwner;
-  isFollow?: boolean;
+  user: TFollow;
 };
 
-const UserWithFollowButtonCard = ({ user, isFollow: isF = true }: Props) => {
+const UserWithFollowButtonCard = ({
+  user: { avatar, id, isFollow: isF, name, username },
+}: Props) => {
   const [isFollow, setIsFollow] = useState(isF);
   const { session } = useSessionStore();
   const pathname = usePathname();
@@ -26,7 +27,7 @@ const UserWithFollowButtonCard = ({ user, isFollow: isF = true }: Props) => {
     try {
       await actionFollowUser({
         pathname,
-        followId: user.id,
+        followId: id,
       });
     } catch (err) {
       toast.error("something went wrong", { theme });
@@ -35,18 +36,18 @@ const UserWithFollowButtonCard = ({ user, isFollow: isF = true }: Props) => {
   return (
     <div className="flex w-full items-center justify-between px-4 py-3">
       <div className="flex items-start justify-start gap-3">
-        <Avatar url={user.avatar} />
+        <Avatar url={avatar} />
         <div className="max-w-[150px] overflow-hidden text-sm">
           <Link
-            href={`/${user.username}`}
+            href={`/${username}`}
             className="overflow-hidden text-ellipsis whitespace-pre-line font-semibold"
           >
-            {user.username}
+            {username}
           </Link>
-          <p className="line-clamp-1 text-skin-muted">{user.name}</p>
+          <p className="line-clamp-1 text-skin-muted">{name}</p>
         </div>
       </div>
-      {session?.user.id !== user.id && (
+      {session?.user.id !== id && (
         <button
           onClick={follow}
           className={cn(

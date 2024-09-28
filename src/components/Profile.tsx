@@ -60,15 +60,20 @@ export default async function Profile({ username }: Props) {
         </div>
         <div className="flex items-center gap-10">
           <div>
-            <h1>{u?.sumPosts} Posts</h1>
+            <h1>
+              {u?.sumPosts}
+              <span className="pl-2">Posts</span>
+            </h1>
           </div>
 
           <Link scroll={false} href={`/${username}/followers`}>
-            {u.sumFollowers} Followers
+            {u.sumFollowers}
+            <span className="pl-2">Followers</span>
           </Link>
 
           <Link scroll={false} href={`/${username}/followings`}>
-            {u.sumFollowings} Followings
+            {u.sumFollowings}
+            <span className="pl-2">Followings</span>
           </Link>
         </div>
         <div className="spacey-2 text-sm">

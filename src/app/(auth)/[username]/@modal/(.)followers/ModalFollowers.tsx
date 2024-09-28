@@ -1,19 +1,15 @@
 "use client";
 
 import UsersContainer from "@/components/UsersContainer";
-import { TInfiniteResult, TUserIsFollow } from "@/lib/drizzle/queries/type";
+import { TFollow } from "@/lib/drizzle/queries/fetchUserFollowers";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {
-  data: TInfiniteResult<TUserIsFollow>;
+  data: TFollow[];
 };
 
 export default function ModalFollowers({ data }: Props) {
-  const [followers, setFollowers] = useState<TUserIsFollow[]>(data.data);
-  console.log({ followers });
-
   const router = useRouter();
 
   const closeModal = () => {
@@ -28,7 +24,7 @@ export default function ModalFollowers({ data }: Props) {
       />
       <UsersContainer
         title="Followers"
-        users={followers}
+        users={data}
         closeCallback={closeModal}
       />
     </div>,

@@ -1,7 +1,6 @@
 import db from "@/lib/drizzle/db";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import { and, desc, eq, lt, sql } from "drizzle-orm";
-import { unstable_cache } from "next/cache";
 import {
   CommentsTable,
   PostLikesTable,
@@ -11,7 +10,6 @@ import {
 
 type Args = {
   username: string;
-  page?: number;
   date?: Date;
   total?: number;
 };
@@ -35,11 +33,11 @@ const query = async (userId: string, date: Date) => {
       urls: PostsTable.urls,
       createdAt: PostsTable.createdAt,
       sumLikes: sql<number>`
-        CAST(COUNT(${PostLikesTable}) AS Int)
+        CAST(COUNT(DISTINCT ${PostLikesTable}) AS Int)
       `,
       sumComments: sql<number>`
-        CAST(COUNT(${RepliesTable.id}) AS Int) +
-        CAST(COUNT(${CommentsTable.id}) AS Int)
+        CAST(COUNT(DISTINCT ${RepliesTable.id}) AS Int) +
+        CAST(COUNT(DISTINCT ${CommentsTable.id}) AS Int)
       `,
     })
     .from(PostsTable)
@@ -54,9 +52,8 @@ const query = async (userId: string, date: Date) => {
 
 export type TUserPost = Awaited<ReturnType<typeof query>>[number];
 
-const getPosts = async ({
+export const fetchUserPosts = async ({
   username,
-  page = 1,
   date = new Date(),
   total = 0,
 }: Args): Promise<TInfiniteResult<TUserPost>> => {
@@ -69,8 +66,8 @@ const getPosts = async ({
     return {
       data: [],
       total: 0,
-      page: 1,
       date,
+      page: 1,
     };
   }
   if (total === 0) {
@@ -78,13 +75,9 @@ const getPosts = async ({
   }
   const data = await query(user.id, date);
   return {
+    page: 1,
     data,
-    page,
     total,
     date,
   };
 };
-
-export const fetchUserPosts = unstable_cache(getPosts, ["fetchUserPosts"], {
-  tags: ["fetchUserPosts"],
-});

@@ -1,63 +1,37 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { useLastElement } from "@/hooks/useLastElement";
+import { createUserPostsMatrix } from "@/helpers/createPostMatrix";
+import { filterUniqueUserPosts } from "@/helpers/filterUniquePosts";
+import { TUserPost } from "@/lib/drizzle/queries/fetchUserPosts";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import { actionFetchUserPosts } from "@/lib/next-safe-action/actionFetchUserPosts";
-import usePostsStore from "@/stores/Posts";
 import { useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";
-import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useInView } from "react-intersection-observer";
 import useMeasure from "react-use-measure";
 import Post from "./UserPost";
-import { TUserPost } from "@/lib/drizzle/queries/fetchUserPosts";
 
 type Props = {
   initData: TInfiniteResult<TUserPost>;
 };
 
-const filterUniquePosts = (currPosts: TUserPost[]) => {
-  const seenIds = new Set<string>();
-  const posts = [] as TUserPost[];
-  for (const post of currPosts) {
-    if (!seenIds.has(post.id)) {
-      posts.push(post);
-      seenIds.add(post.id);
-    }
-  }
-  return posts;
-};
-
 export default function UserPosts({ initData }: Props) {
   const [currPosts, setCurrPosts] = useState<TUserPost[]>(initData.data);
-  // const { userPosts, totalUserPosts, pageUserPosts, addUserPosts } =
-  //   usePostsStore();
-  const [currPage, setCurrPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const { ref, inView } = useInView();
   const params = useParams();
-  const { theme } = useTheme();
 
   const posts = useMemo(() => {
-    const createPostMatrix = (matrixLength: number) => {
-      const result: TUserPost[][] = [];
-      for (let i = 0; i < currPosts.length; i++) {
-        const newArr: TUserPost[] = [];
-        for (let j = 0; j < matrixLength; j++) {
-          if (currPosts[i]) {
-            newArr.push(currPosts[i]);
-          }
-          if (j === matrixLength - 1) {
-            result.push(newArr);
-          } else {
-            i += 1;
-          }
-        }
-      }
-      return result;
-    };
-    const data = createPostMatrix(3);
+    const data = createUserPostsMatrix(3, currPosts);
     return data;
   }, [currPosts.length]);
 
@@ -68,44 +42,35 @@ export default function UserPosts({ initData }: Props) {
     parentOffsetRef.current = parentRef.current?.offsetTop ?? 0;
   }, []);
 
-  const lastElementRef = useLastElement({
-    callback: () => setCurrPage((val) => val + 1),
-    data: currPosts,
-    loading,
-    total: initData.total,
-  });
+  const fetchMoreItems = useCallback(async () => {
+    if (!hasMore) return;
+    const args = {
+      username: params.username as string,
+      date: currPosts[currPosts.length - 1].createdAt,
+      total: initData.total,
+    };
+    const result = await actionFetchUserPosts(args);
+    const newPosts = result?.data?.data;
+    if (newPosts) {
+      if (newPosts.length < 6) {
+        setHasMore(false);
+      }
+      setCurrPosts((prevPosts) =>
+        filterUniqueUserPosts([...prevPosts, ...newPosts]),
+      );
+    } else {
+      setHasMore(false);
+    }
+  }, [hasMore]);
 
   useEffect(() => {
-    const loadPosts = async () => {
-      setLoading(true);
-      try {
-        const result = await actionFetchUserPosts({
-          page: currPage,
-          username: params.username as string,
-          date: currPosts[currPosts.length - 1].createdAt,
-          total: initData.total,
-        });
-        const incomingPosts = result?.data?.data;
-        if (incomingPosts) {
-          setCurrPosts((curr) => [
-            ...filterUniquePosts([...curr, ...incomingPosts]),
-          ]);
-        }
-      } catch (err) {
-        toast.error("Something went wrong", { theme });
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (currPage === 1) {
-      return;
-    } else {
-      loadPosts();
+    if (hasMore && inView) {
+      fetchMoreItems();
     }
-  }, [currPage]);
+  }, [hasMore, inView]);
 
   const rowVirtualizer = useWindowVirtualizer({
-    count: currPosts.length < initData.total ? posts.length + 1 : posts.length,
+    count: hasMore ? posts.length + 1 : posts.length,
     estimateSize: () => 100,
     overscan: 5,
     scrollMargin: parentOffsetRef.current,
@@ -130,12 +95,12 @@ export default function UserPosts({ initData }: Props) {
         ]
       : [0, 0];
 
-  const [ref, { width: wdt1 }] = useMeasure();
+  const [refM, { width: wdt1 }] = useMeasure();
 
   return (
     <div ref={parentRef}>
       <div
-        ref={ref}
+        ref={refM}
         style={{
           height: rowVirtualizer.getTotalSize(),
           position: "relative",
@@ -160,7 +125,7 @@ export default function UserPosts({ initData }: Props) {
             >
               {isLoaderRow ? (
                 <div
-                  ref={lastElementRef}
+                  ref={ref}
                   className="flex items-center justify-center py-10"
                 >
                   <Spinner />

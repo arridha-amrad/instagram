@@ -50,9 +50,9 @@ const query = async (userId: string, authUserId?: string) => {
     })
     .from(UsersTable)
     .where(eq(UsersTable.id, userId))
-    .innerJoin(UserInfoTable, eq(UserInfoTable.userId, UsersTable.id))
-    .leftJoin(followings, eq(followings.userId, UsersTable.id))
+    .leftJoin(UserInfoTable, eq(UserInfoTable.userId, UsersTable.id))
     .leftJoin(PostsTable, eq(PostsTable.userId, UsersTable.id))
+    .leftJoin(followings, eq(followings.userId, UsersTable.id))
     .leftJoin(followers, eq(followers.followId, UsersTable.id))
     .groupBy(UsersTable.id, UserInfoTable.id);
 };

@@ -23,11 +23,7 @@ export default function UsersContainer({ users, closeCallback, title }: Props) {
       </div>
       <div className="max-h-[500px] overflow-y-auto p-3">
         {users.map((user) => (
-          <UserWithFollowButtonCard
-            isFollow={user.isFollow}
-            key={user.id}
-            user={user}
-          />
+          <UserWithFollowButtonCard key={user.id} user={user} />
         ))}
       </div>
     </div>

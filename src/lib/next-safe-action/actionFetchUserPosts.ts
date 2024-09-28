@@ -7,15 +7,13 @@ import { z } from "zod";
 export const actionFetchUserPosts = authActionClient
   .schema(
     z.object({
-      page: z.number(),
       username: z.string(),
       date: z.date(),
       total: z.number(),
     }),
   )
-  .action(async ({ parsedInput: { page, username, date, total } }) => {
+  .action(async ({ parsedInput: { username, date, total } }) => {
     const result = await fetchUserPosts({
-      page,
       username,
       date,
       total,

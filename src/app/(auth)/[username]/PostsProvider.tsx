@@ -6,6 +6,6 @@ type Params = {
 };
 
 export default async function PostsProvider({ username }: Params) {
-  const data = await fetchUserPosts({ username, page: 1 });
+  const data = await fetchUserPosts({ username });
   return <UserPosts initData={data} />;
 }
