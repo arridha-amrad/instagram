@@ -1,19 +1,19 @@
 import db from "@/lib/drizzle/db";
-import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import {
   CommentLikesTable,
   CommentsTable,
+  PostsTable,
   RepliesTable,
   UsersTable,
 } from "@/lib/drizzle/schema";
 import { and, desc, eq, lt, sql } from "drizzle-orm";
+import crypto from "crypto";
 
 const LIMIT = 10;
 
 type Args = {
   postId: string;
   userId?: string;
-  page: number;
   date?: Date;
 };
 
@@ -56,21 +56,8 @@ const query = async (postId: string, date: Date, userId?: string) => {
     )
     .leftJoin(RepliesTable, eq(RepliesTable.commentId, CommentsTable.id))
     .orderBy(desc(CommentsTable.createdAt))
-    .limit(LIMIT);
-};
-
-const queryTotal = async (postId: string, date: Date) => {
-  const [result] = await db
-    .select({
-      total: sql<number>`
-        CAST(COUNT(${CommentsTable.id}) AS Int)
-      `,
-    })
-    .from(CommentsTable)
-    .where(
-      and(eq(CommentsTable.postId, postId), lt(CommentsTable.createdAt, date)),
-    );
-  return result.total;
+    .limit(LIMIT)
+    .groupBy(CommentsTable.id, UsersTable.id);
 };
 
 export type TComment = Awaited<ReturnType<typeof query>>[number];
@@ -78,10 +65,11 @@ export type TComment = Awaited<ReturnType<typeof query>>[number];
 export async function fetchComments({
   postId,
   userId,
-  page,
   date = new Date(),
-}: Args): Promise<TInfiniteResult<TComment>> {
-  const total = await queryTotal(postId, date);
+}: Args): Promise<TComment[]> {
+  if (!userId) {
+    userId = crypto.randomUUID();
+  }
   const data = await query(postId, date, userId);
-  return { date, data, total, page };
+  return data;
 }

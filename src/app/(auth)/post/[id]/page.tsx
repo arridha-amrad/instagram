@@ -1,19 +1,13 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
 import Carousel from "@/components/Post/FeedPost/Carousel";
-import ButtonComment from "@/components/Post/Post/ButtonComment";
-import ButtonLikePost from "@/components/Post/Post/ButtonLike";
-import PostProvider from "@/components/Providers/PostProvider";
 import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
-import { HeartIcon } from "@heroicons/react/24/solid";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
-import CommentForm from "./_components/FormComment";
-import SumComment from "./_components/SumComments";
-import Comments from "@/components/Post/Post/Comments";
 import ActionsWithCommentForm from "./_components/ActionsWithCommentForm";
+import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
+import CommentsProvider from "@/components/Providers/CommentsProvider";
 
 type Props = {
   params: {
@@ -25,22 +19,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const session = await auth();
   const post = await fetchPost({
     postId: params.id,
-    authUserId: session?.user.id,
+    userId: session?.user.id,
   });
 
   return {
-    title: `Instagram Post by ${post?.owner.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
-    description: `Instagram post created by ${post?.owner.username}`,
+    title: `Instagram Post by ${post?.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
+    description: `Instagram post created by ${post?.username}`,
   };
 }
 
 const Page = async ({ params }: Props) => {
   const session = await auth();
 
-  const post = await fetchPost({
-    postId: params.id,
-    authUserId: session?.user.id,
-  });
+  const [post, comments] = await Promise.all([
+    await fetchPost({
+      postId: params.id,
+      userId: session?.user.id,
+    }),
+    await fetchComments({
+      postId: params.id,
+      userId: session?.user.id,
+    }),
+  ]);
 
   if (!post) {
     return (
@@ -53,16 +53,16 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <PostProvider post={post}>
+    <CommentsProvider data={comments}>
       <main className="px flex min-h-screen w-full max-w-xl flex-col px-4 pb-20">
         <section className="flex h-[80px] w-max items-center gap-3">
-          <Avatar url={post.owner.avatar} />
+          <Avatar url={post.avatar} />
           <div>
             <Link
-              href={`/${post.owner.username}`}
+              href={`/${post.username}`}
               className="font-semibold hover:underline"
             >
-              {post.owner.username}
+              {post.username}
             </Link>
             <p className="text-sm text-skin-muted">{post.location}</p>
           </div>
@@ -73,12 +73,11 @@ const Page = async ({ params }: Props) => {
         </section>
         <Carousel isFirstPost urls={post.urls.map((u) => u.url)} />
         <ActionsWithCommentForm post={post} />
-        <SumComment />
-        <section className="py-3">
-          <Comments />
+        <section className="pb-4">
+          <h1 className="text-2xl font-bold">{post.sumComments} Comments</h1>
         </section>
       </main>
-    </PostProvider>
+    </CommentsProvider>
   );
 };
 

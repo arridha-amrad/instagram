@@ -37,8 +37,9 @@ const query = async (postId: string, userId?: string) => {
             SELECT 1 FROM ${PostLikesTable}
             WHERE ${PostLikesTable.postId} = ${PostsTable.id}
             AND ${PostLikesTable.userId} = ${userId}
-          ) THEN true
-          ELSE false
+          ) 
+            THEN true
+            ELSE false
         END
       `,
     })
@@ -47,7 +48,8 @@ const query = async (postId: string, userId?: string) => {
     .innerJoin(UsersTable, eq(UsersTable.id, PostsTable.userId))
     .leftJoin(PostLikesTable, eq(PostLikesTable.postId, PostsTable.id))
     .leftJoin(CommentsTable, eq(CommentsTable.postId, PostsTable.id))
-    .leftJoin(RepliesTable, eq(RepliesTable.commentId, CommentsTable.id));
+    .leftJoin(RepliesTable, eq(RepliesTable.commentId, CommentsTable.id))
+    .groupBy(PostsTable.id, UsersTable.id);
 };
 
 export type TPost = Awaited<ReturnType<typeof query>>[number];
@@ -56,6 +58,10 @@ export const fetchPost = async ({
   postId,
   userId,
 }: Params): Promise<TPost | null> => {
-  const [post] = await query(postId, userId);
-  return post;
+  const post = await query(postId, userId);
+  return post.length === 0 ? null : post[0];
 };
+
+// export const fetchPost = unstable_cache(getPost, ["fetch_posts"], {
+//   tags: ["fetchPosts"],
+// });

@@ -10,17 +10,15 @@ import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { useSessionStore } from "@/stores/Session";
 import mergeRefs from "merge-refs";
+import { useParams } from "next/navigation";
 
 import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 
 const CommentForm = ({}, ref: Ref<HTMLInputElement>) => {
   const [isFocus, setFocus] = useState(false);
+  const params = useParams();
 
   const { session } = useSessionStore();
-
-  const { post } = usePostsStore();
-
-  if (!post) return null;
 
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -29,7 +27,7 @@ const CommentForm = ({}, ref: Ref<HTMLInputElement>) => {
   const { reply, setReply } = useReplySetter();
 
   const { exeComment, isExeComment, isSuccess } = useActionCreateComment(
-    post.id,
+    params.id as string,
   );
 
   const { execute, hasSucceeded, isExecuting } = useActionCreateReply(
