@@ -6,14 +6,11 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import MySpinner from "@/components/Spinner";
 import { useSessionStore } from "@/stores/Session";
-import usePostsStore from "@/stores/Posts";
 import { actionFetchComments } from "@/lib/next-safe-action/actionFetchComments";
+import { useComments } from "@/stores/useComments";
 
 const Comments = () => {
-  const { post, addMoreComments } = usePostsStore();
-  if (!post) return null;
-
-  const page = post.comments.page;
+  const { comments, hasMore, addComments, cDate } = useComments();
   const { session } = useSessionStore();
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -24,10 +21,11 @@ const Comments = () => {
       const response = await actionFetchComments({
         postId: id as string,
         authUserId: session?.user.id,
-        page: page + 1,
+        date: new Date(cDate),
       });
-      if (response?.data) {
-        addMoreComments(response.data);
+      const newComments = response?.data;
+      if (newComments) {
+        addComments(newComments);
       }
     } catch (err) {
       console.log(err);
@@ -38,10 +36,10 @@ const Comments = () => {
 
   return (
     <>
-      {post.comments.data.map((comment) => (
+      {comments.map((comment) => (
         <Comment comment={comment} key={comment.id} />
       ))}
-      {post.comments.data.length < post.comments.total && (
+      {hasMore && (
         <button
           disabled={loading}
           onClick={loadMore}

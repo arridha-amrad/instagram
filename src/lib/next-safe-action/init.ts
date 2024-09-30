@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 export const actionClient = createSafeActionClient();
 
 export const optionalAuthActionClient = createSafeActionClient({
-  handleReturnedServerError(e) {
+  handleServerError(e) {
     if (e instanceof CustomServerError) {
       return e.message;
     }

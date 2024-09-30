@@ -2,7 +2,6 @@ import db from "@/lib/drizzle/db";
 import {
   CommentLikesTable,
   CommentsTable,
-  PostsTable,
   RepliesTable,
   UsersTable,
 } from "@/lib/drizzle/schema";

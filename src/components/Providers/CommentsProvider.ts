@@ -1,7 +1,8 @@
 "use client";
 
 import { TComment } from "@/lib/drizzle/queries/fetchComments";
-import { ReactNode } from "react";
+import { useComments } from "@/stores/useComments";
+import { ReactNode, useEffect } from "react";
 
 type Props = {
   data: TComment[];
@@ -9,7 +10,11 @@ type Props = {
 };
 
 export default function CommentsProvider({ children, data }: Props) {
-  console.log({ data });
+  const { setComments } = useComments();
+
+  useEffect(() => {
+    setComments(data);
+  }, []);
 
   return children;
 }

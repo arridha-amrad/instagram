@@ -5,11 +5,11 @@ import { useState } from "react";
 import ButtonFetchReplies from "./ButtonFetchReplies";
 import ButtonLikeComment from "./ButtonLike";
 import Replies from "./Replies";
-import { TComment } from "@/lib/drizzle/queries/type";
 import ButtonReply from "./ButtonReply";
+import { Comment } from "@/stores/useComments";
 
 type Props = {
-  comment: TComment;
+  comment: Comment;
 };
 
 const CommentCard = ({ comment }: Props) => {
@@ -18,16 +18,16 @@ const CommentCard = ({ comment }: Props) => {
   return (
     <article className="flex w-full items-start gap-2 py-2">
       <div>
-        <Avatar url={comment.owner.avatar} />
+        <Avatar url={comment.avatar} />
       </div>
       <div className="flex-1 basis-0 overflow-hidden">
         <div className="flex w-full pt-0.5">
           <div className="flex-1 space-x-2 break-words text-sm">
             <Link
-              href={`/${comment.owner.username}`}
+              href={`/${comment.username}`}
               className="inline font-semibold"
             >
-              {comment.owner.username}
+              {comment.username}
             </Link>
             <p className="inline">{comment.message}</p>
           </div>
@@ -48,20 +48,17 @@ const CommentCard = ({ comment }: Props) => {
             </p>
           )}
           <div>
-            <ButtonReply
-              commentId={comment.id}
-              username={comment.owner.username}
-            />
+            <ButtonReply commentId={comment.id} username={comment.username} />
           </div>
         </div>
-        {comment.sumReplies > 0 && (
+        {/* {comment.sumReplies > 0 && (
           <ButtonFetchReplies
             isShowReplies={isShowReplies}
             setIsShowReplies={setIsShowReplies}
             comment={comment}
           />
         )}
-        {isShowReplies && <Replies replies={comment.replies} />}
+        {isShowReplies && <Replies replies={comment.replies} />} */}
       </div>
     </article>
   );

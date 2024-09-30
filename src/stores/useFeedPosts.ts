@@ -113,7 +113,7 @@ export const useFeedPosts = create<State & Action>()(
     })),
     {
       enabled: process.env.NODE_ENV === "development",
-      name: "useFeedPosts",
+      anonymousActionType: "useFeedPosts",
     },
   ),
 );

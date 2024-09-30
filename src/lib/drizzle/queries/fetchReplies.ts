@@ -1,30 +1,14 @@
 import db from "@/lib/drizzle/db";
 import { and, asc, eq, lt, sql } from "drizzle-orm";
 import { RepliesTable, ReplyLikesTable, UsersTable } from "../schema";
-import { TInfiniteResult } from "./type";
+import crypto from "crypto";
 
 const LIMIT = 5;
 
 type Props = {
   commentId: string;
   userId?: string;
-  page?: number;
   date?: Date;
-};
-
-const queryTotal = async (commentId: string, date: Date) => {
-  const [result] = await db
-    .select({
-      sum: sql<number>`CAST(COUNT(${RepliesTable.id}) AS Int)`,
-    })
-    .from(RepliesTable)
-    .where(
-      and(
-        eq(RepliesTable.commentId, commentId),
-        lt(RepliesTable.createdAt, date),
-      ),
-    );
-  return result.sum;
 };
 
 const query = async (commentId: string, date: Date, userId?: string) => {
@@ -71,15 +55,11 @@ export type TReply = Awaited<ReturnType<typeof query>>[number];
 export const fetchReplies = async ({
   commentId,
   userId,
-  page = 1,
   date = new Date(),
-}: Props): Promise<TInfiniteResult<TReply>> => {
-  const total = await queryTotal(commentId, date);
+}: Props): Promise<TReply[]> => {
+  if (!userId) {
+    userId = crypto.randomUUID();
+  }
   const data = await query(commentId, date, userId);
-  return {
-    date,
-    data,
-    page,
-    total,
-  };
+  return data;
 };

@@ -7,16 +7,16 @@ import { optionalAuthActionClient } from "./init";
 const schema = z.object({
   postId: z.string(),
   authUserId: z.string().optional(),
-  page: z.number(),
+  date: z.date(),
 });
 
 export const actionFetchComments = optionalAuthActionClient
   .schema(schema)
-  .action(async ({ parsedInput: { postId, authUserId, page } }) => {
+  .action(async ({ parsedInput: { postId, authUserId, date } }) => {
     const comments = await fetchComments({
-      page,
       postId,
-      authUserId,
+      userId: authUserId,
+      date,
     });
     return comments;
   });

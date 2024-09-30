@@ -8,6 +8,7 @@ import Link from "next/link";
 import ActionsWithCommentForm from "./_components/ActionsWithCommentForm";
 import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
 import CommentsProvider from "@/components/Providers/CommentsProvider";
+import Comments from "@/components/Post/Post/Comments";
 
 type Props = {
   params: {
@@ -76,6 +77,7 @@ const Page = async ({ params }: Props) => {
         <section className="pb-4">
           <h1 className="text-2xl font-bold">{post.sumComments} Comments</h1>
         </section>
+        <Comments />
       </main>
     </CommentsProvider>
   );
