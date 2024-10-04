@@ -1,20 +1,23 @@
 import Avatar from "@/components/Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import ButtonFetchReplies from "./ButtonFetchReplies";
 import ButtonLikeComment from "./ButtonLike";
 import Replies from "./Replies";
 import ButtonReply from "./ButtonReply";
 import { Comment as Tc } from "@/stores/useComments";
+import FormReply from "./FormReply";
 
 type Props = {
   comment: Tc;
-  children: ReactNode;
+  showForm?: boolean;
 };
 
-const Comment = ({ comment, children }: Props) => {
+const Comment = ({ comment, showForm }: Props) => {
   const [isShowReplies, setIsShowReplies] = useState(true);
+
+  const [isShow, setIsShow] = useState(false);
 
   return (
     <article className="flex w-full items-start gap-2 py-2">
@@ -46,8 +49,20 @@ const Comment = ({ comment, children }: Props) => {
               {comment.sumLikes} {comment.sumLikes > 1 ? "Likes" : "Like"}
             </p>
           )}
-          {children}
+          {showForm ? (
+            <button onClick={() => setIsShow((val) => !val)}>Reply</button>
+          ) : (
+            <ButtonReply commentId={comment.id} username={comment.username} />
+          )}
         </div>
+
+        {isShow && (
+          <FormReply
+            username={comment.username}
+            commentId={comment.id}
+            setIsShow={setIsShow}
+          />
+        )}
 
         {comment.sumReplies > 0 && (
           <ButtonFetchReplies

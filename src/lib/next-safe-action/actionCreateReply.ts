@@ -4,6 +4,7 @@ import { zfd } from "zod-form-data";
 import { authClient } from "./init";
 import { z } from "zod";
 import { createReply } from "@/lib/drizzle/mutations/createReply";
+import { TReply } from "../drizzle/queries/fetchReplies";
 
 export const actionCreateReply = authClient
   .schema(
@@ -15,7 +16,7 @@ export const actionCreateReply = authClient
   .action(
     async ({
       bindArgsParsedInputs: [commentId],
-      ctx: { userId },
+      ctx: { userId, image, username },
       parsedInput: { message },
     }) => {
       try {
@@ -24,7 +25,14 @@ export const actionCreateReply = authClient
           message,
           userId,
         });
-        return result;
+        const data: TReply = {
+          avatar: image ?? null,
+          username,
+          isLiked: false,
+          sumLikes: 0,
+          ...result,
+        };
+        return data;
       } catch (err) {
         throw err;
       }

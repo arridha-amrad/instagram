@@ -13,6 +13,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import ButtonLikePost from "./components/ButtonLike";
 import FormComment from "./components/FormComment";
+import SumComment from "./components/SumComments";
 
 type Props = {
   params: {
@@ -87,10 +88,8 @@ const Page = async ({ params }: Props) => {
           </div>
           <FormComment session={session} />
         </section>
-        <section className="pb-4">
-          <h1 className="text-2xl font-bold">{post.sumComments} Comments</h1>
-        </section>
-        <Comments isShowInput />
+        <SumComment />
+        <Comments showForm />
       </main>
     </CommentsProvider>
   );

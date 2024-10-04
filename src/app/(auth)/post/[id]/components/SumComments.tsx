@@ -1,12 +1,12 @@
 "use client";
 
-import usePostsStore from "@/stores/Posts";
+import { useComments } from "@/stores/useComments";
 
-export default function SumComment() {
-  const { post } = usePostsStore();
+export default function SumComments() {
+  const { total } = useComments();
   return (
     <section className="pb-4">
-      <h1 className="text-2xl font-bold">{post?.sumComments} Comments</h1>
+      <h1 className="text-2xl font-bold">{total} Comments</h1>
     </section>
   );
 }

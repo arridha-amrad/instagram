@@ -1,7 +1,6 @@
 "use client";
 
 import Comment from "@/components/Comment";
-import ButtonReply from "@/components/Comment/Reply/ButtonReply";
 import MySpinner from "@/components/Spinner";
 import { actionFetchComments } from "@/lib/next-safe-action/actionFetchComments";
 import { useComments } from "@/stores/useComments";
@@ -9,10 +8,10 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
-  isShowInput?: boolean;
+  showForm?: boolean;
 };
 
-const Comments = ({ isShowInput }: Props) => {
+const Comments = ({ showForm }: Props) => {
   const { comments, hasMore, addComments, cDate } = useComments();
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -38,13 +37,7 @@ const Comments = ({ isShowInput }: Props) => {
   return (
     <>
       {comments.map((comment) => (
-        <Comment comment={comment} key={comment.id}>
-          {isShowInput ? (
-            <button>Reply</button>
-          ) : (
-            <ButtonReply commentId={comment.id} username={comment.username} />
-          )}
-        </Comment>
+        <Comment showForm={showForm} comment={comment} key={comment.id} />
       ))}
       {hasMore && (
         <button

@@ -38,6 +38,7 @@ export const authClient = client.use(async ({ next, clientInput }) => {
   }
 
   const userId = session.user.id;
+  const { username, email, image, name } = session.user;
 
   if (!userId) {
     throw new CustomServerError("Session is not valid!");
@@ -46,6 +47,10 @@ export const authClient = client.use(async ({ next, clientInput }) => {
   return next({
     ctx: {
       userId,
+      username,
+      email,
+      image,
+      name,
     },
   });
 });

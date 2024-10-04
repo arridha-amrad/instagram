@@ -36,6 +36,8 @@ interface ActionState {
   addComments: (comments: TComment[]) => void;
   likeComment: (commentId: string) => void;
   setReplies: (replies: TReply[]) => void;
+  addReply: (reply: TReply) => void;
+  addComment: (comment: TComment) => void;
 }
 
 export const useComments = create<ActionState>()(
@@ -46,6 +48,22 @@ export const useComments = create<ActionState>()(
       total: 0,
       hasMore: true,
       cDate: new Date(),
+      addComment(comment) {
+        const c: Comment = { ...comment, replies: [] };
+        set((state) => {
+          state.comments.unshift(c);
+          state.total += 1;
+        });
+      },
+      addReply(reply) {
+        set((state) => {
+          const c = state.comments.find((c) => c.id === reply.commentId);
+          if (!c) return;
+          c.replies.push(reply);
+          c.sumReplies += 1;
+          state.total += 1;
+        });
+      },
       setReplies(replies) {
         set((state) => {
           const cId = replies[0].commentId;

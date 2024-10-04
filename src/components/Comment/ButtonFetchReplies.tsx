@@ -50,7 +50,7 @@ const ButtonFetchReplies = ({
     }
   };
 
-  if (hasMore) {
+  if (hasMore && comment.sumReplies - comment.replies.length > 0) {
     return (
       <div className="relative py-3">
         <button
