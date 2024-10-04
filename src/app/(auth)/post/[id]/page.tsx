@@ -1,17 +1,18 @@
-import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
 import Carousel from "@/components/Post/FeedPost/Carousel";
+import Comments from "@/components/Post/Post/Comments";
+import CommentsProvider from "@/components/Providers/CommentsProvider";
+import db from "@/lib/drizzle/db";
+import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
 import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
+import { PostsTable, UsersTable } from "@/lib/drizzle/schema";
+import { getAuth } from "@/lib/next.auth";
 import { formatDistanceToNowStrict } from "date-fns";
+import { eq } from "drizzle-orm";
 import { Metadata } from "next";
 import Link from "next/link";
-import ActionsWithCommentForm from "./_components/ActionsWithCommentForm";
-import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
-import CommentsProvider from "@/components/Providers/CommentsProvider";
-import Comments from "@/components/Post/Post/Comments";
-import db from "@/lib/drizzle/db";
-import { PostsTable, UsersTable } from "@/lib/drizzle/schema";
-import { eq } from "drizzle-orm";
+import ButtonLikePost from "./components/ButtonLike";
+import FormComment from "./components/FormComment";
 
 type Props = {
   params: {
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const Page = async ({ params }: Props) => {
-  const session = await auth();
+  const session = await getAuth();
 
   const [post, comments] = await Promise.all([
     await fetchPost({
@@ -76,11 +77,20 @@ const Page = async ({ params }: Props) => {
           </h2>
         </section>
         <Carousel isFirstPost urls={post.urls.map((u) => u.url)} />
-        <ActionsWithCommentForm post={post} />
+        <section className="space-y-1">
+          <div className="py-2">
+            <ButtonLikePost
+              isLiked={post.isLiked}
+              postId={post.id}
+              total={post.sumLikes}
+            />
+          </div>
+          <FormComment session={session} />
+        </section>
         <section className="pb-4">
           <h1 className="text-2xl font-bold">{post.sumComments} Comments</h1>
         </section>
-        <Comments />
+        <Comments isShowInput />
       </main>
     </CommentsProvider>
   );

@@ -2,7 +2,6 @@
 
 import MySpinner from "@/components/Spinner";
 import { actionFetchReplies } from "@/lib/next-safe-action/actionFetchReplies";
-import { useSessionStore } from "@/stores/Session";
 import { Comment, useComments } from "@/stores/useComments";
 import { useTheme } from "next-themes";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -19,7 +18,6 @@ const ButtonFetchReplies = ({
   isShowReplies,
   setIsShowReplies,
 }: Props) => {
-  const { session } = useSessionStore();
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = useTheme();
   const { setReplies } = useComments();
@@ -34,7 +32,6 @@ const ButtonFetchReplies = ({
     try {
       const result = await actionFetchReplies({
         commentId: comment.id,
-        authUserId: session?.user.id,
         date,
       });
       const newReplies = result?.data;

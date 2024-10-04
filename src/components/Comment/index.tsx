@@ -1,18 +1,19 @@
 import Avatar from "@/components/Avatar";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import ButtonFetchReplies from "./ButtonFetchReplies";
 import ButtonLikeComment from "./ButtonLike";
 import Replies from "./Replies";
 import ButtonReply from "./ButtonReply";
-import { Comment } from "@/stores/useComments";
+import { Comment as Tc } from "@/stores/useComments";
 
 type Props = {
-  comment: Comment;
+  comment: Tc;
+  children: ReactNode;
 };
 
-const CommentCard = ({ comment }: Props) => {
+const Comment = ({ comment, children }: Props) => {
   const [isShowReplies, setIsShowReplies] = useState(true);
 
   return (
@@ -45,8 +46,9 @@ const CommentCard = ({ comment }: Props) => {
               {comment.sumLikes} {comment.sumLikes > 1 ? "Likes" : "Like"}
             </p>
           )}
-          <ButtonReply commentId={comment.id} username={comment.username} />
+          {children}
         </div>
+
         {comment.sumReplies > 0 && (
           <ButtonFetchReplies
             isShowReplies={isShowReplies}
@@ -60,4 +62,4 @@ const CommentCard = ({ comment }: Props) => {
   );
 };
 
-export default CommentCard;
+export default Comment;
