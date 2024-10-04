@@ -1,10 +1,10 @@
 "use server";
 
 import { fetchUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
-import { authActionClient } from "@/lib/next-safe-action/init";
+import { optionalAuthClient } from "@/lib/next-safe-action/init";
 import { z } from "zod";
 
-export const actionFetchUserPosts = authActionClient
+export const actionFetchUserPosts = optionalAuthClient
   .schema(
     z.object({
       username: z.string(),

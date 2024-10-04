@@ -1,22 +1,18 @@
 import Avatar from "@/components/Avatar";
-import { TReply } from "@/lib/drizzle/queries/type";
+
 import { cn } from "@/lib/utils";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import ButtonLikeReply from "./ButtonLike";
 import ButtonReply from "./ButtonReply";
+import { TReply } from "@/lib/drizzle/queries/fetchReplies";
 
 type Props = {
   reply: TReply;
 };
 
 const Reply = ({ reply }: Props) => {
-  const {
-    owner: { avatar, username },
-    sumLikes,
-    createdAt,
-    message,
-  } = reply;
+  const { avatar, username, sumLikes, createdAt, message, commentId } = reply;
 
   return (
     <div className="flex w-full items-start gap-2 py-2 text-sm">
@@ -49,10 +45,7 @@ const Reply = ({ reply }: Props) => {
               {sumLikes} {sumLikes > 1 ? "likes" : "like"}
             </p>
           )}
-          <ButtonReply
-            commentId={reply.commentId}
-            username={reply.owner.username}
-          />
+          <ButtonReply commentId={commentId} username={username} />
         </div>
       </div>
       <div className="pt-1">

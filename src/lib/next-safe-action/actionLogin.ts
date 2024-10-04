@@ -5,14 +5,14 @@ import { flattenValidationErrors } from "next-safe-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { login } from "../drizzle/mutations/login";
-import { actionClient } from "./init";
+import { optionalAuthClient } from "./init";
 
 const loginSchema = zfd.formData({
   identity: zfd.text(z.string()),
   password: zfd.text(z.string()),
 });
 
-export const actionLogin = actionClient
+export const actionLogin = optionalAuthClient
   .schema(loginSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,

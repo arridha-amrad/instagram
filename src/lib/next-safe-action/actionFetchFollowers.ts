@@ -1,19 +1,18 @@
 "use server";
 
 import { z } from "zod";
-import { optionalAuthActionClient } from "./init";
+import { optionalAuthClient } from "./init";
 import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
 
-export const actionFetchFollowers = optionalAuthActionClient
+export const actionFetchFollowers = optionalAuthClient
   .schema(
     z.object({
       username: z.string(),
-      authUserId: z.string().optional(),
     }),
   )
-  .action(async ({ parsedInput: { username, authUserId } }) => {
+  .action(async ({ parsedInput: { username }, ctx: { userId } }) => {
     try {
-      const result = await fetchUserFollowers({ username, authUserId });
+      const result = await fetchUserFollowers({ username, authUserId: userId });
       return result;
     } catch (err) {
       throw err;

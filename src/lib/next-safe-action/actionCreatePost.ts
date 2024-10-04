@@ -1,6 +1,6 @@
 "use server";
 
-import { authActionClient } from "@/lib/next-safe-action/init";
+import { authClient } from "@/lib/next-safe-action/init";
 import { flattenValidationErrors } from "next-safe-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
@@ -14,7 +14,7 @@ const schema = zfd.formData({
   pathname: zfd.text(z.string()),
 });
 
-export const actionCreatePost = authActionClient
+export const actionCreatePost = authClient
   .schema(schema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,

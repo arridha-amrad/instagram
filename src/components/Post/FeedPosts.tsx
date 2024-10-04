@@ -2,7 +2,7 @@
 
 import Spinner from "@/components/Spinner";
 import { useLastElement } from "@/hooks/useLastElement";
-import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchPosts";
+import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchFeedPosts";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";

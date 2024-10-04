@@ -5,7 +5,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { updateProfile } from "../drizzle/mutations/updateProfile";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 
 const schema = zfd.formData({
   name: zfd.text(z.string().min(1, { message: "name is required" })),
@@ -15,7 +15,7 @@ const schema = zfd.formData({
   gender: zfd.text(z.string().optional()),
 });
 
-export const actionUpdateProfile = authActionClient
+export const actionUpdateProfile = authClient
   .schema(schema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,

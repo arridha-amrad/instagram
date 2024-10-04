@@ -1,10 +1,10 @@
 "use server";
 
 import { fetchFeedPosts } from "@/lib/drizzle/queries/fetchFeedPosts";
-import { authActionClient } from "@/lib/next-safe-action/init";
+import { authClient } from "@/lib/next-safe-action/init";
 import { z } from "zod";
 
-export const actionFetchPosts = authActionClient
+export const actionFetchPosts = authClient
   .schema(
     z.object({
       page: z.number(),
@@ -17,7 +17,7 @@ export const actionFetchPosts = authActionClient
       page,
       userId,
       date,
-      total
+      total,
     });
     return result;
   });

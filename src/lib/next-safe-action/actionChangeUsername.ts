@@ -4,7 +4,7 @@ import { flattenValidationErrors } from "next-safe-action";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { changeUsername } from "../drizzle/mutations/changeUsername";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 
 const usernameSchema = zfd.formData({
   newUsername: zfd.text(
@@ -16,7 +16,7 @@ const usernameSchema = zfd.formData({
   currentUsername: zfd.text(z.string()),
 });
 
-export const actionChangeUsername = authActionClient
+export const actionChangeUsername = authClient
   .schema(usernameSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,

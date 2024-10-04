@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { likeReply } from "../drizzle/mutations/likeReply";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 
 const schema = z.object({
   replyId: z.string(),
 });
 
-export const actionLikeReply = authActionClient
+export const actionLikeReply = authClient
   .schema(schema)
   .action(async ({ ctx: { userId }, parsedInput: { replyId } }) => {
     try {

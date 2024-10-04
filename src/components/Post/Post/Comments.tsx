@@ -1,17 +1,14 @@
 "use client";
 
 import Comment from "@/components/Comment";
-
-import { useParams } from "next/navigation";
-import { useState } from "react";
 import MySpinner from "@/components/Spinner";
-import { useSessionStore } from "@/stores/Session";
 import { actionFetchComments } from "@/lib/next-safe-action/actionFetchComments";
 import { useComments } from "@/stores/useComments";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 const Comments = () => {
   const { comments, hasMore, addComments, cDate } = useComments();
-  const { session } = useSessionStore();
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
 
@@ -20,7 +17,6 @@ const Comments = () => {
     try {
       const response = await actionFetchComments({
         postId: id as string,
-        authUserId: session?.user.id,
         date: new Date(cDate),
       });
       const newComments = response?.data;

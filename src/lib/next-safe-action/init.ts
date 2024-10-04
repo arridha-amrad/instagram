@@ -1,14 +1,12 @@
-import { auth } from "@/auth";
 import { CustomServerError } from "@/helpers/CustomServerError";
 import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-safe-action";
 import { redirect } from "next/navigation";
+import { getAuth } from "../next.auth";
 
-export const actionClient = createSafeActionClient();
-
-export const optionalAuthActionClient = createSafeActionClient({
+const client = createSafeActionClient({
   handleServerError(e) {
     if (e instanceof CustomServerError) {
       return e.message;
@@ -17,30 +15,37 @@ export const optionalAuthActionClient = createSafeActionClient({
   },
 });
 
-export const authActionClient = optionalAuthActionClient.use(
-  async ({ next, clientInput }) => {
-    const session = await auth();
+export const optionalAuthClient = client.use(async ({ next }) => {
+  const session = await getAuth();
+  return next({
+    ctx: {
+      userId: session?.user.id,
+    },
+  });
+});
 
-    if (!session) {
-      let pathname = "/";
-      if (clientInput instanceof FormData) {
-        pathname = clientInput.get("pathname") as string;
-      } else {
-        pathname = (clientInput as any).pathname;
-      }
-      redirect(`/login?cbUrl=${pathname}`);
+export const authClient = client.use(async ({ next, clientInput }) => {
+  const session = await getAuth();
+
+  if (!session) {
+    let pathname = "/";
+    if (clientInput instanceof FormData) {
+      pathname = clientInput.get("pathname") as string;
+    } else {
+      pathname = (clientInput as any).pathname;
     }
+    redirect(`/login?cbUrl=${pathname}`);
+  }
 
-    const userId = session.user.id;
+  const userId = session.user.id;
 
-    if (!userId) {
-      throw new CustomServerError("Session is not valid!");
-    }
+  if (!userId) {
+    throw new CustomServerError("Session is not valid!");
+  }
 
-    return next({
-      ctx: {
-        userId,
-      },
-    });
-  },
-);
+  return next({
+    ctx: {
+      userId,
+    },
+  });
+});

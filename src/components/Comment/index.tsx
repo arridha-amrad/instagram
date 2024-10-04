@@ -39,26 +39,22 @@ const CommentCard = ({ comment }: Props) => {
           </div>
         </div>
         <div className="flex gap-4 py-2 text-xs font-semibold text-skin-muted">
-          <div>
-            <p className="">{formatDistanceToNowStrict(comment.createdAt)}</p>
-          </div>
+          <p className="">{formatDistanceToNowStrict(comment.createdAt)}</p>
           {comment.sumLikes > 0 && (
             <p>
               {comment.sumLikes} {comment.sumLikes > 1 ? "Likes" : "Like"}
             </p>
           )}
-          <div>
-            <ButtonReply commentId={comment.id} username={comment.username} />
-          </div>
+          <ButtonReply commentId={comment.id} username={comment.username} />
         </div>
-        {/* {comment.sumReplies > 0 && (
+        {comment.sumReplies > 0 && (
           <ButtonFetchReplies
             isShowReplies={isShowReplies}
             setIsShowReplies={setIsShowReplies}
             comment={comment}
           />
         )}
-        {isShowReplies && <Replies replies={comment.replies} />} */}
+        {isShowReplies && <Replies replies={comment.replies} />}
       </div>
     </article>
   );

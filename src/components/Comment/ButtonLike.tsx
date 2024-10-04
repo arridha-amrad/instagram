@@ -1,7 +1,7 @@
 "use client";
 
 import { actionLikeComment } from "@/lib/next-safe-action/actionLikeComment";
-import usePostsStore from "@/stores/Posts";
+import { useComments } from "@/stores/useComments";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
 import { usePathname } from "next/navigation";
@@ -13,8 +13,8 @@ type Props = {
 };
 
 const ButtonLikeComment = ({ commentId, isLiked }: Props) => {
-  const { likeComment } = usePostsStore();
   const pathname = usePathname();
+  const { likeComment } = useComments();
   const like = async () => {
     likeComment(commentId);
     try {

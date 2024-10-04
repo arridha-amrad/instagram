@@ -28,10 +28,14 @@ export type Comment = TComment & { replies: TReply[] };
 interface ActionState {
   comments: Comment[];
   cIds: string[];
+  total: number;
   cDate: Date;
+  hasMore: boolean;
+  setTotal: (val: number) => void;
   setComments: (comments: TComment[]) => void;
   addComments: (comments: TComment[]) => void;
-  hasMore: boolean;
+  likeComment: (commentId: string) => void;
+  setReplies: (replies: TReply[]) => void;
 }
 
 export const useComments = create<ActionState>()(
@@ -39,8 +43,35 @@ export const useComments = create<ActionState>()(
     immer((set) => ({
       comments: [],
       cIds: [],
+      total: 0,
       hasMore: true,
       cDate: new Date(),
+      setReplies(replies) {
+        set((state) => {
+          const cId = replies[0].commentId;
+          const comment = state.comments.find((c) => c.id === cId);
+          if (!comment) return;
+          comment.replies = [...comment.replies, ...replies];
+        });
+      },
+      setTotal(val) {
+        set((state) => {
+          state.total = val;
+        });
+      },
+      likeComment(commentId) {
+        set((state) => {
+          const comment = state.comments.find((c) => c.id === commentId);
+          if (!comment) return;
+          if (comment.isLiked) {
+            comment.isLiked = false;
+            comment.sumLikes -= 1;
+          } else {
+            comment.isLiked = true;
+            comment.sumLikes += 1;
+          }
+        });
+      },
       setComments(comments) {
         set((state) => {
           state.hasMore = comments.length >= 10;

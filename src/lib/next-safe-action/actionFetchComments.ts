@@ -2,20 +2,19 @@
 
 import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
 import { z } from "zod";
-import { optionalAuthActionClient } from "./init";
+import { optionalAuthClient } from "./init";
 
 const schema = z.object({
   postId: z.string(),
-  authUserId: z.string().optional(),
   date: z.date(),
 });
 
-export const actionFetchComments = optionalAuthActionClient
+export const actionFetchComments = optionalAuthClient
   .schema(schema)
-  .action(async ({ parsedInput: { postId, authUserId, date } }) => {
+  .action(async ({ parsedInput: { postId, date }, ctx: { userId } }) => {
     const comments = await fetchComments({
       postId,
-      userId: authUserId,
+      userId,
       date,
     });
     return comments;

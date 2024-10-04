@@ -2,9 +2,9 @@
 
 import { removeAll } from "@/lib/drizzle/mutations/searchUser/removeAll";
 import { revalidateTag } from "next/cache";
-import { authActionClient } from "../init";
+import { authClient } from "../init";
 
-export const actionRemoveAllSearchHistories = authActionClient.action(
+export const actionRemoveAllSearchHistories = authClient.action(
   async ({ ctx: { userId } }) => {
     await removeAll(userId);
     revalidateTag("fetchSearchHistories");

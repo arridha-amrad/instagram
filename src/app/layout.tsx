@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-import AuthProvider from "@/components/Providers/AuthProvider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
@@ -13,7 +11,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Instagram",
+  title: "Nextgram",
   description: "Created by Arridha Amrad",
 };
 
@@ -22,23 +20,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
   return (
     <html suppressHydrationWarning lang="en">
       <body className={cn(inter.className, "bg-background text-skin-base")}>
         <NextTopLoader showSpinner={false} color="#2B38C9" />
-        <AuthProvider session={session}>
-          <SessionProvider>
-            <ThemeProvider enableColorScheme={false} attribute="class">
-              {children}
-            </ThemeProvider>
-          </SessionProvider>
-          <ToastContainer
-            pauseOnHover={false}
-            hideProgressBar={true}
-            position="bottom-right"
-          />
-        </AuthProvider>
+        <SessionProvider>
+          <ThemeProvider enableColorScheme={false} attribute="class">
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
+        <ToastContainer
+          pauseOnHover={false}
+          hideProgressBar={true}
+          position="bottom-right"
+        />
       </body>
     </html>
   );

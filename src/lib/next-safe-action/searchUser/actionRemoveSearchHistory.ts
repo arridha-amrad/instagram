@@ -1,11 +1,11 @@
 "use server";
 
 import { remove } from "@/lib/drizzle/mutations/searchUser/remove";
-import { authActionClient } from "../init";
+import { authClient } from "../init";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 
-export const actionRemoveSearchHistory = authActionClient
+export const actionRemoveSearchHistory = authClient
   .schema(
     z.object({
       searchId: z.string(),

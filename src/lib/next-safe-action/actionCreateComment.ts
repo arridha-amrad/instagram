@@ -1,11 +1,11 @@
 "use server";
 
 import { zfd } from "zod-form-data";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 import { z } from "zod";
 import { createComment } from "@/lib/drizzle/mutations/createComment";
 
-export const actionCreateComment = authActionClient
+export const actionCreateComment = authClient
   .schema(
     zfd.formData({
       message: zfd.text(z.string()),

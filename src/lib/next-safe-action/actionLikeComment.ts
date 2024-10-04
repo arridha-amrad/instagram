@@ -2,14 +2,14 @@
 
 import { z } from "zod";
 import { likeComment } from "../drizzle/mutations/likeComment";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 
 const schema = z.object({
   pathname: z.string(),
   commentId: z.string(),
 });
 
-export const actionLikeComment = authActionClient
+export const actionLikeComment = authClient
   .schema(schema)
   .action(async ({ ctx: { userId }, parsedInput: { commentId } }) => {
     try {

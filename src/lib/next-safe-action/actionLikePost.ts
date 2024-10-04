@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { likePost } from "../drizzle/mutations/likePost";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 
-export const actionLikePost = authActionClient
+export const actionLikePost = authClient
   .schema(
     z.object({
       postId: z.string(),

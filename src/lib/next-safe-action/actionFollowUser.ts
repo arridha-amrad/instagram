@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { follow } from "../drizzle/mutations/follow";
-import { authActionClient } from "./init";
+import { authClient } from "./init";
 import { revalidateTag } from "next/cache";
 
 const schema = z.object({
@@ -10,7 +10,7 @@ const schema = z.object({
   pathname: z.string().nullable(),
 });
 
-export const actionFollowUser = authActionClient
+export const actionFollowUser = authClient
   .schema(schema)
   .action(async ({ parsedInput: { followId }, ctx: { userId: authId } }) => {
     try {

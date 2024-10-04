@@ -1,12 +1,12 @@
-import { TInfiniteResult, TReply } from "@/lib/drizzle/queries/type";
+import { TReply } from "@/lib/drizzle/queries/fetchReplies";
 import Reply from "./Reply";
 
 type Props = {
-  replies: TInfiniteResult<TReply>;
+  replies: TReply[];
 };
 
 const Replies = ({ replies }: Props) => {
-  return replies.data.map((r) => <Reply key={r.id} reply={r} />);
+  return replies.map((r) => <Reply key={r.id} reply={r} />);
 };
 
 export default Replies;

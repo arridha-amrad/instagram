@@ -9,6 +9,9 @@ import ActionsWithCommentForm from "./_components/ActionsWithCommentForm";
 import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
 import CommentsProvider from "@/components/Providers/CommentsProvider";
 import Comments from "@/components/Post/Post/Comments";
+import db from "@/lib/drizzle/db";
+import { PostsTable, UsersTable } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 type Props = {
   params: {
@@ -17,12 +20,14 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const session = await auth();
-  const post = await fetchPost({
-    postId: params.id,
-    userId: session?.user.id,
-  });
-
+  const [post] = await db
+    .select({
+      username: UsersTable.username,
+      createdAt: PostsTable.createdAt,
+    })
+    .from(PostsTable)
+    .where(eq(PostsTable.id, params.id))
+    .innerJoin(UsersTable, eq(UsersTable.id, PostsTable.userId));
   return {
     title: `Instagram Post by ${post?.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
     description: `Instagram post created by ${post?.username}`,
@@ -54,19 +59,17 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <CommentsProvider data={comments}>
+    <CommentsProvider total={post.sumComments} data={comments}>
       <main className="px flex min-h-screen w-full max-w-xl flex-col px-4 pb-20">
         <section className="flex h-[80px] w-max items-center gap-3">
           <Avatar url={post.avatar} />
-          <div>
-            <Link
-              href={`/${post.username}`}
-              className="font-semibold hover:underline"
-            >
-              {post.username}
-            </Link>
-            <p className="text-sm text-skin-muted">{post.location}</p>
-          </div>
+          <Link
+            href={`/${post.username}`}
+            className="font-semibold hover:underline"
+          >
+            {post.username}
+          </Link>
+          <p className="text-sm text-skin-muted">{post.location}</p>
           <div className="aspect-square w-1 rounded-full bg-neutral-500" />
           <h2 className="text-sm text-skin-muted">
             {formatDistanceToNowStrict(post.createdAt)}

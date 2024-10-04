@@ -6,14 +6,16 @@ import { ReactNode, useEffect } from "react";
 
 type Props = {
   data: TComment[];
+  total: number;
   children: ReactNode;
 };
 
-export default function CommentsProvider({ children, data }: Props) {
-  const { setComments } = useComments();
+export default function CommentsProvider({ children, data, total }: Props) {
+  const { setComments, setTotal } = useComments();
 
   useEffect(() => {
     setComments(data);
+    setTotal(total);
   }, []);
 
   return children;

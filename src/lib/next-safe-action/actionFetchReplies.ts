@@ -2,22 +2,21 @@
 
 import { z } from "zod";
 import { fetchReplies } from "../drizzle/queries/fetchReplies";
-import { optionalAuthActionClient } from "./init";
+import { optionalAuthClient } from "./init";
 
-export const actionFetchReplies = optionalAuthActionClient
+export const actionFetchReplies = optionalAuthClient
   .schema(
     z.object({
       commentId: z.string(),
-      page: z.number(),
-      authUserId: z.string().optional(),
+      date: z.date(),
     }),
   )
-  .action(async ({ parsedInput: { commentId, page, authUserId } }) => {
+  .action(async ({ parsedInput: { commentId, date }, ctx: { userId } }) => {
     try {
       const data = await fetchReplies({
         commentId,
-        page,
-        userId: authUserId,
+        userId,
+        date,
       });
       return data;
     } catch (err) {
