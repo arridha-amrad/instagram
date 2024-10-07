@@ -11,11 +11,14 @@ const Picker = () => {
   const onChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
+      const urls: string[] = [];
+      const f: File[] = [];
       for (let i = 0; i < files.length; i++) {
-        setFiles((val) => [...val, files[i]]);
-        const url = URL.createObjectURL(files[i]);
-        setPreview((val) => [...val, url]);
+        f.push(files[i]);
+        urls.push(URL.createObjectURL(files[i]));
       }
+      setFiles(f);
+      setPreview(urls);
     }
   };
   return (

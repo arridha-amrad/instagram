@@ -9,7 +9,7 @@ type PostContentUrl = {
 };
 
 type Param = {
-  images: File[];
+  images: File[] | File;
   description?: string;
   location?: string;
   authUserId: string;
@@ -23,8 +23,17 @@ export const createPost = async ({
 }: Param) => {
   //
   const urls: PostContentUrl[] = [];
-  for (const image of images) {
-    const response = await upload(image);
+  if (images instanceof Array) {
+    for (const image of images) {
+      const response = await upload(image);
+      urls.push({
+        publicId: response.public_id,
+        type: response.resource_type === "image" ? "image" : "video",
+        url: response.secure_url,
+      });
+    }
+  } else {
+    const response = await upload(images);
     urls.push({
       publicId: response.public_id,
       type: response.resource_type === "image" ? "image" : "video",

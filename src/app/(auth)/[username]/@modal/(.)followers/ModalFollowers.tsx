@@ -1,15 +1,14 @@
 "use client";
 
-import UsersContainer from "@/components/UsersContainer";
-import { TFollow } from "@/lib/drizzle/queries/fetchUserFollowers";
 import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {
-  data: TFollow[];
+  children: ReactNode;
 };
 
-export default function ModalFollowers({ data }: Props) {
+export default function ModalFollowers({ children }: Props) {
   const router = useRouter();
   const closeModal = () => {
     router.back();
@@ -21,11 +20,7 @@ export default function ModalFollowers({ data }: Props) {
         onClick={closeModal}
         className="absolute inset-0 bg-background/50 backdrop-blur"
       />
-      <UsersContainer
-        title="Followers"
-        users={data}
-        closeCallback={closeModal}
-      />
+      {children}
     </div>,
     document.body,
   );

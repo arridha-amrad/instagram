@@ -1,5 +1,5 @@
-import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
+import { getAuth } from "@/lib/next.auth";
 import { ReactNode } from "react";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 };
 
 const Layout = async ({ children, modal }: Props) => {
-  const session = await auth();
+  const session = await getAuth();
   return (
     <main className="mx-auto flex w-full max-w-[1200px]">
       {session && (

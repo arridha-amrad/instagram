@@ -10,7 +10,11 @@ import { toast } from "react-toastify";
 import FeedPost from "./FeedPost";
 import { useFeedPosts } from "@/stores/useFeedPosts";
 
-export default function FeedPosts() {
+type Props = {
+  sessionUserId: string;
+};
+
+export default function FeedPosts({ sessionUserId }: Props) {
   const { page, posts, total, date, addPosts } = useFeedPosts();
 
   const [currPage, setCurrPage] = useState(page);
@@ -91,7 +95,7 @@ export default function FeedPosts() {
                   <Spinner />
                 </div>
               ) : (
-                <FeedPost post={post} />
+                <FeedPost sessionUserId={sessionUserId} post={post} />
               )}
             </div>
           </div>

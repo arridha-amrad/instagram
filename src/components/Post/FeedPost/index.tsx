@@ -4,7 +4,6 @@ import { FeedPost } from "@/stores/useFeedPosts";
 import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
-import { forwardRef, Ref } from "react";
 import ButtonLike from "./ButtonLike";
 import Carousel from "./Carousel";
 import Comments from "./Comments";
@@ -13,12 +12,13 @@ import TotalLikes from "./Likes";
 
 type Props = {
   post: FeedPost;
+  sessionUserId: string;
 };
 
-const Post = ({ post }: Props, ref: Ref<HTMLElement>) => {
+const Post = ({ post, sessionUserId }: Props) => {
   const urls = post.urls.map((u) => u.url);
   return (
-    <article ref={ref} className={cn("w-full space-y-2 pb-14")}>
+    <article className={cn("w-full space-y-2 pb-14")}>
       <section className="flex w-full items-center gap-3 text-sm">
         <Avatar className="w-9" url={post.avatar} />
         <div>
@@ -43,7 +43,11 @@ const Post = ({ post }: Props, ref: Ref<HTMLElement>) => {
         </Link>
       </div>
       {post.sumLikes > 0 && (
-        <TotalLikes postId={post.id} total={post.sumLikes} />
+        <TotalLikes
+          sessionUserId={sessionUserId}
+          postId={post.id}
+          total={post.sumLikes}
+        />
       )}
       {post.description && (
         <section id="post_description" className="line-clamp-2 text-sm">
@@ -65,4 +69,4 @@ const Post = ({ post }: Props, ref: Ref<HTMLElement>) => {
   );
 };
 
-export default forwardRef(Post);
+export default Post;

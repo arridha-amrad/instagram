@@ -1,17 +1,17 @@
 "use client";
 
+import Modal from "@/components/core/ModalWrapper";
+import { cn } from "@/lib/utils";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useCreatePost } from "./CreatePostContext";
 import useMeasure from "react-use-measure";
-import Preview from "./Preview";
-import Picker from "./Picker";
-import { cn } from "@/lib/utils";
+import { className } from "../../styles";
+import { useCreatePost } from "./CreatePostContext";
 import FormCreatePost from "./FormCreatePost";
 import ModalTitle from "./ModalTitle";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import Modal from "@/components/core/ModalWrapper";
-import { className } from "../../styles";
+import Picker from "./Picker";
+import Preview from "./Preview";
 
 const NewPostModal = () => {
   const [open, setOpen] = useState(false);

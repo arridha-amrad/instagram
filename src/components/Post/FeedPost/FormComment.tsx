@@ -6,7 +6,6 @@ import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { useSessionStore } from "@/stores/Session";
 import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
 import { useFeedPosts } from "@/stores/useFeedPosts";
 
@@ -18,7 +17,6 @@ export default function CommentForm({ postId }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { theme } = useTheme();
-  const { session } = useSessionStore();
 
   const { addComment } = useFeedPosts();
 
@@ -35,7 +33,7 @@ export default function CommentForm({ postId }: Props) {
           id: data.id,
           isLiked: false,
           postId: data.postId,
-          username: session?.user.username ?? "",
+          username: data.username,
         });
       }
       formRef.current?.reset();

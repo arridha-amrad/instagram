@@ -3,7 +3,6 @@
 import Wrapper from "@/components/core/ModalWrapper";
 import MySpinner from "@/components/Spinner";
 import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
-import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -13,12 +12,12 @@ import { TUserIsFollow } from "@/lib/drizzle/queries/type";
 type Props = {
   postId: string;
   total: number;
+  sessionUserId: string;
 };
 
-const TotalLikes = ({ postId, total }: Props) => {
+const TotalLikes = ({ postId, total, sessionUserId }: Props) => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<TUserIsFollow[]>([]);
-  const { session } = useSessionStore();
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = useTheme();
   const openModal = async () => {
@@ -27,7 +26,6 @@ const TotalLikes = ({ postId, total }: Props) => {
     try {
       const response = await actionFetchLikedPostUsers({
         postId,
-        authUserId: session?.user.id,
       });
       if (response?.data) {
         setUsers(response.data.data);
@@ -71,7 +69,7 @@ const TotalLikes = ({ postId, total }: Props) => {
               ) : (
                 users.map((user) => (
                   <UserWithFollowButtonCard
-                    isFollow={user.isFollow}
+                    sessionUserId={sessionUserId}
                     key={user.id}
                     user={user}
                   />

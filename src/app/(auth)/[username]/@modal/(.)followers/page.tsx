@@ -1,6 +1,7 @@
-import { auth } from "@/auth";
 import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
 import ModalFollowers from "./ModalFollowers";
+import { getAuth } from "@/lib/next.auth";
+import UsersContainer from "@/components/UsersContainer";
 
 type Props = {
   params: {
@@ -9,12 +10,20 @@ type Props = {
 };
 
 const Page = async ({ params: { username } }: Props) => {
-  const session = await auth();
+  const session = await getAuth();
   const data = await fetchUserFollowers({
     authUserId: session?.user.id,
     username,
   });
-  return <ModalFollowers data={data} />;
+  return (
+    <ModalFollowers>
+      <UsersContainer
+        sessionUserId={session?.user.id ?? ""}
+        title="Followers"
+        users={data}
+      />
+    </ModalFollowers>
+  );
 };
 
 export default Page;

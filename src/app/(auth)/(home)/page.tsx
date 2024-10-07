@@ -13,7 +13,7 @@ export default async function Page() {
   const posts = await fetchFeedPosts({ page: 1, userId });
   return (
     <FeedPostProvider data={posts}>
-      <FeedPosts />
+      <FeedPosts sessionUserId={session.user.id ?? ""} />
     </FeedPostProvider>
   );
 }

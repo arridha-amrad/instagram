@@ -3,7 +3,6 @@ import { TFollow } from "@/lib/drizzle/queries/fetchUserFollowers";
 
 import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/Session";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,13 +11,14 @@ import { toast } from "react-toastify";
 
 type Props = {
   user: TFollow;
+  sessionUserId: string;
 };
 
 const UserWithFollowButtonCard = ({
   user: { avatar, id, isFollow: isF, name, username },
+  sessionUserId,
 }: Props) => {
   const [isFollow, setIsFollow] = useState(isF);
-  const { session } = useSessionStore();
   const pathname = usePathname();
   const { theme } = useTheme();
 
@@ -47,7 +47,7 @@ const UserWithFollowButtonCard = ({
           <p className="line-clamp-1 text-skin-muted">{name}</p>
         </div>
       </div>
-      {session?.user.id !== id && (
+      {sessionUserId !== id && (
         <button
           onClick={follow}
           className={cn(

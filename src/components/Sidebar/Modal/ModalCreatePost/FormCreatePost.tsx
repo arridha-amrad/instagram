@@ -19,7 +19,7 @@ const FormCreatePost = () => {
       toast.error("Something went wrong", { theme });
     },
     onSuccess: () => {
-      toast.success("New post created successfully");
+      toast.success("New post created successfully", { theme });
       setSubmitSuccessful(true);
     },
   });
