@@ -71,7 +71,9 @@ const Comment = ({ comment, showForm }: Props) => {
             comment={comment}
           />
         )}
-        {isShowReplies && <Replies showForm replies={comment.replies} />}
+        {isShowReplies && (
+          <Replies showForm={showForm} replies={comment.replies} />
+        )}
       </div>
     </article>
   );

@@ -4,13 +4,14 @@ import { useActionCreateReply } from "@/hooks/useActionCreateReply";
 import { TPost } from "@/lib/drizzle/queries/fetchPost";
 import { cn } from "@/lib/utils";
 import { useReplySetter } from "@/stores/ReplySetter";
-import { useEffect, useRef, useState } from "react";
+import mergeRefs from "merge-refs";
+import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 
 type Props = {
   post: TPost;
 };
 
-const CommentForm = ({ post }: Props) => {
+const CommentForm = ({ post }: Props, ref: Ref<HTMLInputElement>) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { reply, setReply } = useReplySetter();
@@ -63,7 +64,7 @@ const CommentForm = ({ post }: Props) => {
         <div className="flex-1 px-2">
           <fieldset disabled={isExeReply || isExeComment}>
             <input
-              ref={inputRef}
+              ref={mergeRefs(ref, inputRef)}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               name="message"
@@ -90,4 +91,4 @@ const CommentForm = ({ post }: Props) => {
   );
 };
 
-export default CommentForm;
+export default forwardRef(CommentForm);

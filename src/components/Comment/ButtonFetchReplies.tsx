@@ -52,7 +52,8 @@ const ButtonFetchReplies = ({
 
   if (hasMore && comment.sumReplies - comment.replies.length > 0) {
     return (
-      <div className="relative py-3">
+      <div className="relative flex items-center gap-4 py-3">
+        <div className="h-0.5 w-[30px] bg-gray-500" />
         <button
           onClick={fetchReplies}
           disabled={isLoading}

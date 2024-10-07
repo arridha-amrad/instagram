@@ -6,7 +6,7 @@ import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 import Avatar from "@/components/Avatar";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import ButtonComment from "./ButtonComment";
 import { TPost } from "@/lib/drizzle/queries/fetchPost";
 
@@ -27,6 +27,7 @@ const PostExpanded = ({ post, children }: Props) => {
       setIsLiked(true);
     }
   };
+  const commentInputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="flex overflow-hidden rounded-md border-[3px] border-skin">
       <section
@@ -89,7 +90,9 @@ const PostExpanded = ({ post, children }: Props) => {
                 isLiked={isLiked}
                 postId={post.id}
               />
-              {/* <ButtonComment /> */}
+              <ButtonComment
+                focusToCommentInput={() => commentInputRef.current?.focus()}
+              />
             </div>
             <div className="px-1 pt-2">
               <h1 className="font-semibold">
@@ -105,7 +108,7 @@ const PostExpanded = ({ post, children }: Props) => {
           </div>
         </section>
         <section id="comment_form">
-          <CommentForm post={post} />
+          <CommentForm ref={commentInputRef} post={post} />
         </section>
       </section>
     </div>
