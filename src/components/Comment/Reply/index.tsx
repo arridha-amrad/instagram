@@ -6,13 +6,17 @@ import Link from "next/link";
 import ButtonLikeReply from "./ButtonLike";
 import ButtonReply from "./ButtonReply";
 import { TReply } from "@/lib/drizzle/queries/fetchReplies";
+import { useState } from "react";
+import FormReply from "../FormReply";
 
 type Props = {
   reply: TReply;
+  showForm?: boolean;
 };
 
-const Reply = ({ reply }: Props) => {
+const Reply = ({ reply, showForm }: Props) => {
   const { avatar, username, sumLikes, createdAt, message, commentId } = reply;
+  const [isShow, setIsShow] = useState(false);
 
   return (
     <div className="flex w-full items-start gap-2 py-2 text-sm">
@@ -45,8 +49,19 @@ const Reply = ({ reply }: Props) => {
               {sumLikes} {sumLikes > 1 ? "likes" : "like"}
             </p>
           )}
-          <ButtonReply commentId={commentId} username={username} />
+          {showForm ? (
+            <button onClick={() => setIsShow((val) => !val)}>Reply</button>
+          ) : (
+            <ButtonReply commentId={commentId} username={username} />
+          )}
         </div>
+        {isShow && (
+          <FormReply
+            commentId={commentId}
+            setIsShow={setIsShow}
+            username={username}
+          />
+        )}
       </div>
       <div className="pt-1">
         <ButtonLikeReply

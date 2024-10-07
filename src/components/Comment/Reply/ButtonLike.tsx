@@ -1,9 +1,9 @@
 import { actionLikeReply } from "@/lib/next-safe-action/actionLikeReply";
-import usePostsStore from "@/stores/Posts";
-import { useSessionStore } from "@/stores/Session";
+import { useComments } from "@/stores/useComments";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -13,14 +13,14 @@ type Props = {
 };
 
 const ButtonLikeReply = ({ commentId, isLiked, replyId }: Props) => {
-  const { session } = useSessionStore();
-  const { likeReply } = usePostsStore();
+  const { likeReply } = useComments();
   const { theme } = useTheme();
+  const pathname = usePathname();
 
   const like = async () => {
     likeReply(commentId, replyId);
     try {
-      await actionLikeReply({ replyId });
+      await actionLikeReply({ replyId, pathname });
     } catch (err) {
       toast.error("Something went wrong", { theme });
     }
@@ -29,7 +29,6 @@ const ButtonLikeReply = ({ commentId, isLiked, replyId }: Props) => {
   return (
     <button
       onClick={like}
-      disabled={!session?.user.id}
       type="submit"
       className="flex aspect-square w-5 items-start justify-end"
     >

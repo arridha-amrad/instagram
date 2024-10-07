@@ -6,6 +6,7 @@ import { authClient } from "./init";
 
 const schema = z.object({
   replyId: z.string(),
+  pathname: z.string(),
 });
 
 export const actionLikeReply = authClient

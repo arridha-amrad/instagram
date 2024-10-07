@@ -8,15 +8,15 @@ export const actionFetchReplies = optionalAuthClient
   .schema(
     z.object({
       commentId: z.string(),
-      date: z.date(),
+      page: z.number(),
     }),
   )
-  .action(async ({ parsedInput: { commentId, date }, ctx: { userId } }) => {
+  .action(async ({ parsedInput: { commentId, page }, ctx: { userId } }) => {
     try {
       const data = await fetchReplies({
         commentId,
         userId,
-        date,
+        page,
       });
       return data;
     } catch (err) {

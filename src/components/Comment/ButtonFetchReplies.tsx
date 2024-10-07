@@ -22,23 +22,23 @@ const ButtonFetchReplies = ({
   const { theme } = useTheme();
   const { setReplies } = useComments();
   const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
 
   const fetchReplies = async () => {
     setIsLoading(true);
-    const date =
-      comment.replies.length === 0
-        ? new Date()
-        : comment.replies[comment.replies.length - 1].createdAt;
     try {
       const result = await actionFetchReplies({
         commentId: comment.id,
-        date,
+        page,
       });
       const newReplies = result?.data;
+      console.log({ newReplies });
+
       if (newReplies) {
         if (newReplies.length < 5) {
           setHasMore(false);
         }
+        setPage((val) => val + 1);
         setReplies(newReplies);
       } else {
         setHasMore(false);
@@ -59,7 +59,8 @@ const ButtonFetchReplies = ({
           type="submit"
           className="text-xs font-semibold text-skin-muted"
         >
-          View {comment.sumReplies - comment.replies.length} replies
+          View {comment.sumReplies - comment.replies.length}{" "}
+          {page > 1 && "more"} replies
         </button>
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80">

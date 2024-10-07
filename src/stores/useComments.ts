@@ -19,6 +19,18 @@ const uniqueComments = (currSeenIds: Set<string>, newComments: Comment[]) => {
   };
 };
 
+const uniqueReplies = (replies: TReply[]) => {
+  const seenIds = new Set<string>();
+  const result = [] as TReply[];
+  for (const reply of replies) {
+    if (!seenIds.has(reply.id)) {
+      result.push(reply);
+      seenIds.add(reply.id);
+    }
+  }
+  return result;
+};
+
 const transform = (comments: TComment[]): Comment[] => {
   return comments.map((c) => ({ ...c, replies: [] as TReply[] }));
 };
@@ -38,6 +50,7 @@ interface ActionState {
   setReplies: (replies: TReply[]) => void;
   addReply: (reply: TReply) => void;
   addComment: (comment: TComment) => void;
+  likeReply: (commentId: string, replyId: string) => void;
 }
 
 export const useComments = create<ActionState>()(
@@ -48,6 +61,21 @@ export const useComments = create<ActionState>()(
       total: 0,
       hasMore: true,
       cDate: new Date(),
+      likeReply(commentId, replyId) {
+        set((state) => {
+          const c = state.comments.find((co) => co.id === commentId);
+          if (!c) return;
+          const r = c.replies.find((re) => re.id === replyId);
+          if (!r) return;
+          if (r.isLiked) {
+            r.isLiked = false;
+            r.sumLikes -= 1;
+          } else {
+            r.isLiked = true;
+            r.sumLikes += 1;
+          }
+        });
+      },
       addComment(comment) {
         const c: Comment = { ...comment, replies: [] };
         set((state) => {
@@ -69,7 +97,7 @@ export const useComments = create<ActionState>()(
           const cId = replies[0].commentId;
           const comment = state.comments.find((c) => c.id === cId);
           if (!comment) return;
-          comment.replies = [...comment.replies, ...replies];
+          comment.replies = uniqueReplies([...comment.replies, ...replies]);
         });
       },
       setTotal(val) {

@@ -1,5 +1,5 @@
 import db from "@/lib/drizzle/db";
-import { and, asc, eq, lt, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { RepliesTable, ReplyLikesTable, UsersTable } from "../schema";
 import crypto from "crypto";
 
@@ -8,10 +8,10 @@ const LIMIT = 5;
 type Props = {
   commentId: string;
   userId?: string;
-  date?: Date;
+  page: number;
 };
 
-const query = async (commentId: string, date: Date, userId?: string) => {
+const query = async (commentId: string, page: number, userId?: string) => {
   return db
     .select({
       id: RepliesTable.id,
@@ -37,16 +37,12 @@ const query = async (commentId: string, date: Date, userId?: string) => {
       `,
     })
     .from(RepliesTable)
-    .where(
-      and(
-        eq(RepliesTable.commentId, commentId),
-        lt(RepliesTable.createdAt, date),
-      ),
-    )
+    .where(eq(RepliesTable.commentId, commentId))
     .leftJoin(ReplyLikesTable, eq(ReplyLikesTable.replyId, RepliesTable.id))
     .innerJoin(UsersTable, eq(UsersTable.id, RepliesTable.userId))
     .groupBy(RepliesTable.id, UsersTable.username, UsersTable.avatar)
     .orderBy(asc(RepliesTable.createdAt))
+    .offset((page - 1) * LIMIT)
     .limit(LIMIT);
 };
 
@@ -55,11 +51,11 @@ export type TReply = Awaited<ReturnType<typeof query>>[number];
 export const fetchReplies = async ({
   commentId,
   userId,
-  date = new Date(),
+  page,
 }: Props): Promise<TReply[]> => {
   if (!userId) {
     userId = crypto.randomUUID();
   }
-  const data = await query(commentId, date, userId);
+  const data = await query(commentId, page, userId);
   return data;
 };

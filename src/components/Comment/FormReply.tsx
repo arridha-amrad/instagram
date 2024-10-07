@@ -23,6 +23,7 @@ const FormReply = ({ setIsShow, commentId, username }: Props) => {
     <form action={execute} className="px-1">
       <fieldset disabled={isExecuting}>
         <input
+          autoFocus
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           name="message"
