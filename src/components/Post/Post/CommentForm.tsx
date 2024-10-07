@@ -1,7 +1,7 @@
 import MySpinner from "@/components/Spinner";
 import { useActionCreateComment } from "@/hooks/useActionCreateComment";
 import { useActionCreateReply } from "@/hooks/useActionCreateReply";
-import { TPost } from "@/lib/drizzle/queries/type";
+import { TPost } from "@/lib/drizzle/queries/fetchPost";
 import { cn } from "@/lib/utils";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { useEffect, useRef, useState } from "react";

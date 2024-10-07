@@ -1,14 +1,14 @@
 "use client";
 
-import { TPost } from "@/lib/drizzle/queries/type";
 import { formatDistanceToNowStrict } from "date-fns";
 import ButtonLikePost from "./ButtonLike";
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 import Avatar from "@/components/Avatar";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import ButtonComment from "./ButtonComment";
+import { TPost } from "@/lib/drizzle/queries/fetchPost";
 
 type Props = {
   post: TPost;
@@ -16,6 +16,17 @@ type Props = {
 };
 
 const PostExpanded = ({ post, children }: Props) => {
+  const [isLiked, setIsLiked] = useState(post.isLiked);
+  const [totalLikes, setTotalLikes] = useState(post.sumLikes);
+  const likesCb = () => {
+    if (isLiked) {
+      setTotalLikes((val) => (val -= 1));
+      setIsLiked(false);
+    } else {
+      setTotalLikes((val) => (val += 1));
+      setIsLiked(true);
+    }
+  };
   return (
     <div className="flex overflow-hidden rounded-md border-[3px] border-skin">
       <section
@@ -30,13 +41,13 @@ const PostExpanded = ({ post, children }: Props) => {
       >
         <section id="post_owner" className="px-4 py-2">
           <div className="flex items-center gap-3">
-            <Avatar url={post.owner.avatar} />
+            <Avatar url={post.avatar} />
             <div>
               <Link
-                href={`/${post.owner.username}`}
+                href={`/${post.username}`}
                 className="text-sm font-semibold"
               >
-                {post.owner.username}
+                {post.username}
               </Link>
             </div>
           </div>
@@ -48,14 +59,14 @@ const PostExpanded = ({ post, children }: Props) => {
           {post.description && (
             <section id="post_description" className="flex gap-2">
               <div>
-                <Avatar url={post.owner.avatar} />
+                <Avatar url={post.avatar} />
               </div>
               <div className="pt-0.5">
                 <Link
-                  href={`/${post.owner.username}`}
+                  href={`/${post.username}`}
                   className="inline pr-2 text-sm font-semibold"
                 >
-                  {post.owner.username}
+                  {post.username}
                 </Link>
                 <p className="inline text-sm text-skin-muted">
                   {post.description}
@@ -73,14 +84,18 @@ const PostExpanded = ({ post, children }: Props) => {
         <section id="post_actions_and_info">
           <div className="w-full px-4 py-2">
             <div className="flex items-center gap-3 pt-2">
-              <ButtonLikePost isLiked={post.isLiked} postId={post.id} />
-              <ButtonComment />
+              <ButtonLikePost
+                callback={likesCb}
+                isLiked={isLiked}
+                postId={post.id}
+              />
+              {/* <ButtonComment /> */}
             </div>
             <div className="px-1 pt-2">
               <h1 className="font-semibold">
-                {post.sumLikes}
+                {totalLikes}
                 <span className="pl-1 text-sm">
-                  {post.sumLikes > 1 ? "likes" : "like"}
+                  {totalLikes > 1 ? "likes" : "like"}
                 </span>
               </h1>
               <p className="text-xs text-skin-muted">

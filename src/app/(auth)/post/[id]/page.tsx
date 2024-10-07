@@ -14,6 +14,7 @@ import Link from "next/link";
 import ButtonLikePost from "./components/ButtonLike";
 import FormComment from "./components/FormComment";
 import SumComment from "./components/SumComments";
+import { fetchPostMetadata } from "@/lib/drizzle/queries/fetchPostMetadata";
 
 type Props = {
   params: {
@@ -22,14 +23,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const [post] = await db
-    .select({
-      username: UsersTable.username,
-      createdAt: PostsTable.createdAt,
-    })
-    .from(PostsTable)
-    .where(eq(PostsTable.id, params.id))
-    .innerJoin(UsersTable, eq(UsersTable.id, PostsTable.userId));
+  const post = await fetchPostMetadata(params.id);
   return {
     title: `Instagram Post by ${post?.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
     description: `Instagram post created by ${post?.username}`,

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 type Props = {
   postId: string;
-  total: number;
+  total?: number;
   isLiked: boolean;
   callback: VoidFunction;
 };
@@ -30,7 +30,9 @@ export default function ButtonLikePost({
       ) : (
         <HeartIcon className="aspect-square w-7" />
       )}
-      {total > 0 && <span className="text-2xl font-medium">{total} likes</span>}
+      {total && total > 0 && (
+        <span className="text-2xl font-medium">{total} likes</span>
+      )}
     </button>
   );
 }

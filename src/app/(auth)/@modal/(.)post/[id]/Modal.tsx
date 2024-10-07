@@ -2,16 +2,20 @@
 
 import CarouselOne from "@/components/Post/Carousel/CarouselOne";
 import Post from "@/components/Post/Post";
+import { TPost } from "@/lib/drizzle/queries/fetchPost";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-const Modal = () => {
+type Props = {
+  post: TPost;
+};
+
+const Modal = ({ post }: Props) => {
   const router = useRouter();
   const { setReply } = useReplySetter();
-  const { post } = usePostsStore();
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
@@ -49,13 +53,9 @@ const Modal = () => {
           className="absolute inset-0 bg-background/50 backdrop-blur"
         />
         <div className="relative">
-          {!post ? (
-            <p>Post not found</p>
-          ) : (
-            <Post post={post}>
-              <CarouselOne urls={post.urls.map((u) => u.url)} />
-            </Post>
-          )}
+          <Post post={post}>
+            <CarouselOne urls={post.urls.map((u) => u.url)} />
+          </Post>
         </div>
       </section>,
       document.body,
