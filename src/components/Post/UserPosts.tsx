@@ -3,7 +3,7 @@
 import Spinner from "@/components/Spinner";
 import { createUserPostsMatrix } from "@/helpers/createPostMatrix";
 import { filterUniqueUserPosts } from "@/helpers/filterUniquePosts";
-import { TUserPost } from "@/lib/drizzle/queries/fetchUserPosts";
+import { TUserPost } from "@/lib/drizzle/queries/posts/fetchUserPosts";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import { actionFetchUserPosts } from "@/lib/next-safe-action/actionFetchUserPosts";
 import { useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";

@@ -1,4 +1,4 @@
-import { fetchUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
+import { fetchUserPosts } from "@/lib/drizzle/queries/posts/fetchUserPosts";
 import UserPosts from "@/components/Post/UserPosts";
 
 type Params = {

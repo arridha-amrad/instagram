@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import Avatar from "@/components/Avatar";
+import { getMe } from "@/lib/drizzle/queries/auth/me";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -21,9 +22,7 @@ const Layout = async ({ children, suggestedUsers }: Props) => {
     redirect("/login");
   }
 
-  const {
-    user: { username, name, image },
-  } = session;
+  const { image, name, username } = await getMe(session.user.id);
 
   return (
     <section className="flex w-full">

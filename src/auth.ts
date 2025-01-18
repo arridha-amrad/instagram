@@ -1,22 +1,10 @@
 import NextAuth, { User } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import { JWT } from "next-auth/jwt";
-import Credentials from "next-auth/providers/credentials";
-import { eq } from "drizzle-orm";
-import { UsersTable } from "./lib/drizzle/schema";
-import db from "./lib/drizzle/db";
+import UserService from "./lib/drizzle/services/UserService";
 
-const createToken = (token: JWT, user: User) => {
-  const { id, image, name, username } = user;
-  return {
-    ...token,
-    name,
-    picture: image,
-    sub: id,
-    username,
-  };
-};
+type Provider = "credentials" | "facebook" | "github" | "google";
 
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   trustHost: true,
@@ -41,10 +29,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       authorize: async (credentials: any) => {
         const user: User = {
           id: credentials.id,
-          name: credentials.name,
-          email: credentials.email,
-          image: credentials.image,
-          username: credentials.username,
         };
         return user;
       },
@@ -55,67 +39,44 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       if (account?.type === "credentials") {
         return true;
       }
-      const { email: em, name, image } = user;
-      if (em && name && image) {
-        await db
-          .insert(UsersTable)
-          .values({
-            email: em,
-            username: `${em.split("@")[0]}`,
-            avatar: image,
+      const { email, name, image } = user;
+      if (email && name && image) {
+        const userService = new UserService();
+
+        let provider = "credentials" as Provider;
+        switch (account?.provider) {
+          case "facebook":
+            provider = "facebook";
+            break;
+          case "github":
+            provider = "github";
+            break;
+          default:
+            provider = "google";
+        }
+        const userWithSameEmail = await userService.findUserByEmail(email);
+        if (userWithSameEmail.length === 0) {
+          await userService.createUser({
+            email,
             name,
-            password: "",
-            provider:
-              account?.provider === "google"
-                ? "google"
-                : account?.provider === "github"
-                  ? "github"
-                  : "facebook",
-          })
-          .onConflictDoNothing();
+            provider: provider,
+            username: `${email.split("@")[0]}`,
+            avatar: image,
+          });
+        }
         return true;
       } else {
         return "/signin?e=invalid credentials";
       }
     },
-    async jwt({ token, user, trigger, session, account }) {
-      if (user && user.email) {
-        if (account && account.provider !== "credentials") {
-          const [dbUser] = await db
-            .select({
-              id: UsersTable.id,
-              name: UsersTable.name,
-              email: UsersTable.email,
-              image: UsersTable.avatar,
-              username: UsersTable.username,
-            })
-            .from(UsersTable)
-            .where(eq(UsersTable.email, user.email));
-          token = createToken(token, { ...dbUser, id: dbUser.id.toString() });
-        } else {
-          // construct token and avoid duplicate data
-          // if user login with credentials provider
-          token = createToken(token, user);
-        }
-      }
-
-      if (trigger === "update" && session) {
-        console.log("update session : ", session);
-
-        // see actions/updateUser returning value
-        token = createToken(token, session);
-        return token;
+    async jwt({ token, user }) {
+      if (user && user.id) {
+        token.userId = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      // @ts-ignore
-      session.user = {
-        id: token.sub as string,
-        name: token.name as string,
-        username: token.username as string,
-        image: token.picture as string,
-      } as User;
+      session.user.id = token.userId as string;
       return session;
     },
   },

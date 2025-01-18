@@ -1,6 +1,6 @@
 "use server";
 
-import { fetchUserPosts } from "@/lib/drizzle/queries/fetchUserPosts";
+import { fetchUserPosts } from "@/lib/drizzle/queries/posts/fetchUserPosts";
 import { optionalAuthClient } from "@/lib/next-safe-action/init";
 import { z } from "zod";
 

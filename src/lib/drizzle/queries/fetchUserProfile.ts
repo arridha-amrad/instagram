@@ -1,4 +1,4 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import {
   FollowingsTable,
   PostsTable,

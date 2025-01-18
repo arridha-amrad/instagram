@@ -1,4 +1,4 @@
-import FormRegister from "@/components/Forms/FormRegisterUser";
+import FormRegister from "@/app/(noAuth)/register/FormRegister";
 import FacebookButton from "@/components/SocialButtons/FacebookButton";
 import GithubButton from "@/components/SocialButtons/GithubButton";
 import GoogleButton from "@/components/SocialButtons/GoogleButton";

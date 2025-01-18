@@ -1,13 +1,10 @@
+import FormLogin from "@/app/(noAuth)/login/FormLogin";
 import FacebookButton from "@/components/SocialButtons/FacebookButton";
 import GithubButton from "@/components/SocialButtons/GithubButton";
 import GoogleButton from "@/components/SocialButtons/GoogleButton";
 import SvgInstagram from "@/components/svg/SvgInstagram";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
-import { auth } from "@/auth";
-import { RedirectType, redirect } from "next/navigation";
-import FormLogin from "@/components/Forms/FormLogin";
 
 export const metadata: Metadata = {
   title: "Instagram | Login",
@@ -15,10 +12,6 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const session = await auth();
-  if (session) {
-    redirect("/", RedirectType.replace);
-  }
   return (
     <section className="flex">
       <div className="relative hidden w-full max-w-sm lg:block">
@@ -39,9 +32,7 @@ const Page = async () => {
           </h1>
         </section>
         <section className="w-full max-w-sm">
-          <Suspense fallback={"loading..."}>
-            <FormLogin />
-          </Suspense>
+          <FormLogin />
         </section>
         <section className="w-full max-w-sm py-6">
           <span className="relative flex justify-center">

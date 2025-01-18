@@ -6,7 +6,7 @@ import {
   PostLikesTable,
   PostsTable,
   RepliesTable,
-} from "../schema";
+} from "../../schema";
 
 type Args = {
   username: string;

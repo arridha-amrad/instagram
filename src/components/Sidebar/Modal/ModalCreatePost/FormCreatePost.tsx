@@ -1,25 +1,24 @@
 "use client";
 
 import Button from "@/components/core/Button";
-import { actionCreatePost } from "@/lib/next-safe-action/actionCreatePost";
-import { cn } from "@/lib/utils";
+import { cn, showToast } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import { toast } from "react-toastify";
 import { useCreatePost } from "./CreatePostContext";
+import { createPost } from "./action";
 
 const FormCreatePost = () => {
   const { step, files, setSubmitSuccessful } = useCreatePost();
-  const { theme } = useTheme();
   const pathname = usePathname();
 
-  const { isExecuting, execute } = useAction(actionCreatePost, {
+  const { isExecuting, execute } = useAction(createPost, {
     onError: () => {
-      toast.error("Something went wrong", { theme });
+      showToast("Something went wrong", "error");
     },
-    onSuccess: () => {
-      toast.success("New post created successfully", { theme });
+    onSuccess: ({ data }) => {
+      if (data) {
+        showToast(data, "success");
+      }
       setSubmitSuccessful(true);
     },
   });

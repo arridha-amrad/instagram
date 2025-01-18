@@ -6,7 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
+import { actionCreateComment } from "@/lib/actions/comment";
 import { useFeedPosts } from "@/stores/useFeedPosts";
 
 type Props = {

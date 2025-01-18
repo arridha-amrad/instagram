@@ -3,79 +3,85 @@
 import Button from "@/components/core/Button";
 import CheckboxWithLabel from "@/components/core/CheckboxWithLabel";
 import TextInput from "@/components/core/TextInput";
-import { actionRegister } from "@/lib/next-safe-action/actionRegisterUser";
-import { cn } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
+import { signUp } from "./action";
 
 const FormRegister = () => {
   const [isShow, setShow] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState({
-    general: "",
+
+  const [state, setState] = useState({
     name: "",
     email: "",
-    password: "",
     username: "",
+    password: "",
   });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  const { execute, isExecuting } = useAction(actionRegister, {
+  const { execute, isExecuting, result } = useAction(signUp, {
     onSuccess: () => {
       formRef.current?.reset();
       setMessage("Registration is successful");
-    },
-    onError: ({ error: { serverError, validationErrors } }) => {
-      if (serverError) {
-        setError({
-          ...error,
-          general: serverError,
-        });
-      }
-      if (validationErrors) {
-        const { email, name, password, username } = validationErrors;
-        setError({
-          ...error,
-          email: email ? email[0] : "",
-          name: name ? name[0] : "",
-          password: password ? password[0] : "",
-          username: username ? username[0] : "",
-        });
-      }
+      setState({
+        email: "",
+        name: "",
+        password: "",
+        username: "",
+      });
     },
   });
+
+  const nameError = result.validationErrors?.name?._errors;
+  const usernameError = result.validationErrors?.username?._errors;
+  const emailError = result.validationErrors?.email?._errors;
+  const passwordError = result.validationErrors?.password?._errors;
+  const actionError = result.serverError;
 
   return (
     <form ref={formRef} className="space-y-3" action={execute}>
       <section className="text-center text-sm">
-        <p className={cn(message && "text-green-500", error && "text-red-500")}>
-          {error.general}
-          {message}
-        </p>
+        {actionError && <p className="text-red-500">{actionError}</p>}
+        {message && <p className="text-green-500">{message}</p>}
       </section>
       <fieldset className="space-y-3" disabled={isExecuting}>
         <TextInput
-          errorMessage={error.name}
+          onChange={handleChange}
+          value={state.name}
+          errorMessage={nameError && nameError[0]}
           label="Name"
           name="name"
           id="name"
         />
         <TextInput
-          errorMessage={error.email}
+          onChange={handleChange}
+          value={state.email}
+          errorMessage={emailError && emailError[0]}
           label="Email"
           name="email"
           id="email"
         />
         <TextInput
-          errorMessage={error.username}
+          onChange={handleChange}
+          value={state.username}
+          errorMessage={usernameError && usernameError[0]}
           label="Username"
           name="username"
           id="username"
         />
 
         <TextInput
-          errorMessage={error.password}
+          onChange={handleChange}
+          value={state.password}
+          errorMessage={passwordError && passwordError[0]}
           label="Password"
           type={isShow ? "text" : "password"}
           name="password"

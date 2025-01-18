@@ -1,4 +1,4 @@
-import { TUserPost } from "@/lib/drizzle/queries/fetchUserPosts";
+import { TUserPost } from "@/lib/drizzle/queries/posts/fetchUserPosts";
 import { actionFetchUserPosts } from "@/lib/next-safe-action/actionFetchUserPosts";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";

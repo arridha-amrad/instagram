@@ -1,4 +1,4 @@
-import { TUserPost } from "@/lib/drizzle/queries/fetchUserPosts";
+import { TUserPost } from "@/lib/drizzle/queries/posts/fetchUserPosts";
 
 export const createUserPostsMatrix = (
   matrixLength: number,

@@ -3,53 +3,54 @@
 import Button from "@/components/core/Button";
 import CheckboxWithLabel from "@/components/core/CheckboxWithLabel";
 import TextInput from "@/components/core/TextInput";
-import { actionLogin } from "@/lib/next-safe-action/actionLogin";
 import { useAction } from "next-safe-action/hooks";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { login } from "./action";
 
 const FormLogin = () => {
   const [isShow, setShow] = useState(false);
-  const [error, setError] = useState({
-    general: "",
+
+  const [state, setState] = useState({
     identity: "",
     password: "",
   });
+
   const params = useSearchParams();
-  const la = actionLogin.bind(null, params.get("cbUrl"));
-  const { execute, isExecuting, result } = useAction(la, {
-    onError: ({ error: { serverError, validationErrors } }) => {
-      if (serverError) {
-        setError({
-          ...error,
-          general: serverError,
-        });
-      }
-      if (validationErrors) {
-        const { identity, password } = validationErrors;
-        setError({
-          ...error,
-          identity: identity ? identity[0] : "",
-          password: password ? password[0] : "",
-        });
-      }
-    },
-  });
+
+  const { execute, isPending, result } = useAction(
+    login.bind(null, params.get("cb_url")),
+  );
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const identityError = result.validationErrors?.identity?._errors;
+  const passwordError = result.validationErrors?.password?._errors;
+  const actionError = result.serverError;
 
   return (
     <form className="space-y-3" action={execute}>
       <section className="text-center text-sm">
-        <p className="text-red-500">{error.general}</p>
+        {actionError && <p className="text-red-500">{actionError}</p>}
       </section>
-      <fieldset className="space-y-3" disabled={isExecuting}>
+      <fieldset className="space-y-3" disabled={isPending}>
         <TextInput
-          errorMessage={error.identity}
+          errorMessage={identityError && identityError[0]}
+          onChange={handleChange}
+          value={state.identity}
           label="Username or email"
           name="identity"
           id="identity"
         />
         <TextInput
-          errorMessage={error.password}
+          errorMessage={passwordError && passwordError[0]}
+          onChange={handleChange}
+          value={state.password}
           label="Password"
           type={isShow ? "text" : "password"}
           name="password"
@@ -62,7 +63,7 @@ const FormLogin = () => {
         <div className="h-4" />
         <Button
           className="inline-flex w-full justify-center"
-          isLoading={isExecuting}
+          isLoading={isPending}
           type="submit"
         >
           Sign In

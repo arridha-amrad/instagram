@@ -4,28 +4,22 @@ import AvatarEditable from "@/components/AvatarEditable";
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
 
-import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import { ChangeEvent, useRef, useState } from "react";
 
-import { useSessionStore } from "@/stores/Session";
-import { actionUpdateProfile } from "@/lib/next-safe-action/actionUpdateProfile";
 import { TUserProfile } from "@/lib/drizzle/queries/type";
+import { showToast } from "@/lib/utils";
+import { updateProfile } from "./action";
+import { usePathname } from "next/navigation";
 
 type Props = {
   user: TUserProfile;
 };
 
 const FormEditProfile = ({ user }: Props) => {
-  const { update } = useSession();
-  const { session } = useSessionStore();
-  const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { theme } = useTheme();
-  const [error, setError] = useState({
+
+  const [state, setState] = useState({
     fullName: "",
     website: "",
     occupation: "",
@@ -33,48 +27,32 @@ const FormEditProfile = ({ user }: Props) => {
     gender: "",
   });
 
-  const { execute, isExecuting, hasSucceeded, result } = useAction(
-    actionUpdateProfile,
+  const pathname = usePathname();
+
+  const { execute, isPending, result } = useAction(
+    updateProfile.bind(null, pathname),
     {
-      onError: ({ error: { serverError, validationErrors } }) => {
-        if (serverError) {
-          toast.error("Something went wrong", { theme });
-        }
-        if (validationErrors) {
-          const { bio, gender, name, occupation, website } = validationErrors;
-          setError({
-            ...error,
-            bio: bio ? bio[0] : "",
-            fullName: name ? name[0] : "",
-            gender: gender ? gender[0] : "",
-            occupation: occupation ? occupation[0] : "",
-            website: website ? website[0] : "",
-          });
-        }
-      },
       async onSuccess({ data }) {
-        if (!data || !session) return;
-        toast.success("Profile updated", { theme });
-        await update({
-          ...session.user,
-          name: data,
-        });
-        router.refresh();
+        if (data) {
+          showToast(data, "success");
+        }
       },
     },
   );
 
-  // useEffect(() => {
-  //   if (hasSucceeded && result.data && session) {
-  //     toast.success("Profile updated", { theme });
-  //     update({
-  //       ...session.user,
-  //       name: result.data,
-  //     }).then(() => {
-  //       router.refresh();
-  //     });
-  //   }
-  // }, [hasSucceeded]);
+  const bioError = result.validationErrors?.bio?._errors;
+  const genderError = result.validationErrors?.gender?._errors;
+  const nameError = result.validationErrors?.name?._errors;
+  const occupationError = result.validationErrors?.occupation?._errors;
+  const websiteError = result.validationErrors?.website?._errors;
+  const actionError = result.serverError;
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <div className="relative w-full max-w-md space-y-6">
@@ -94,33 +72,39 @@ const FormEditProfile = ({ user }: Props) => {
         </button>
       </div>
       <form action={execute}>
-        <fieldset className="flex flex-col gap-6" disabled={isExecuting}>
+        <fieldset className="flex flex-col gap-6" disabled={isPending}>
+          {actionError && (
+            <p className="text-sm text-red-500">{actionError[0]}</p>
+          )}
           <TextInput
-            errorMessage={error.fullName}
+            errorMessage={nameError && nameError[0]}
+            onChange={handleChange}
+            value={state.fullName}
             label="Fullname"
             variant="normal"
             type="text"
             id="fullName"
             name="name"
-            defaultValue={user?.name}
           />
           <TextInput
-            errorMessage={error.website}
+            errorMessage={websiteError && websiteError[0]}
+            onChange={handleChange}
+            value={state.website}
             label="Website"
             variant="normal"
             type="text"
             id="website"
             name="website"
-            defaultValue={user?.userInfo?.website ?? ""}
           />
           <TextInput
-            errorMessage={error.occupation}
+            errorMessage={occupationError && occupationError[0]}
+            onChange={handleChange}
+            value={state.occupation}
             label="Occupation"
             variant="normal"
             type="text"
             id="occupation"
             name="occupation"
-            defaultValue={user?.userInfo?.occupation ?? ""}
           />
           <div className="space-y-1.5">
             <label
@@ -136,9 +120,11 @@ const FormEditProfile = ({ user }: Props) => {
               defaultValue={user?.userInfo?.bio ?? ""}
               className="w-full resize-none rounded-md border border-skin bg-skin-input outline-none focus:border-transparent focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
             ></textarea>
-            <div className="text-red-500">
-              <small>{error.bio}</small>
-            </div>
+            {bioError && (
+              <div className="text-red-500">
+                <small>{bioError[0]}</small>
+              </div>
+            )}
           </div>
           <div className="space-y-1.5">
             <label
@@ -157,12 +143,14 @@ const FormEditProfile = ({ user }: Props) => {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <div className="text-red-500">
-              <small>{error.gender}</small>
-            </div>
+            {genderError && (
+              <div className="text-red-500">
+                <small>{genderError[0]}</small>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3 self-end">
-            <Button type="submit" className="h-10 w-24" isLoading={isExecuting}>
+            <Button type="submit" className="h-10 w-24" isLoading={isPending}>
               Save
             </Button>
           </div>

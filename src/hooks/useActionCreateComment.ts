@@ -1,4 +1,4 @@
-import { actionCreateComment } from "@/lib/next-safe-action/actionCreateComment";
+import { actionCreateComment } from "@/lib/actions/comment";
 import { useComments } from "@/stores/useComments";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";

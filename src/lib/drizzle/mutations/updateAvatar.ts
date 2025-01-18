@@ -1,4 +1,4 @@
-import { upload } from "@/lib/cloudinary";
+import { upload } from "@/lib/CloudinaryService";
 import { eq } from "drizzle-orm";
 import db from "../db";
 import { UsersTable } from "../schema";
