@@ -1,4 +1,4 @@
-import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
+import { fetchUserFollowers } from "@/lib/drizzle/queries/users/fetchUserFollowers";
 import ModalFollowers from "./ModalFollowers";
 import { getAuth } from "@/lib/next.auth";
 import UsersContainer from "@/components/UsersContainer";

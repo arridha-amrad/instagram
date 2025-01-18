@@ -1,10 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
-import {
-  findUserByEmail,
-  findUserByUsername,
-} from "@/lib/drizzle/services/UserService";
+import UserService from "@/lib/drizzle/services/UserService";
 import { SafeActionError } from "@/lib/errors/SafeActionError";
 import { verifyPasswordHash } from "@/lib/passwordHandler";
 import { actionClient } from "@/lib/safeAction";
@@ -24,9 +21,10 @@ export const login = actionClient
       bindArgsParsedInputs: [cbUrl],
       parsedInput: { identity, password },
     }) => {
+      const userService = new UserService();
       const users = identity.includes("@")
-        ? await findUserByEmail(identity)
-        : await findUserByUsername(identity);
+        ? await userService.findUserByEmail(identity)
+        : await userService.findUserByUsername(identity);
 
       if (users.length === 0) {
         throw new SafeActionError("User not found");

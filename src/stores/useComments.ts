@@ -1,5 +1,5 @@
-import { TComment } from "@/lib/drizzle/queries/fetchComments";
-import { TReply } from "@/lib/drizzle/queries/fetchReplies";
+import { TComment } from "@/lib/drizzle/queries/comments/fetchComments";
+import { TReply } from "@/lib/drizzle/queries/replies/fetchReplies";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

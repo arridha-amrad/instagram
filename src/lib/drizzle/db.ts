@@ -1,8 +1,8 @@
 import { Pool } from "@neondatabase/serverless";
-import { drizzle, NeonQueryResultHKT } from "drizzle-orm/neon-serverless";
-import * as schema from "./schema";
-import { PgTransaction } from "drizzle-orm/pg-core";
 import { ExtractTablesWithRelations } from "drizzle-orm";
+import { drizzle, NeonQueryResultHKT } from "drizzle-orm/neon-serverless";
+import { PgTransaction } from "drizzle-orm/pg-core";
+import * as schema from "./schema";
 
 const pool = new Pool({ connectionString: process.env.DB_URL });
 

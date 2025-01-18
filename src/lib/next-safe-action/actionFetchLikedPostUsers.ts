@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { optionalAuthClient } from "./init";
-import { fetchPostLikes } from "../drizzle/queries/fetchPostLikes";
+import { fetchPostLikes } from "../drizzle/queries/posts/fetchPostLikes";
 
 export const actionFetchLikedPostUsers = optionalAuthClient
   .schema(

@@ -1,7 +1,7 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { TFeedPost } from "@/lib/drizzle/queries/fetchFeedPosts";
+import { TFeedPost } from "@/lib/drizzle/queries/posts/fetchFeedPosts";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import { useFeedPosts } from "@/stores/useFeedPosts";
 import { ReactNode, useEffect } from "react";

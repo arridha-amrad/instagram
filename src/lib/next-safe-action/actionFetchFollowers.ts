@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { optionalAuthClient } from "./init";
-import { fetchUserFollowers } from "@/lib/drizzle/queries/fetchUserFollowers";
+import { fetchUserFollowers } from "@/lib/drizzle/queries/users/fetchUserFollowers";
 
 export const actionFetchFollowers = optionalAuthClient
   .schema(

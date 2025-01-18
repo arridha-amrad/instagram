@@ -1,4 +1,4 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import { aliasedTable, eq, sql } from "drizzle-orm";
 import { FollowingsTable, UsersTable } from "@/lib/drizzle/schema";
 

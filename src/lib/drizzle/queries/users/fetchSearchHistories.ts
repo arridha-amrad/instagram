@@ -1,7 +1,7 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import { eq } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
-import { SearchUsersTable, UsersTable } from "../schema";
+import { SearchUsersTable, UsersTable } from "../../schema";
 
 const query = async (userId: string) => {
   return db

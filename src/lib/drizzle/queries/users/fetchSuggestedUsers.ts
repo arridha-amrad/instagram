@@ -1,5 +1,5 @@
-import db from "@/lib/drizzle/db";
-import { FollowingsTable, UsersTable } from "../schema";
+import { db } from "@/lib/drizzle/db";
+import { FollowingsTable, UsersTable } from "../../schema";
 import { sql } from "drizzle-orm";
 
 const query2 = async (userId: string) => {
@@ -16,6 +16,7 @@ const query2 = async (userId: string) => {
       WHERE ${FollowingsTable.userId} = ${userId}
     )
     AND ${UsersTable.id} != ${userId}
+    LIMIT 5
     `);
 
   return result.rows;

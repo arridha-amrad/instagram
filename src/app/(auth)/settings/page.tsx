@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import FormEditProfile from "@/app/(auth)/settings/Form";
-import { fetchUserProfileDetails } from "@/lib/drizzle/queries/fetchUserProfileDetails";
+import { fetchUserProfileDetails } from "@/lib/drizzle/queries/users/fetchUserProfileDetails";
 
 import { redirect } from "next/navigation";
 

@@ -7,8 +7,9 @@ import Link from "next/link";
 import ButtonLike from "./ButtonLike";
 import Carousel from "./Carousel";
 import Comments from "./Comments";
-import CommentForm from "./FormComment";
+
 import TotalLikes from "./Likes";
+import CommentForm from "@/app/(auth)/(home)/FormComment";
 
 type Props = {
   post: FeedPost;

@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
-import db from "../db";
-import { FollowingsTable } from "../schema";
+import db from "../drizzle/db";
+import { FollowingsTable } from "../drizzle/schema";
 
 export const follow = async ({
   authUserId,

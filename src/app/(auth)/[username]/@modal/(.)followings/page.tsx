@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import ModalFollowings from "./ModalFollowings";
-import { fetchUserFollowings } from "@/lib/drizzle/queries/fetchUserFollowings";
+import { fetchUserFollowings } from "@/lib/drizzle/queries/users/fetchUserFollowings";
 import UsersContainer from "@/components/UsersContainer";
 
 type Props = {

@@ -8,7 +8,7 @@ import Avatar from "@/components/Avatar";
 import Link from "next/link";
 import { ReactNode, useRef, useState } from "react";
 import ButtonComment from "./ButtonComment";
-import { TPost } from "@/lib/drizzle/queries/fetchPost";
+import { TPost } from "@/lib/drizzle/queries/posts/fetchPost";
 
 type Props = {
   post: TPost;

@@ -1,6 +1,6 @@
 "use server";
 
-import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
+import { fetchComments } from "@/lib/drizzle/queries/comments/fetchComments";
 import { z } from "zod";
 import { optionalAuthClient } from "./init";
 

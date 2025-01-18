@@ -6,7 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { actionCreateComment } from "@/lib/actions/comment";
+import { create } from "@/lib/actions/comment";
 import { useFeedPosts } from "@/stores/useFeedPosts";
 
 type Props = {
@@ -20,7 +20,7 @@ export default function CommentForm({ postId }: Props) {
 
   const { addComment } = useFeedPosts();
 
-  const action = actionCreateComment.bind(null, postId);
+  const action = create.bind(null, postId);
   const { execute, isExecuting } = useAction(action, {
     onError: () => {
       toast.error("Something went wrong", { theme });

@@ -1,10 +1,10 @@
 "use server";
 
-import { zfd } from "zod-form-data";
-import { authClient } from "../next-safe-action/init";
 import { z } from "zod";
-import { TReply } from "../drizzle/queries/fetchReplies";
+import { zfd } from "zod-form-data";
+import { TReply } from "../drizzle/queries/replies/fetchReplies";
 import ReplyService from "../drizzle/services/ReplyService";
+import { authClient } from "../next-safe-action/init";
 
 export const create = authClient
   .schema(

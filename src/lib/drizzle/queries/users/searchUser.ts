@@ -1,6 +1,6 @@
 import { ilike, or } from "drizzle-orm";
-import db from "../db";
-import { UsersTable } from "../schema";
+import { db } from "../../db";
+import { UsersTable } from "../../schema";
 
 const query = async (searchKey: string) => {
   return db

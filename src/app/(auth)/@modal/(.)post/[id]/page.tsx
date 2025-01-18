@@ -1,7 +1,7 @@
 import CommentsProvider from "@/components/Providers/CommentsProvider";
-import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
-import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
-import { fetchPostMetadata } from "@/lib/drizzle/queries/fetchPostMetadata";
+import { fetchComments } from "@/lib/drizzle/queries/comments/fetchComments";
+import { fetchPost } from "@/lib/drizzle/queries/posts/fetchPost";
+import { fetchPostMetadata } from "@/lib/drizzle/queries/posts/fetchPostMetadata";
 import { getAuth } from "@/lib/next.auth";
 import { Metadata } from "next";
 import Modal from "./Modal";

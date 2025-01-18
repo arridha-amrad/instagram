@@ -3,8 +3,8 @@ import Carousel from "@/components/Post/FeedPost/Carousel";
 import Comments from "@/components/Post/Post/Comments";
 import CommentsProvider from "@/components/Providers/CommentsProvider";
 import db from "@/lib/drizzle/db";
-import { fetchComments } from "@/lib/drizzle/queries/fetchComments";
-import { fetchPost } from "@/lib/drizzle/queries/fetchPost";
+import { fetchComments } from "@/lib/drizzle/queries/comments/fetchComments";
+import { fetchPost } from "@/lib/drizzle/queries/posts/fetchPost";
 import { PostsTable, UsersTable } from "@/lib/drizzle/schema";
 import { getAuth } from "@/lib/next.auth";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -14,7 +14,7 @@ import Link from "next/link";
 import ButtonLikePost from "./components/ButtonLike";
 import FormComment from "./components/FormComment";
 import SumComment from "./components/SumComments";
-import { fetchPostMetadata } from "@/lib/drizzle/queries/fetchPostMetadata";
+import { fetchPostMetadata } from "@/lib/drizzle/queries/posts/fetchPostMetadata";
 
 type Props = {
   params: {

@@ -2,7 +2,7 @@
 
 import CarouselOne from "@/components/Post/Carousel/CarouselOne";
 import Post from "@/components/Post/Post";
-import { TPost } from "@/lib/drizzle/queries/fetchPost";
+import { TPost } from "@/lib/drizzle/queries/posts/fetchPost";
 import usePostsStore from "@/stores/Posts";
 import { useReplySetter } from "@/stores/ReplySetter";
 import { usePathname, useRouter } from "next/navigation";

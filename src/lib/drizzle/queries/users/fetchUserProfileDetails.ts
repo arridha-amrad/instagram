@@ -1,6 +1,6 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import { unstable_cache } from "next/cache";
-import { UserInfoTable, UsersTable } from "../schema";
+import { UserInfoTable, UsersTable } from "../../schema";
 import { eq } from "drizzle-orm";
 
 type Params = {

@@ -1,10 +1,10 @@
 "use server";
 
+import { TComment } from "@/lib/drizzle/queries/comments/fetchComments";
+import CommentService from "@/lib/drizzle/services/CommentService";
+import { authClient } from "@/lib/next-safe-action/init";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-import { TComment } from "../drizzle/queries/comments/fetchComments";
-import CommentService from "../drizzle/services/CommentService";
-import { authClient } from "../next-safe-action/init";
 
 export const create = authClient
   .schema(

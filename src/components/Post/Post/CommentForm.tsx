@@ -1,7 +1,7 @@
 import MySpinner from "@/components/Spinner";
 import { useActionCreateComment } from "@/hooks/useActionCreateComment";
 import { useActionCreateReply } from "@/hooks/useActionCreateReply";
-import { TPost } from "@/lib/drizzle/queries/fetchPost";
+import { TPost } from "@/lib/drizzle/queries/posts/fetchPost";
 import { cn } from "@/lib/utils";
 import { useReplySetter } from "@/stores/ReplySetter";
 import mergeRefs from "merge-refs";

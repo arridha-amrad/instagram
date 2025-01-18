@@ -1,4 +1,4 @@
-import { TReply } from "@/lib/drizzle/queries/fetchReplies";
+import { TReply } from "@/lib/drizzle/queries/replies/fetchReplies";
 import Reply from "./Reply";
 
 type Props = {

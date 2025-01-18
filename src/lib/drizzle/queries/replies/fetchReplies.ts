@@ -1,6 +1,6 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import { asc, eq, sql } from "drizzle-orm";
-import { RepliesTable, ReplyLikesTable, UsersTable } from "../schema";
+import { RepliesTable, ReplyLikesTable, UsersTable } from "../../schema";
 import crypto from "crypto";
 
 const LIMIT = 5;

@@ -1,10 +1,6 @@
 "use server";
 
-import {
-  createUser,
-  findUserByEmail,
-  findUserByUsername,
-} from "@/lib/drizzle/services/UserService";
+import UserService from "@/lib/drizzle/services/UserService";
 import { SafeActionError } from "@/lib/errors/SafeActionError";
 import { hashPassword } from "@/lib/passwordHandler";
 import { actionClient } from "@/lib/safeAction";
@@ -29,13 +25,14 @@ const schema = zfd.formData({
 export const signUp = actionClient
   .schema(schema)
   .action(async ({ parsedInput: { email, name, password, username } }) => {
-    const userWithSameEmail = await findUserByEmail(email);
+    const userService = new UserService();
+    const userWithSameEmail = await userService.findUserByEmail(email);
 
     if (userWithSameEmail.length > 0) {
       throw new SafeActionError("Email has been registered");
     }
 
-    const userWithSameUsername = await findUserByUsername(username);
+    const userWithSameUsername = await userService.findUserByUsername(username);
 
     if (userWithSameUsername.length > 0) {
       throw new SafeActionError("Username has been taken");
@@ -43,7 +40,7 @@ export const signUp = actionClient
 
     const hashedPassword = await hashPassword(password);
 
-    await createUser({
+    await userService.createUser({
       email,
       name,
       provider: "credentials",

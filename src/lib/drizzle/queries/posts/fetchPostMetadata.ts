@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import db from "../db";
-import { UsersTable, PostsTable } from "../schema";
+import { db } from "../../db";
+import { UsersTable, PostsTable } from "../../schema";
 
 export const fetchPostMetadata = async (postId: string) => {
   const [post] = await db

@@ -1,11 +1,11 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import {
   CommentsTable,
   PostLikesTable,
   PostsTable,
   RepliesTable,
   UsersTable,
-} from "../schema";
+} from "../../schema";
 import { eq, sql } from "drizzle-orm";
 
 type Params = {

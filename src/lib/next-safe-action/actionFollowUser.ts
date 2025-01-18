@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { follow } from "../drizzle/mutations/follow";
+import { follow } from "../actions/follow";
 import { authClient } from "./init";
 import { revalidateTag } from "next/cache";
 

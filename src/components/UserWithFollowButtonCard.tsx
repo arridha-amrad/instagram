@@ -1,5 +1,5 @@
 import Avatar from "@/components/Avatar";
-import { TFollow } from "@/lib/drizzle/queries/fetchUserFollowers";
+import { TFollow } from "@/lib/drizzle/queries/users/fetchUserFollowers";
 
 import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";

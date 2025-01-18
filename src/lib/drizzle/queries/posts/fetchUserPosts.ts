@@ -1,4 +1,4 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import { and, desc, eq, lt, sql } from "drizzle-orm";
 import {

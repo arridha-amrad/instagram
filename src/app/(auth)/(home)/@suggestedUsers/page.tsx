@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import SuggestedUsers from "@/components/SuggestedUsers";
-import fetchSuggestedUsers from "@/lib/drizzle/queries/fetchSuggestedUsers";
+import fetchSuggestedUsers from "@/lib/drizzle/queries/users/fetchSuggestedUsers";
 import { redirect } from "next/navigation";
 
 export default async function Page() {

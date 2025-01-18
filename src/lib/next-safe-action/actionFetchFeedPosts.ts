@@ -1,6 +1,6 @@
 "use server";
 
-import { fetchFeedPosts } from "@/lib/drizzle/queries/fetchFeedPosts";
+import { fetchFeedPosts } from "@/lib/drizzle/queries/posts/fetchFeedPosts";
 import { authClient } from "@/lib/next-safe-action/init";
 import { z } from "zod";
 

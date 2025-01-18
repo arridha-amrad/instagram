@@ -1,6 +1,6 @@
-import db from "@/lib/drizzle/db";
-import { TInfiniteResult } from "./type";
-import { FollowingsTable, PostLikesTable, UsersTable } from "../schema";
+import { db } from "@/lib/drizzle/db";
+import { TInfiniteResult } from "../type";
+import { FollowingsTable, PostLikesTable, UsersTable } from "../../schema";
 import { eq, sql } from "drizzle-orm";
 
 const LIMIT = 10;

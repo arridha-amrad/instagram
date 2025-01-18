@@ -3,7 +3,7 @@ import Avatar from "@/components/Avatar";
 import Button from "@/components/core/Button";
 import SvgFemale from "@/components/svg/SvgFemale";
 import SvgMale from "@/components/svg/SvgMale";
-import { fetchUserProfile } from "@/lib/drizzle/queries/fetchUserProfile";
+import { fetchUserProfile } from "@/lib/drizzle/queries/users/fetchUserProfile";
 import Link from "next/link";
 import Settings from "./Settings";
 import ButtonFollow from "@/components/ButtonFollow";

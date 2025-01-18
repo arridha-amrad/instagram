@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { fetchReplies } from "../drizzle/queries/fetchReplies";
+import { fetchReplies } from "../drizzle/queries/replies/fetchReplies";
 import { optionalAuthClient } from "./init";
 
 export const actionFetchReplies = optionalAuthClient

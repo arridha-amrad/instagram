@@ -1,6 +1,6 @@
-import db from "@/lib/drizzle/db";
+import { db } from "@/lib/drizzle/db";
 import { aliasedTable, eq, sql } from "drizzle-orm";
-import { FollowingsTable, UsersTable } from "../schema";
+import { FollowingsTable, UsersTable } from "../../schema";
 
 type Args = {
   username: string;

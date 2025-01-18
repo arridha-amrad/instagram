@@ -1,6 +1,6 @@
 "use client";
 
-import { TComment } from "@/lib/drizzle/queries/fetchComments";
+import { TComment } from "@/lib/drizzle/queries/comments/fetchComments";
 import { useComments } from "@/stores/useComments";
 import { ReactNode, useEffect } from "react";
 

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import SwitchTheme from "@/components/SwitchTheme";
-import { fetchSearchHistories } from "@/lib/drizzle/queries/fetchSearchHistories";
+import { fetchSearchHistories } from "@/lib/drizzle/queries/users/fetchSearchHistories";
 import LinkHome from "./Links/LinkHome";
 import LinkProfile from "./Links/LinkProfile";
 import LinkSettings from "./Links/LinkSettings";
