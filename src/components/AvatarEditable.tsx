@@ -2,22 +2,15 @@
 
 import Avatar from "@/components/Avatar";
 import MySpinner from "@/components/Spinner";
-import { actionChangeAvatar } from "@/lib/next-safe-action/actionChangeAvatar";
-import { cn } from "@/lib/utils";
+import { updateAvatar } from "@/lib/actions/user";
+import { cn, showToast } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import mergeRefs from "merge-refs";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import {
-  ChangeEvent,
-  HTMLAttributes,
-  Ref,
-  forwardRef,
-  useEffect,
-  useRef,
-} from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ChangeEvent, HTMLAttributes, Ref, forwardRef, useRef } from "react";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -33,12 +26,13 @@ const EditableAvatar = (
   const { theme } = useTheme();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const pathname = usePathname();
 
-  const { execute, result, isExecuting, hasSucceeded } = useAction(
-    actionChangeAvatar,
+  const { execute, isExecuting } = useAction(
+    updateAvatar.bind(null, pathname),
     {
       onError: () => {
-        toast.error("Something went wrong", { theme });
+        showToast("something went wrong", "success");
       },
       async onSuccess({ data }) {
         if (!data) return;
@@ -54,21 +48,6 @@ const EditableAvatar = (
       },
     },
   );
-
-  // useEffect(() => {
-  //   if (hasSucceeded) {
-  //     const user = result.data?.user;
-  //     update({
-  //       id: user?.id,
-  //       username: user?.username,
-  //       image: user?.image,
-  //       name: user?.name,
-  //     }).then(() => {
-  //       router.refresh();
-  //       toast.success("Avatar updated", { theme });
-  //     });
-  //   }
-  // }, [hasSucceeded]);
 
   const onChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

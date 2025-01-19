@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
 import SuggestedUsers from "@/components/SuggestedUsers";
 import fetchSuggestedUsers from "@/lib/drizzle/queries/users/fetchSuggestedUsers";
+import { getAuth } from "@/lib/next.auth";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const session = await auth();
+  const session = await getAuth();
   const uid = session?.user.id;
   if (!uid) {
     redirect("/login");

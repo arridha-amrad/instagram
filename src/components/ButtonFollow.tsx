@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/core/Button";
-import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
+import { follow as fl } from "@/lib/actions/follow";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -19,7 +19,7 @@ const ButtonFollow = ({ userId, isFollow }: Props) => {
   const follow = async () => {
     setPending(true);
     try {
-      await actionFollowUser({ followId: userId, pathname });
+      await fl({ followId: userId, pathname });
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");

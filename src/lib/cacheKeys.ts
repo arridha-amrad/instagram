@@ -1,6 +1,7 @@
 export const USERS = {
   profile: "user-profile",
   profileDetails: "user-profile-details",
+  metadata: "metadata",
   auth: "user-auth",
   searchHistories: "search-histories",
 };

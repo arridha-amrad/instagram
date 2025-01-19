@@ -2,10 +2,10 @@
 
 import Comment from "@/components/Comment";
 import MySpinner from "@/components/Spinner";
-import { actionFetchComments } from "@/lib/next-safe-action/actionFetchComments";
 import { useComments } from "@/stores/useComments";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
+import { loadMoreComments } from "@/lib/actions/comment";
 
 type Props = {
   showForm?: boolean;
@@ -15,11 +15,15 @@ const Comments = ({ showForm }: Props) => {
   const { comments, hasMore, addComments, cDate } = useComments();
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const pathname = usePathname();
 
   const loadMore = async () => {
     setLoading(true);
     try {
-      const response = await actionFetchComments({
+      const response = await loadMoreComments.bind(
+        null,
+        pathname,
+      )({
         postId: id as string,
         date: new Date(cDate),
       });

@@ -3,11 +3,11 @@
 import Wrapper from "@/components/core/ModalWrapper";
 import MySpinner from "@/components/Spinner";
 import UserWithFollowButtonCard from "@/components/UserWithFollowButtonCard";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { actionFetchLikedPostUsers } from "@/lib/next-safe-action/actionFetchLikedPostUsers";
+import { loadMoreLovers } from "@/lib/actions/post";
 import { TUserIsFollow } from "@/lib/drizzle/queries/type";
+import { showToast } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Props = {
   postId: string;
@@ -19,19 +19,23 @@ const TotalLikes = ({ postId, total, sessionUserId }: Props) => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<TUserIsFollow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { theme } = useTheme();
+
+  const pathname = usePathname();
   const openModal = async () => {
     setOpen(true);
     setIsLoading(true);
     try {
-      const response = await actionFetchLikedPostUsers({
+      const response = await loadMoreLovers.bind(
+        null,
+        pathname,
+      )({
         postId,
       });
       if (response?.data) {
         setUsers(response.data.data);
       }
     } catch (err) {
-      toast.error("Something went wrong", { theme });
+      showToast("something went wrong", "error");
     } finally {
       setIsLoading(false);
     }

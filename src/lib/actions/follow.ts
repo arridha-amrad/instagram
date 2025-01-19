@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { fetchUserFollowers } from "../drizzle/queries/users/fetchUserFollowers";
 import FollowService from "../drizzle/services/FollowService";
 import { authActionClient } from "../safeAction";
 
@@ -31,3 +32,27 @@ export const follow = authActionClient
 
     return message;
   });
+
+export const loadMoreFollowers = authActionClient
+  .schema(
+    z.object({
+      username: z.string(),
+    }),
+  )
+  .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
+  .action(
+    async ({
+      ctx: { session },
+      parsedInput: { username },
+      bindArgsParsedInputs: [pathname],
+    }) => {
+      if (!session) {
+        return redirect(`/login?cb_url?=${pathname}`);
+      }
+      const result = await fetchUserFollowers({
+        username,
+        authUserId: session.user.id,
+      });
+      return result;
+    },
+  );

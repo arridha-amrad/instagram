@@ -1,8 +1,9 @@
 import { TUserPost } from "@/lib/drizzle/queries/posts/fetchUserPosts";
-import { actionFetchUserPosts } from "@/lib/next-safe-action/actionFetchUserPosts";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { loadMoreUserPosts } from "@/lib/actions/post";
+import { usePathname } from "next/navigation";
 
 export const useFetchUserPosts = (
   currPage: number,
@@ -14,13 +15,16 @@ export const useFetchUserPosts = (
   const { theme } = useTheme();
   const [isFetchingDisabled, setIsFetchingDisabled] = useState(false);
   const [incomingPosts, setIncomingPosts] = useState<TUserPost[]>([]);
+  const pathname = usePathname();
 
   useEffect(() => {
     const loadPosts = async () => {
       setIsFetching(true);
       try {
-        const result = await actionFetchUserPosts({
-          page: currPage,
+        const result = await loadMoreUserPosts.bind(
+          null,
+          pathname,
+        )({
           username,
           date,
           total,

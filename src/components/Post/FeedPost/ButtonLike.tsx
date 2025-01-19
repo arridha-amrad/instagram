@@ -18,7 +18,7 @@ export default function ButtonLike({ isLiked, postId }: Props) {
   const like = async () => {
     likePost(postId);
     try {
-      await lp({ pathname, postId });
+      await lp.bind(null, pathname)({ postId });
     } catch (err) {
       showToast("something went wrong", "error");
       // to cancel prev optimistic update

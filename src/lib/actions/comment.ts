@@ -1,11 +1,14 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-import { TComment } from "../drizzle/queries/comments/fetchComments";
+import {
+  fetchComments,
+  TComment,
+} from "../drizzle/queries/comments/fetchComments";
 import CommentService from "../drizzle/services/CommentService";
 import { authActionClient } from "../safeAction";
-import { redirect } from "next/navigation";
 
 export const create = authActionClient
   .schema(
@@ -62,5 +65,31 @@ export const likeComment = authActionClient
       } else {
         await commentService.disLike({ commentId, userId });
       }
+    },
+  );
+
+export const loadMoreComments = authActionClient
+  .schema(
+    z.object({
+      postId: z.string(),
+      date: z.date(),
+    }),
+  )
+  .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
+  .action(
+    async ({
+      ctx: { session },
+      bindArgsParsedInputs: [pathname],
+      parsedInput: { date, postId },
+    }) => {
+      if (!session) {
+        return redirect(`/login?cb_url=${pathname}`);
+      }
+      const comments = await fetchComments({
+        postId,
+        userId: session.user.id,
+        date,
+      });
+      return comments;
     },
   );

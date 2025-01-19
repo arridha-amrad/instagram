@@ -6,7 +6,6 @@ import UserInfoService from "@/lib/drizzle/services/UserInfoService";
 import UserService from "@/lib/drizzle/services/UserService";
 import { authActionClient } from "@/lib/safeAction";
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
@@ -20,38 +19,29 @@ const schema = zfd.formData({
 
 export const updateProfile = authActionClient
   .schema(schema)
-  .bindArgsSchemas<[cb_url: z.ZodString]>([z.string()])
-  .action(
-    async ({
-      ctx: { session },
-      parsedInput: { name, ...props },
-      bindArgsClientInputs: [cb_url],
-    }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${cb_url}`);
+  .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
+  .action(async ({ ctx: { session }, parsedInput: { name, ...props } }) => {
+    const userId = session.user.id;
+    const tm = new TransactionManager();
+
+    await tm.execute(async (tx) => {
+      const userService = new UserService(tx);
+      const userInfoService = new UserInfoService(tx);
+      await userService.updateUser(userId, { name });
+      const userInfoRow = await userInfoService.findByUserId(userId);
+
+      if (userInfoRow.length === 0) {
+        await userInfoService.create({
+          userId,
+          ...props,
+        });
+      } else {
+        await userInfoService.update(userInfoRow[0].id, props);
       }
-      const userId = session.user.id;
-      const tm = new TransactionManager();
+    });
 
-      await tm.execute(async (tx) => {
-        const userService = new UserService(tx);
-        const userInfoService = new UserInfoService(tx);
-        await userService.updateUser(userId, { name });
-        const userInfoRow = await userInfoService.findByUserId(userId);
+    revalidateTag(USERS.profile);
+    revalidateTag(USERS.profileDetails);
 
-        if (userInfoRow.length === 0) {
-          await userInfoService.create({
-            userId,
-            ...props,
-          });
-        } else {
-          await userInfoService.update(userInfoRow[0].id, props);
-        }
-      });
-
-      revalidateTag(USERS.profile);
-      revalidateTag(USERS.profileDetails);
-
-      return "Profile updated successfully";
-    },
-  );
+    return "Profile updated successfully";
+  });

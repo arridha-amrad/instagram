@@ -2,28 +2,26 @@ import Avatar from "@/components/Avatar";
 import Carousel from "@/components/Post/FeedPost/Carousel";
 import Comments from "@/components/Post/Post/Comments";
 import CommentsProvider from "@/components/Providers/CommentsProvider";
-import db from "@/lib/drizzle/db";
 import { fetchComments } from "@/lib/drizzle/queries/comments/fetchComments";
 import { fetchPost } from "@/lib/drizzle/queries/posts/fetchPost";
-import { PostsTable, UsersTable } from "@/lib/drizzle/schema";
+import { fetchPostMetadata } from "@/lib/drizzle/queries/posts/fetchPostMetadata";
 import { getAuth } from "@/lib/next.auth";
 import { formatDistanceToNowStrict } from "date-fns";
-import { eq } from "drizzle-orm";
 import { Metadata } from "next";
 import Link from "next/link";
 import ButtonLikePost from "./components/ButtonLike";
 import FormComment from "./components/FormComment";
 import SumComment from "./components/SumComments";
-import { fetchPostMetadata } from "@/lib/drizzle/queries/posts/fetchPostMetadata";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await fetchPostMetadata(params.id);
+  const id = (await params).id;
+  const post = await fetchPostMetadata(id);
   return {
     title: `Instagram Post by ${post?.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
     description: `Instagram post created by ${post?.username}`,
@@ -32,14 +30,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const Page = async ({ params }: Props) => {
   const session = await getAuth();
+  const id = (await params).id;
 
   const [post, comments] = await Promise.all([
     await fetchPost({
-      postId: params.id,
+      postId: id,
       userId: session?.user.id,
     }),
     await fetchComments({
-      postId: params.id,
+      postId: id,
       userId: session?.user.id,
     }),
   ]);

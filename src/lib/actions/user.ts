@@ -11,7 +11,7 @@ import { USERS } from "../cacheKeys";
 
 export const updateAvatar = authActionClient
   .schema(
-    z.object({
+    zfd.formData({
       image: zfd.file(),
     }),
   )

@@ -5,9 +5,8 @@ import { createUserPostsMatrix } from "@/helpers/createPostMatrix";
 import { filterUniqueUserPosts } from "@/helpers/filterUniquePosts";
 import { TUserPost } from "@/lib/drizzle/queries/posts/fetchUserPosts";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
-import { actionFetchUserPosts } from "@/lib/next-safe-action/actionFetchUserPosts";
 import { useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -19,6 +18,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import useMeasure from "react-use-measure";
 import Post from "./UserPost";
+import { loadMoreUserPosts } from "@/lib/actions/post";
 
 type Props = {
   initData: TInfiniteResult<TUserPost>;
@@ -29,6 +29,7 @@ export default function UserPosts({ initData }: Props) {
   const [hasMore, setHasMore] = useState(initData.data.length === 6);
   const { ref, inView } = useInView();
   const params = useParams();
+  const pathname = usePathname();
 
   const posts = useMemo(() => {
     const data = createUserPostsMatrix(3, currPosts);
@@ -49,7 +50,7 @@ export default function UserPosts({ initData }: Props) {
       date: currPosts[currPosts.length - 1].createdAt,
       total: initData.total,
     };
-    const result = await actionFetchUserPosts(args);
+    const result = await loadMoreUserPosts.bind(null, pathname)(args);
     const newPosts = result?.data?.data;
     if (newPosts) {
       if (newPosts.length < 6) {

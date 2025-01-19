@@ -4,13 +4,14 @@ import { fetchUserFollowings } from "@/lib/drizzle/queries/users/fetchUserFollow
 import UsersContainer from "@/components/UsersContainer";
 
 type Props = {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 };
 
-const Page = async ({ params: { username } }: Props) => {
+const Page = async ({ params }: Props) => {
   const session = await auth();
+  const username = (await params).username;
 
   const data = await fetchUserFollowings({
     authUserId: session?.user.id,

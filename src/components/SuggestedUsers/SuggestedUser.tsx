@@ -1,8 +1,8 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
+import { follow as fl } from "@/lib/actions/follow";
 import { TSearchUser } from "@/lib/drizzle/queries/type";
-import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,7 +19,7 @@ const SuggestedUser = ({ user: { name, username, avatar, id } }: Props) => {
   const follow = async () => {
     setFollow((val) => !val);
     try {
-      await actionFollowUser({
+      await fl({
         pathname,
         followId: id,
       });

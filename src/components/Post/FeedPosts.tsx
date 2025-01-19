@@ -2,13 +2,14 @@
 
 import Spinner from "@/components/Spinner";
 import { useLastElement } from "@/hooks/useLastElement";
-import { actionFetchPosts } from "@/lib/next-safe-action/actionFetchFeedPosts";
+import { loadMoreFeedPosts } from "@/lib/actions/post";
+import { useFeedPosts } from "@/stores/useFeedPosts";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FeedPost from "./FeedPost";
-import { useFeedPosts } from "@/stores/useFeedPosts";
 
 type Props = {
   sessionUserId: string;
@@ -20,6 +21,7 @@ export default function FeedPosts({ sessionUserId }: Props) {
   const [currPage, setCurrPage] = useState(page);
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
+  const pathname = usePathname();
 
   const lastElementRef = useLastElement({
     callback: () => setCurrPage((val) => val + 1),
@@ -32,7 +34,10 @@ export default function FeedPosts({ sessionUserId }: Props) {
     const loadPosts = async () => {
       setLoading(true);
       try {
-        const result = await actionFetchPosts({
+        const result = await loadMoreFeedPosts.bind(
+          null,
+          pathname,
+        )({
           page: currPage,
           date: new Date(date),
           total: total,

@@ -1,11 +1,12 @@
 import PostsProvider from "../PostsProvider";
 
 type Props = {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: Props) {
-  return <PostsProvider username={params.username} />;
+  const username = (await params).username;
+  return <PostsProvider username={username} />;
 }

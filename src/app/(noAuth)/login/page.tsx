@@ -5,6 +5,7 @@ import GoogleButton from "@/components/SocialButtons/GoogleButton";
 import SvgInstagram from "@/components/svg/SvgInstagram";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Instagram | Login",
@@ -32,7 +33,9 @@ const Page = async () => {
           </h1>
         </section>
         <section className="w-full max-w-sm">
-          <FormLogin />
+          <Suspense>
+            <FormLogin />
+          </Suspense>
         </section>
         <section className="w-full max-w-sm py-6">
           <span className="relative flex justify-center">

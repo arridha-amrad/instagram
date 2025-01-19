@@ -20,7 +20,7 @@ export default function ButtonLikePost({
 }: Props) {
   const pathname = usePathname();
   const like = async () => {
-    await likePost({ pathname, postId });
+    await likePost.bind(null, pathname)({ postId });
     callback();
   };
   return (

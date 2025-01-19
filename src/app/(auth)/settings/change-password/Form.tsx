@@ -6,33 +6,38 @@ import { showToast } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import { ChangeEvent, useRef, useState } from "react";
 import { changePassword } from "./action";
+import { usePathname } from "next/navigation";
 
 const FormChangePassword = () => {
   const ref = useRef<HTMLFormElement | null>(null);
+  const pathname = usePathname();
 
   const [state, setState] = useState({
     newPassword: "",
     oldPassword: "",
   });
 
-  const { execute, isPending, result } = useAction(changePassword, {
-    onError: ({ error: { serverError } }) => {
-      if (serverError) {
-        showToast(serverError, "error");
-      }
+  const { execute, isPending, result } = useAction(
+    changePassword.bind(null, pathname),
+    {
+      onError: ({ error: { serverError } }) => {
+        if (serverError) {
+          showToast(serverError, "error");
+        }
+      },
+      onSuccess: ({ data }) => {
+        ref.current?.reset();
+        if (data) {
+          showToast(data, "success");
+        }
+        setState({
+          ...state,
+          newPassword: "",
+          oldPassword: "",
+        });
+      },
     },
-    onSuccess: ({ data }) => {
-      ref.current?.reset();
-      if (data) {
-        showToast(data, "success");
-      }
-      setState({
-        ...state,
-        newPassword: "",
-        oldPassword: "",
-      });
-    },
-  });
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({

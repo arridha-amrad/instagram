@@ -11,8 +11,6 @@ export default async function Page() {
     redirect("/login");
   }
 
-  console.log("session user : ", session.user);
-
   const posts = await fetchFeedPosts({ page: 1, userId });
   return (
     <FeedPostProvider data={posts}>

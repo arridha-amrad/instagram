@@ -7,13 +7,14 @@ import { Metadata } from "next";
 import Modal from "./Modal";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await fetchPostMetadata(params.id);
+  const id = (await params).id;
+  const post = await fetchPostMetadata(id);
   return {
     title: `Instagram Post by ${post?.username} added at ${new Intl.DateTimeFormat("en-US").format(post?.createdAt)} • Instagram`,
     description: `Instagram post created by ${post?.username}`,
@@ -22,14 +23,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const Page = async ({ params }: Props) => {
   const session = await getAuth();
+  const id = (await params).id;
 
   const [post, comments] = await Promise.all([
     await fetchPost({
-      postId: params.id,
+      postId: id,
       userId: session?.user.id,
     }),
     await fetchComments({
-      postId: params.id,
+      postId: id,
       userId: session?.user.id,
     }),
   ]);

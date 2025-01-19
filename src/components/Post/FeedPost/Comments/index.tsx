@@ -1,8 +1,8 @@
-import { FeedComment } from "@/stores/useFeedPosts";
+import { TFeedComment } from "@/stores/useFeedPosts";
 import Comment from "./Comment";
 
 type Props = {
-  comments: FeedComment[];
+  comments: TFeedComment[];
 };
 
 const Comments = ({ comments }: Props) => {

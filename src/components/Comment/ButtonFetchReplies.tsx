@@ -1,9 +1,10 @@
 "use client";
 
 import MySpinner from "@/components/Spinner";
-import { actionFetchReplies } from "@/lib/next-safe-action/actionFetchReplies";
+import { loadMoreReplies } from "@/lib/actions/reply";
 import { Comment, useComments } from "@/stores/useComments";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -23,11 +24,15 @@ const ButtonFetchReplies = ({
   const { setReplies } = useComments();
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+  const pathname = usePathname();
 
   const fetchReplies = async () => {
     setIsLoading(true);
     try {
-      const result = await actionFetchReplies({
+      const result = await loadMoreReplies.bind(
+        null,
+        pathname,
+      )({
         commentId: comment.id,
         page,
       });

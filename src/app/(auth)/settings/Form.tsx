@@ -3,17 +3,15 @@
 import AvatarEditable from "@/components/AvatarEditable";
 import Button from "@/components/core/Button";
 import TextInput from "@/components/core/TextInput";
-
-import { useAction } from "next-safe-action/hooks";
-import { ChangeEvent, useRef, useState } from "react";
-
-import { TUserProfile } from "@/lib/drizzle/queries/type";
+import { TProfileDetail } from "@/lib/drizzle/queries/users/fetchUserProfileDetails";
 import { showToast } from "@/lib/utils";
-import { updateProfile } from "./action";
+import { useAction } from "next-safe-action/hooks";
 import { usePathname } from "next/navigation";
+import { ChangeEvent, useRef, useState } from "react";
+import { updateProfile } from "./action";
 
 type Props = {
-  user: TUserProfile;
+  user: TProfileDetail;
 };
 
 const FormEditProfile = ({ user }: Props) => {
@@ -117,7 +115,7 @@ const FormEditProfile = ({ user }: Props) => {
               name="bio"
               id="bio"
               rows={2}
-              defaultValue={user?.userInfo?.bio ?? ""}
+              defaultValue={user?.bio ?? ""}
               className="w-full resize-none rounded-md border border-skin bg-skin-input outline-none focus:border-transparent focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
             ></textarea>
             {bioError && (
@@ -136,7 +134,7 @@ const FormEditProfile = ({ user }: Props) => {
             <select
               name="gender"
               id="gender"
-              defaultValue={user?.userInfo?.gender ?? ""}
+              defaultValue={user?.gender ?? ""}
               className="w-full rounded-md border border-skin bg-skin-input outline-none focus:border-transparent focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
             >
               <option value="">Please select</option>

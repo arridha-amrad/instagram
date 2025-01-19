@@ -19,7 +19,7 @@ export default function ButtonLikePost({ isLiked, total, postId }: Props) {
   const like = async () => {
     setTot((val) => (isL ? (val -= 1) : (val += 1)));
     setIsL((val) => !val);
-    await lp({ pathname, postId });
+    await lp.bind(null, pathname)({ postId });
   };
   return (
     <button className="inline-flex items-center gap-2" onClick={like}>
