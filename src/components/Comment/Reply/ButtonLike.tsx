@@ -1,10 +1,10 @@
-import { actionLikeReply } from "@/lib/next-safe-action/actionLikeReply";
 import { useComments } from "@/stores/useComments";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
+import { likeReply as lr } from "@/lib/actions/reply";
 
 type Props = {
   commentId: string;
@@ -20,7 +20,7 @@ const ButtonLikeReply = ({ commentId, isLiked, replyId }: Props) => {
   const like = async () => {
     likeReply(commentId, replyId);
     try {
-      await actionLikeReply({ replyId, pathname });
+      await lr({ replyId, pathname });
     } catch (err) {
       toast.error("Something went wrong", { theme });
     }

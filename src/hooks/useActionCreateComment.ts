@@ -1,11 +1,11 @@
-import { actionCreateComment } from "@/lib/actions/comment";
 import { useComments } from "@/stores/useComments";
 import { useAction } from "next-safe-action/hooks";
 import { useTheme } from "next-themes";
 import { toast } from "react-toastify";
+import { create } from "@/lib/actions/comment";
 
 export const useActionCreateComment = (postId: string) => {
-  const action = actionCreateComment.bind(null, postId);
+  const action = create.bind(null, postId);
   const { theme } = useTheme();
   const { addComment } = useComments();
   const { execute, isExecuting, hasSucceeded } = useAction(action, {

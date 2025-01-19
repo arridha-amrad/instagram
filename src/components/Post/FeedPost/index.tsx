@@ -9,7 +9,7 @@ import Carousel from "./Carousel";
 import Comments from "./Comments";
 
 import TotalLikes from "./Likes";
-import CommentForm from "@/app/(auth)/(home)/FormComment";
+import FormComment from "./FormComment";
 
 type Props = {
   post: FeedPost;
@@ -65,7 +65,7 @@ const Post = ({ post, sessionUserId }: Props) => {
         </Link>
       )}
       {post.comments && <Comments comments={post.comments} />}
-      <CommentForm postId={post.id} />
+      <FormComment postId={post.id} />
     </article>
   );
 };

@@ -5,13 +5,13 @@ import { cn, showToast } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import { usePathname } from "next/navigation";
 import { useCreatePost } from "./CreatePostContext";
-import { createPost } from "./action";
+import { createPost } from "@/lib/actions/post";
 
 const FormCreatePost = () => {
   const { step, files, setSubmitSuccessful } = useCreatePost();
   const pathname = usePathname();
 
-  const { isExecuting, execute } = useAction(createPost, {
+  const { isExecuting, execute } = useAction(createPost.bind(null, pathname), {
     onError: () => {
       showToast("Something went wrong", "error");
     },

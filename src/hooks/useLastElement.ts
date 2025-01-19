@@ -8,7 +8,7 @@ type Props<T> = {
 };
 
 export const useLastElement = <T>(props: Props<T>) => {
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback(
     (element: HTMLDivElement) => {
       if (props.loading) {

@@ -1,11 +1,11 @@
 "use client";
 
-import { actionLikeComment } from "@/lib/next-safe-action/actionLikeComment";
 import { useComments } from "@/stores/useComments";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
 import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
+import { likeComment as lc } from "@/lib/actions/comment";
 
 type Props = {
   isLiked: boolean;
@@ -18,7 +18,7 @@ const ButtonLikeComment = ({ commentId, isLiked }: Props) => {
   const like = async () => {
     likeComment(commentId);
     try {
-      const result = await actionLikeComment({ commentId, pathname });
+      const result = await lc({ commentId, pathname });
       if (result?.serverError) {
         toast.error("Something went wrong");
       }

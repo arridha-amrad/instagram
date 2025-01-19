@@ -1,13 +1,13 @@
 import Avatar from "@/components/Avatar";
 import { TFollow } from "@/lib/drizzle/queries/users/fetchUserFollowers";
 
-import { actionFollowUser } from "@/lib/next-safe-action/actionFollowUser";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { follow as fl } from "@/lib/actions/follow";
 
 type Props = {
   user: TFollow;
@@ -25,7 +25,7 @@ const UserWithFollowButtonCard = ({
   const follow = async () => {
     setIsFollow((val) => !val);
     try {
-      await actionFollowUser({
+      await fl({
         pathname,
         followId: id,
       });

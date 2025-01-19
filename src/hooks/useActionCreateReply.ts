@@ -1,16 +1,16 @@
-import { actionCreateReply } from "@/lib/actions/reply";
+import { create } from "@/lib/actions/reply";
+import { showToast } from "@/lib/utils";
 import { useComments } from "@/stores/useComments";
 import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
-import { toast } from "react-toastify";
+import { usePathname } from "next/navigation";
 
 export const useActionCreateReply = (commentId: string) => {
-  const replyAction = actionCreateReply.bind(null, commentId);
+  const pathname = usePathname();
+  const replyAction = create.bind(null, commentId, pathname);
   const { addReply } = useComments();
-  const { theme } = useTheme();
   const { execute, isExecuting, hasSucceeded } = useAction(replyAction, {
     onError: () => {
-      toast.error("Something went wrong", { theme });
+      showToast("something went wrong", "error");
     },
     onSuccess: ({ data }) => {
       if (!data) return;

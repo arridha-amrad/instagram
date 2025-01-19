@@ -1,12 +1,11 @@
 "use client";
 
-import { actionLikePost } from "@/lib/next-safe-action/actionLikePost";
+import { likePost as lp } from "@/lib/actions/post";
+import { showToast } from "@/lib/utils";
 import { useFeedPosts } from "@/stores/useFeedPosts";
 import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
-import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import { toast } from "react-toastify";
 
 type Props = {
   isLiked: boolean;
@@ -15,14 +14,13 @@ type Props = {
 
 export default function ButtonLike({ isLiked, postId }: Props) {
   const { likePost } = useFeedPosts();
-  const { theme } = useTheme();
   const pathname = usePathname();
   const like = async () => {
     likePost(postId);
     try {
-      await actionLikePost({ pathname, postId });
+      await lp({ pathname, postId });
     } catch (err) {
-      toast.error("Something went wrong", { theme });
+      showToast("something went wrong", "error");
       // to cancel prev optimistic update
       likePost(postId);
     }

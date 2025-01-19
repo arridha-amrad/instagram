@@ -1,12 +1,12 @@
-import { actionLikeComment } from "@/lib/next-safe-action/actionLikeComment";
-import { FeedComment, useFeedPosts } from "@/stores/useFeedPosts";
+import { TFeedComment, useFeedPosts } from "@/stores/useFeedPosts";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as Heart } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { likeComment as lc } from "@/lib/actions/comment";
 
 type Props = {
-  comment: FeedComment;
+  comment: TFeedComment;
 };
 
 const Comment = ({ comment }: Props) => {
@@ -15,7 +15,7 @@ const Comment = ({ comment }: Props) => {
 
   const like = async () => {
     likeComment(comment);
-    await actionLikeComment({
+    await lc({
       pathname,
       commentId: comment.id,
     });

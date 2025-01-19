@@ -1,10 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { optionalAuthClient } from "./init";
 import { fetchPostLikes } from "../drizzle/queries/posts/fetchPostLikes";
+import { authActionClient } from "../safeAction";
 
-export const actionFetchLikedPostUsers = optionalAuthClient
+export const actionFetchLikedPostUsers = authActionClient
   .schema(
     z.object({
       postId: z.string(),

@@ -13,7 +13,7 @@ type Props = {
   postId: string;
 };
 
-export default function CommentForm({ postId }: Props) {
+export default function FormComment({ postId }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { theme } = useTheme();
@@ -21,7 +21,7 @@ export default function CommentForm({ postId }: Props) {
   const { addComment } = useFeedPosts();
 
   const action = create.bind(null, postId);
-  const { execute, isExecuting } = useAction(action, {
+  const { execute, isPending } = useAction(action, {
     onError: () => {
       toast.error("Something went wrong", { theme });
     },
@@ -42,15 +42,16 @@ export default function CommentForm({ postId }: Props) {
   });
 
   return (
-    <form action={execute} className="relative" ref={formRef}>
-      {isExecuting && (
+    <fieldset className="relative" disabled={false}>
+      {isPending && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/70">
           <Spinner />
         </div>
       )}
-      <fieldset
+      <form
+        action={execute}
         className="relative flex gap-4 border-b border-skin"
-        disabled={false}
+        ref={formRef}
       >
         <input
           value={message}
@@ -70,7 +71,7 @@ export default function CommentForm({ postId }: Props) {
         >
           Post
         </button>
-      </fieldset>
-    </form>
+      </form>
+    </fieldset>
   );
 }

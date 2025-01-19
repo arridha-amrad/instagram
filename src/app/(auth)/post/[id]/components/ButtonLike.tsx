@@ -1,10 +1,10 @@
 "use client";
 
-import { actionLikePost } from "@/lib/next-safe-action/actionLikePost";
 import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { likePost as lp } from "@/lib/actions/post";
 
 type Props = {
   postId: string;
@@ -19,7 +19,7 @@ export default function ButtonLikePost({ isLiked, total, postId }: Props) {
   const like = async () => {
     setTot((val) => (isL ? (val -= 1) : (val += 1)));
     setIsL((val) => !val);
-    await actionLikePost({ pathname, postId });
+    await lp({ pathname, postId });
   };
   return (
     <button className="inline-flex items-center gap-2" onClick={like}>

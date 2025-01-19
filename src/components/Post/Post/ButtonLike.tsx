@@ -1,9 +1,9 @@
 "use client";
 
-import { actionLikePost } from "@/lib/next-safe-action/actionLikePost";
 import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
 import Heart from "@heroicons/react/24/solid/HeartIcon";
 import { usePathname } from "next/navigation";
+import { likePost } from "@/lib/actions/post";
 
 type Props = {
   postId: string;
@@ -20,7 +20,7 @@ export default function ButtonLikePost({
 }: Props) {
   const pathname = usePathname();
   const like = async () => {
-    await actionLikePost({ pathname, postId });
+    await likePost({ pathname, postId });
     callback();
   };
   return (
