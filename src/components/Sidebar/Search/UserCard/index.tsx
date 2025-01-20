@@ -20,13 +20,13 @@ const UserCard = ({
   const pathname = usePathname();
 
   const navigate = async () => {
-    router.push(`/${username}`);
     await saveUserToSearchHistory.bind(
       null,
       pathname,
     )({
       searchId: id,
     });
+    router.push(`/${username}`);
   };
 
   return (
@@ -39,7 +39,6 @@ const UserCard = ({
       </div>
       <div className="flex-1 text-sm">
         <h1>{username}</h1>
-        {/* <ButtonSaveToHistory userId={id} username={username} /> */}
         <p className="text-skin-muted">{name}</p>
       </div>
       {isRemovable && <ButtonRemove userId={id} />}

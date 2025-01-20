@@ -7,10 +7,9 @@ import LinkSettings from "./Links/LinkSettings";
 import NewPostModal from "./Modal/ModalCreatePost";
 import { CreatePostProvider } from "./Modal/ModalCreatePost/CreatePostContext";
 import Logout from "./Modal/ModalLogout";
-import Histories from "./Search/Histories";
-import ButtonSearchUser from "./Search/ModalSearchUser";
+import ModalSearch from "./Search/ModalSearch";
+import UserCard from "./Search/UserCard";
 import SidebarBrand from "./SidebarBrand";
-import LinkSearch from "./Links/LinkSearch";
 
 export default async function Sidebar() {
   const session = await auth();
@@ -28,10 +27,17 @@ export default async function Sidebar() {
       <div className="h-4" />
       <LinkHome />
       <div className="h-2" />
-      <LinkSearch />
-      {/* <ButtonSearchUser>
-        <Histories data={searchHistories} />
-      </ButtonSearchUser> */}
+      <ModalSearch>
+        {searchHistories.length > 0 ? (
+          searchHistories.map((user) => (
+            <UserCard isRemovable user={user} key={user.id} />
+          ))
+        ) : (
+          <div>
+            <h1>There is no recent search</h1>
+          </div>
+        )}
+      </ModalSearch>
       <div className="h-2" />
       <CreatePostProvider>
         <NewPostModal />

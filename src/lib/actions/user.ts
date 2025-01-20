@@ -1,13 +1,25 @@
 "use server";
 
 import { z } from "zod";
-import { authActionClient } from "../safeAction";
+import { actionClient, authActionClient } from "../safeAction";
 import { zfd } from "zod-form-data";
 import { redirect } from "next/navigation";
 import CloudinaryService from "../CloudinaryService";
 import UserService from "../drizzle/services/UserService";
 import { revalidateTag } from "next/cache";
 import { USERS } from "../cacheKeys";
+import { searchUser as su } from "@/lib/drizzle/queries/users/searchUser";
+
+export const searchUser = actionClient
+  .schema(
+    zfd.formData({
+      key: zfd.text(z.string()),
+    }),
+  )
+  .action(async ({ parsedInput: { key } }) => {
+    const users = await su(key);
+    return users;
+  });
 
 export const updateAvatar = authActionClient
   .schema(
