@@ -3,33 +3,34 @@
 import Avatar from "@/components/Avatar";
 import { follow as fl } from "@/lib/actions/follow";
 import { TSearchUser } from "@/lib/drizzle/queries/type";
-import { cn } from "@/lib/utils";
+import { cn, showToast } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 type Props = {
   user: TSearchUser;
 };
 
-const SuggestedUser = ({ user: { name, username, avatar, id } }: Props) => {
+const UserCard = ({ user: { name, username, avatar, id } }: Props) => {
   const pathname = usePathname();
   const [isFollow, setFollow] = useState(false);
   const follow = async () => {
     setFollow((val) => !val);
-    try {
-      await fl({
-        pathname,
-        followId: id,
-      });
-    } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+    const result = await fl.bind(
+      null,
+      pathname,
+    )({
+      pathname,
+      followId: id,
+    });
+    if (result?.serverError) {
+      showToast(result.serverError, "error");
+      setFollow((val) => !val);
     }
   };
   return (
-    <div className="flex w-full items-center justify-between px-4">
+    <div className="flex w-full items-center justify-between">
       <div className="flex items-start justify-start gap-3">
         <Avatar url={avatar} />
         <div className="max-w-[150px] overflow-hidden text-sm">
@@ -55,4 +56,4 @@ const SuggestedUser = ({ user: { name, username, avatar, id } }: Props) => {
   );
 };
 
-export default SuggestedUser;
+export default UserCard;

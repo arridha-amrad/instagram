@@ -1,6 +1,7 @@
 import { db } from "@/lib/drizzle/db";
 import { FollowingsTable, UsersTable } from "../../schema";
 import { sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 
 const query2 = async (userId: string) => {
   const result = await db.execute(sql`
@@ -29,11 +30,11 @@ export type TSuggestedUsers = {
   name: string;
 };
 
-const fetchSuggestedUsers = async (
-  authUserId: string,
-): Promise<TSuggestedUsers[]> => {
-  const users = (await query2(authUserId)) as TSuggestedUsers[];
-  return users;
-};
+const fetchSuggestedUsers = unstable_cache(
+  async (authUserId: string): Promise<TSuggestedUsers[]> => {
+    const users = (await query2(authUserId)) as TSuggestedUsers[];
+    return users;
+  },
+);
 
 export default fetchSuggestedUsers;

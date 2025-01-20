@@ -27,14 +27,16 @@ export default async function Sidebar() {
       <div className="h-4" />
       <LinkHome />
       <div className="h-2" />
-      <ModalSearch>
+      <ModalSearch historiesLength={searchHistories.length}>
         {searchHistories.length > 0 ? (
           searchHistories.map((user) => (
             <UserCard isRemovable user={user} key={user.id} />
           ))
         ) : (
-          <div>
-            <h1>There is no recent search</h1>
+          <div className="flex flex-1 items-center justify-center">
+            <h1 className="text-sm text-skin-muted">
+              There is no recent search
+            </h1>
           </div>
         )}
       </ModalSearch>

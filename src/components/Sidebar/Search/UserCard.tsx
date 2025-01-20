@@ -1,11 +1,14 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
-import { saveUserToSearchHistory } from "@/lib/actions/user";
+import {
+  removeUserFromSearchHistory,
+  saveUserToSearchHistory,
+} from "@/lib/actions/user";
 import { TSearchUser } from "@/lib/drizzle/queries/type";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-import ButtonRemove from "./ButtonRemove";
 
 type Props = {
   user: TSearchUser;
@@ -29,6 +32,10 @@ const UserCard = ({
     router.push(`/${username}`);
   };
 
+  const remove = async () => {
+    await removeUserFromSearchHistory.bind(null, pathname)({ searchId: id });
+  };
+
   return (
     <div
       onClick={navigate}
@@ -41,7 +48,18 @@ const UserCard = ({
         <h1>{username}</h1>
         <p className="text-skin-muted">{name}</p>
       </div>
-      {isRemovable && <ButtonRemove userId={id} />}
+      {isRemovable && (
+        <button
+          onClick={async (e) => {
+            e.stopPropagation();
+            await remove();
+          }}
+          type="submit"
+          className="flex-none"
+        >
+          <XMarkIcon className="aspect-square w-5" />
+        </button>
+      )}
     </div>
   );
 };

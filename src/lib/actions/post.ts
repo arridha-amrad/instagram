@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { POST } from "../cacheKeys";
@@ -39,16 +38,9 @@ export const createPost = authActionClient
     async ({
       ctx: { session },
       parsedInput: { description, images, location },
-      bindArgsParsedInputs: [pathname],
     }) => {
-      if (!session) {
-        return redirect(`/login?cb_url?${pathname}`);
-      }
-
       const { id: userId } = session.user;
-
       const urls: PostContentUrl[] = [];
-
       for (const image of images) {
         const response = await CloudinaryService.upload(image);
         urls.push({
@@ -57,7 +49,6 @@ export const createPost = authActionClient
           url: response.secure_url,
         });
       }
-
       const postService = new PostService();
       await postService.create({
         urls,
@@ -65,10 +56,8 @@ export const createPost = authActionClient
         description,
         location,
       });
-
       revalidateTag(POST.homePosts);
       revalidateTag(POST.userPosts);
-
       return "New post added";
     },
   );
@@ -80,31 +69,20 @@ export const likePost = authActionClient
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
-  .action(
-    async ({
-      ctx: { session },
-      parsedInput: { postId },
-      bindArgsParsedInputs: [pathname],
-    }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${pathname}`);
-      }
-      const { id: userId } = session.user;
-
-      const postService = new PostService();
-
-      const likeRows = await postService.findLike({ postId, userId });
-      let message = "";
-      if (likeRows.length === 0) {
-        await postService.like({ postId, userId });
-        message = "like";
-      } else {
-        await postService.dislike({ postId, userId });
-        message = "dislike";
-      }
-      return message;
-    },
-  );
+  .action(async ({ ctx: { session }, parsedInput: { postId } }) => {
+    const { id: userId } = session.user;
+    const postService = new PostService();
+    const likeRows = await postService.findLike({ postId, userId });
+    let message = "";
+    if (likeRows.length === 0) {
+      await postService.like({ postId, userId });
+      message = "like";
+    } else {
+      await postService.dislike({ postId, userId });
+      message = "dislike";
+    }
+    return message;
+  });
 
 export const loadMoreFeedPosts = authActionClient
   .schema(
@@ -115,24 +93,15 @@ export const loadMoreFeedPosts = authActionClient
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
-  .action(
-    async ({
-      ctx: { session },
-      bindArgsParsedInputs: [pathname],
-      parsedInput: { date, page, total },
-    }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${pathname}`);
-      }
-      const result = await fetchFeedPosts({
-        page,
-        userId: session.user.id,
-        date,
-        total,
-      });
-      return result;
-    },
-  );
+  .action(async ({ ctx: { session }, parsedInput: { date, page, total } }) => {
+    const result = await fetchFeedPosts({
+      page,
+      userId: session.user.id,
+      date,
+      total,
+    });
+    return result;
+  });
 
 export const loadMoreLovers = authActionClient
   .schema(
@@ -142,23 +111,14 @@ export const loadMoreLovers = authActionClient
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
-  .action(
-    async ({
-      ctx: { session },
-      bindArgsParsedInputs: [pathname],
-      parsedInput: { postId, page },
-    }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${pathname}`);
-      }
-      const result = await fetchPostLikes({
-        postId,
-        authUserId: session.user.id,
-        page,
-      });
-      return result;
-    },
-  );
+  .action(async ({ ctx: { session }, parsedInput: { postId, page } }) => {
+    const result = await fetchPostLikes({
+      postId,
+      authUserId: session.user.id,
+      page,
+    });
+    return result;
+  });
 
 export const loadMoreUserPosts = authActionClient
   .schema(
@@ -169,20 +129,11 @@ export const loadMoreUserPosts = authActionClient
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
-  .action(
-    async ({
-      ctx: { session },
-      parsedInput: { date, total, username },
-      bindArgsParsedInputs: [pathname],
-    }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${pathname}`);
-      }
-      const result = await fetchUserPosts({
-        username,
-        date,
-        total,
-      });
-      return result;
-    },
-  );
+  .action(async ({ parsedInput: { date, total, username } }) => {
+    const result = await fetchUserPosts({
+      username,
+      date,
+      total,
+    });
+    return result;
+  });

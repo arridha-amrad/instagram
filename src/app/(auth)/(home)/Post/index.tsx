@@ -7,9 +7,8 @@ import Link from "next/link";
 import ButtonLike from "./ButtonLike";
 import Carousel from "./Carousel";
 import Comments from "./Comments";
-
-import TotalLikes from "./Likes";
 import FormComment from "./FormComment";
+import ModalPostLovers from "./ModalPostLovers";
 
 type Props = {
   post: FeedPost;
@@ -44,7 +43,7 @@ const Post = ({ post, sessionUserId }: Props) => {
         </Link>
       </div>
       {post.sumLikes > 0 && (
-        <TotalLikes
+        <ModalPostLovers
           sessionUserId={sessionUserId}
           postId={post.id}
           total={post.sumLikes}

@@ -18,6 +18,7 @@ type Props = {
 
 const Layout = async ({ children, suggestedUsers }: Props) => {
   const session = await auth();
+
   if (!session) {
     redirect("/login");
   }
@@ -30,7 +31,7 @@ const Layout = async ({ children, suggestedUsers }: Props) => {
         {children}
       </section>
       <section className="sticky inset-y-0 hidden h-screen min-h-[500px] w-full max-w-xs flex-shrink-0 lg:block">
-        <div className="flex items-center">
+        <div className="flex items-center pb-4">
           <div className="flex w-full items-center gap-2 px-4 py-3">
             <div className="flex flex-1 basis-0 items-start justify-start gap-3">
               <Avatar url={image} />
@@ -41,17 +42,14 @@ const Layout = async ({ children, suggestedUsers }: Props) => {
                 <p className="line-clamp-1 text-skin-muted">{name}</p>
               </div>
             </div>
-            <div className="">
-              <Link
-                className="text-sm font-medium text-skin-inverted"
-                href={`/${username}`}
-              >
-                visit
-              </Link>
-            </div>
+            <Link
+              className="text-sm font-medium text-skin-inverted"
+              href={`/${username}`}
+            >
+              visit
+            </Link>
           </div>
         </div>
-        <div className="h-4" />
         {suggestedUsers}
       </section>
     </section>

@@ -10,7 +10,11 @@ export default function ButtonRemoveAll() {
     await removeAllSearchHistories.bind(null, pathname)();
   };
   return (
-    <button onClick={removeAll} type="submit" className="font-semibold">
+    <button
+      onClick={removeAll}
+      type="submit"
+      className="rounded-lg bg-red-500 px-2 py-1 text-sm font-semibold"
+    >
       Clear all
     </button>
   );

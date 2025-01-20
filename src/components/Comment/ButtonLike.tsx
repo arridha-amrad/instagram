@@ -18,7 +18,7 @@ const ButtonLikeComment = ({ commentId, isLiked }: Props) => {
   const like = async () => {
     likeComment(commentId);
     try {
-      const result = await lc({ commentId, pathname });
+      const result = await lc.bind(null, pathname)({ commentId });
       if (result?.serverError) {
         toast.error("Something went wrong");
       }
@@ -27,7 +27,7 @@ const ButtonLikeComment = ({ commentId, isLiked }: Props) => {
     }
   };
   return (
-    <button onClick={like} type="submit">
+    <button onClick={like}>
       {isLiked ? (
         <Heart className="aspect-square w-4 fill-pink-600" />
       ) : (

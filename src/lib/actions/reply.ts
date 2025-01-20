@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { fetchReplies, TReply } from "../drizzle/queries/replies/fetchReplies";
@@ -19,13 +18,10 @@ export const create = authActionClient
   ])
   .action(
     async ({
-      bindArgsParsedInputs: [commentId, pathname],
+      bindArgsParsedInputs: [commentId],
       ctx: { session },
       parsedInput: { message },
     }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${pathname}`);
-      }
       const { id: userId, username, image } = session.user;
       const replyService = new ReplyService();
       const [result] = await replyService.create({
@@ -51,10 +47,8 @@ export const likeReply = authActionClient
       pathname: z.string(),
     }),
   )
-  .action(async ({ parsedInput: { replyId, pathname }, ctx: { session } }) => {
-    if (!session) {
-      return redirect(`/login?cb_url=${pathname}`);
-    }
+  .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
+  .action(async ({ parsedInput: { replyId }, ctx: { session } }) => {
     const { id: userId } = session.user;
     const replyService = new ReplyService();
     const likeRows = await replyService.findLike({ replyId, userId });
@@ -77,20 +71,11 @@ export const loadMoreReplies = authActionClient
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
-  .action(
-    async ({
-      ctx: { session },
-      bindArgsParsedInputs: [pathname],
-      parsedInput: { commentId, page },
-    }) => {
-      if (!session) {
-        return redirect(`/login?cb_url=${pathname}`);
-      }
-      const data = await fetchReplies({
-        commentId,
-        userId: session.user.id,
-        page,
-      });
-      return data;
-    },
-  );
+  .action(async ({ ctx: { session }, parsedInput: { commentId, page } }) => {
+    const data = await fetchReplies({
+      commentId,
+      userId: session.user.id,
+      page,
+    });
+    return data;
+  });

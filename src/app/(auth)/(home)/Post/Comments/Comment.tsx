@@ -15,8 +15,10 @@ const Comment = ({ comment }: Props) => {
 
   const like = async () => {
     likeComment(comment);
-    await lc({
+    await lc.bind(
+      null,
       pathname,
+    )({
       commentId: comment.id,
     });
   };
@@ -32,7 +34,7 @@ const Comment = ({ comment }: Props) => {
         </Link>
         <p className="inline text-sm text-skin-muted">{comment.body}</p>
       </div>
-      <button onClick={like} className="pl-2">
+      <button onClick={like} className="">
         {comment.isLiked ? (
           <Heart className="w-4 fill-pink-500" />
         ) : (

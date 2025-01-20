@@ -1,5 +1,5 @@
 import Avatar from "@/components/Avatar";
-import Carousel from "@/components/Post/FeedPost/Carousel";
+import Carousel from "@/app/(auth)/(home)/Post/Carousel";
 import Comments from "@/components/Post/Post/Comments";
 import CommentsProvider from "@/components/Providers/CommentsProvider";
 import { fetchComments } from "@/lib/drizzle/queries/comments/fetchComments";

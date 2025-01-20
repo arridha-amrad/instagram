@@ -25,8 +25,10 @@ const UserWithFollowButtonCard = ({
   const follow = async () => {
     setIsFollow((val) => !val);
     try {
-      await fl({
+      await fl.bind(
+        null,
         pathname,
+      )({
         followId: id,
       });
     } catch (err) {

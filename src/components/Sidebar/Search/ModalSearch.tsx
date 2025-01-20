@@ -10,8 +10,15 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { className } from "../styles";
 import UserCard from "./UserCard";
+import ButtonRemoveAll from "./ButtonRemoveAll";
 
-export default function ModalSearch({ children }: { children: ReactNode }) {
+export default function ModalSearch({
+  children,
+  historiesLength,
+}: {
+  children: ReactNode;
+  historiesLength: number;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [value, { isPending: isLoading }] = useDebounce(query, 1000);
@@ -85,14 +92,17 @@ export default function ModalSearch({ children }: { children: ReactNode }) {
                   loading ...
                 </h1>
               ) : (
-                <h1 className="">
-                  Search Result
-                  {value && (
-                    <span className="italic">
-                      &nbsp; for <q>{value}</q>
-                    </span>
-                  )}
-                </h1>
+                <div className="flex justify-between">
+                  <h1 className="text-sm font-semibold text-skin-muted">
+                    Search Result
+                    {value && (
+                      <span className="italic">
+                        &nbsp; for <q>{value}</q>
+                      </span>
+                    )}
+                  </h1>
+                  {historiesLength > 0 && !query && <ButtonRemoveAll />}
+                </div>
               )}
             </div>
 

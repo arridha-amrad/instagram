@@ -8,6 +8,7 @@ import {
 import { aliasedTable, eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import crypto from "crypto";
+import { USERS } from "@/lib/cacheKeys";
 
 type Args = {
   username: string;
@@ -72,10 +73,6 @@ const getProfile = async ({ username, authUserId }: Args) => {
   return data.length > 0 ? data[0] : null;
 };
 
-export const fetchUserProfile = unstable_cache(
-  getProfile,
-  ["fetchUserProfile"],
-  {
-    tags: ["fetchUserProfile"],
-  },
-);
+export const fetchUserProfile = unstable_cache(getProfile, [USERS.profile], {
+  tags: [USERS.profile],
+});

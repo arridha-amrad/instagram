@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import FeedPost from "./FeedPost";
+import FeedPost from "../../app/(auth)/(home)/Post";
 
 type Props = {
   sessionUserId: string;
