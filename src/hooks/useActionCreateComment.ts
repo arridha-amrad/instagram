@@ -1,20 +1,21 @@
+import { create } from "@/lib/actions/comment";
+import { showToast } from "@/lib/utils";
 import { useComments } from "@/stores/useComments";
 import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
-import { toast } from "react-toastify";
-import { create } from "@/lib/actions/comment";
+import { usePathname } from "next/navigation";
 
 export const useActionCreateComment = (postId: string) => {
-  const action = create.bind(null, postId);
-  const { theme } = useTheme();
+  const pathname = usePathname();
+  const action = create.bind(null, postId, pathname);
   const { addComment } = useComments();
   const { execute, isExecuting, hasSucceeded } = useAction(action, {
     onError: () => {
-      toast.error("Something went wrong", { theme });
+      showToast("something went wrong", "error");
     },
     onSuccess: ({ data }) => {
-      if (!data) return;
-      addComment(data);
+      if (data) {
+        addComment(data);
+      }
     },
   });
 

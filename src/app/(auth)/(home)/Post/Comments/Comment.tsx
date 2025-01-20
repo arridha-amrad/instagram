@@ -1,9 +1,8 @@
-import { TFeedComment, useFeedPosts } from "@/stores/useFeedPosts";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as Heart } from "@heroicons/react/24/solid";
+import { TFeedComment, useFeedPosts } from "@/app/(auth)/(home)/Post/store";
+import ButtonLike from "@/components/ButtonLike";
+import { likeComment as lc } from "@/lib/actions/comment";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { likeComment as lc } from "@/lib/actions/comment";
 
 type Props = {
   comment: TFeedComment;
@@ -34,13 +33,9 @@ const Comment = ({ comment }: Props) => {
         </Link>
         <p className="inline text-sm text-skin-muted">{comment.body}</p>
       </div>
-      <button onClick={like} className="">
-        {comment.isLiked ? (
-          <Heart className="w-4 fill-pink-500" />
-        ) : (
-          <HeartIcon className="w-4" />
-        )}
-      </button>
+      <div className="pt-1">
+        <ButtonLike callback={like} isLike={comment.isLiked} size="small" />
+      </div>
     </div>
   );
 };

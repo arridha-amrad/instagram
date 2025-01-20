@@ -44,7 +44,6 @@ export const likeReply = authActionClient
   .schema(
     z.object({
       replyId: z.string(),
-      pathname: z.string(),
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])

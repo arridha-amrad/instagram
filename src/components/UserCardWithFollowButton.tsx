@@ -1,38 +1,35 @@
+"use client";
+
 import Avatar from "@/components/Avatar";
 import { TFollow } from "@/lib/drizzle/queries/users/fetchUserFollowers";
-
-import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
+import { follow as fl } from "@/lib/actions/follow";
+import { cn, showToast } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { follow as fl } from "@/lib/actions/follow";
 
 type Props = {
   user: TFollow;
   sessionUserId: string;
 };
 
-const UserWithFollowButtonCard = ({
+const UserCardWithFollowButton = ({
   user: { avatar, id, isFollow: isF, name, username },
   sessionUserId,
 }: Props) => {
   const [isFollow, setIsFollow] = useState(isF);
   const pathname = usePathname();
-  const { theme } = useTheme();
 
   const follow = async () => {
     setIsFollow((val) => !val);
-    try {
-      await fl.bind(
-        null,
-        pathname,
-      )({
-        followId: id,
-      });
-    } catch (err) {
-      toast.error("something went wrong", { theme });
+    const result = await fl.bind(
+      null,
+      pathname,
+    )({
+      followId: id,
+    });
+    if (result?.serverError) {
+      showToast("something went wrong", "error");
     }
   };
   return (
@@ -64,4 +61,4 @@ const UserWithFollowButtonCard = ({
   );
 };
 
-export default UserWithFollowButtonCard;
+export default UserCardWithFollowButton;

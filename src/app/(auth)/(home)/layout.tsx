@@ -23,7 +23,7 @@ const Layout = async ({ children, suggestedUsers }: Props) => {
     redirect("/login");
   }
 
-  const { image, name, username } = await getMe(session.user.id);
+  const { image, name, username } = session.user;
 
   return (
     <section className="flex w-full">

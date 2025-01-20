@@ -17,15 +17,13 @@ const Modal = ({ post }: Props) => {
   const { setReply } = useReplySetter();
   const pathname = usePathname();
 
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     if (!pathname.startsWith("/post")) {
       setOpen(false);
+    } else {
+      setOpen(true);
     }
   }, [pathname]);
 

@@ -2,16 +2,22 @@
 
 import Avatar from "@/components/Avatar";
 import MySpinner from "@/components/Spinner";
+import { useUpdateSession } from "@/hooks/useUpdateSession";
 import { updateAvatar } from "@/lib/actions/user";
 import { cn, showToast } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import mergeRefs from "merge-refs";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
-import { ChangeEvent, HTMLAttributes, Ref, forwardRef, useRef } from "react";
-import { toast } from "react-toastify";
+import {
+  ChangeEvent,
+  HTMLAttributes,
+  Ref,
+  forwardRef,
+  useEffect,
+  useRef,
+} from "react";
 
 type Props = {
   avatar?: string | null;
@@ -21,33 +27,20 @@ const EditableAvatar = (
   { avatar, ...props }: Props,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { update } = useSession();
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const { theme } = useTheme();
-  const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
 
-  const { execute, isExecuting } = useAction(
+  const { execute, isExecuting, hasSucceeded, result } = useAction(
     updateAvatar.bind(null, pathname),
     {
       onError: () => {
-        showToast("something went wrong", "success");
-      },
-      async onSuccess({ data }) {
-        if (!data) return;
-        const { id, image, name, username } = data;
-        await update({
-          id,
-          username,
-          image,
-          name,
-        });
-        router.refresh();
-        toast.success("Avatar changed successfully", { theme });
+        showToast("something went wrong", "error");
       },
     },
   );
+
+  useUpdateSession(hasSucceeded, result.data);
 
   const onChangeFileInput = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

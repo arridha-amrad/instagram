@@ -43,6 +43,7 @@ const Page = async ({ params }: Props) => {
       </div>
     );
   }
+
   return (
     <CommentsProvider total={post.sumComments} data={comments}>
       <Modal post={post} />

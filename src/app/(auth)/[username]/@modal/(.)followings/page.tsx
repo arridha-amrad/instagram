@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
-import ModalFollowings from "./ModalFollowings";
+import ModalBox from "@/components/ModalBox";
+import UserWithFollowButtonCard from "@/components/UserCardWithFollowButton";
 import { fetchUserFollowings } from "@/lib/drizzle/queries/users/fetchUserFollowings";
-import UsersContainer from "@/components/UsersContainer";
+import ModalFollowings from "./ModalFollowings";
 
 type Props = {
   params: Promise<{
@@ -20,11 +21,23 @@ const Page = async ({ params }: Props) => {
 
   return (
     <ModalFollowings>
-      <UsersContainer
-        title="Followings"
-        users={data}
-        sessionUserId={session?.user.id ?? ""}
-      />
+      <ModalBox title="Followings">
+        <div className="max-h-[500px] overflow-y-auto">
+          {data.length > 0 ? (
+            data.map((user) => (
+              <UserWithFollowButtonCard
+                sessionUserId={session?.user.id ?? ""}
+                key={user.id}
+                user={user}
+              />
+            ))
+          ) : (
+            <div className="flex items-center justify-center py-4">
+              <p className="text-skin-muted">You follow nobody</p>
+            </div>
+          )}
+        </div>
+      </ModalBox>
     </ModalFollowings>
   );
 };

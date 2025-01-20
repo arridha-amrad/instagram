@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { create } from "@/lib/actions/comment";
-import { useFeedPosts } from "@/stores/useFeedPosts";
+import { useFeedPosts } from "@/app/(auth)/(home)/Post/store";
 import { usePathname } from "next/navigation";
 
 type Props = {

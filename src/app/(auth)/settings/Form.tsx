@@ -32,7 +32,7 @@ const FormEditProfile = ({ user }: Props) => {
     {
       async onSuccess({ data }) {
         if (data) {
-          showToast(data, "success");
+          showToast("Update successful", "success");
         }
       },
     },

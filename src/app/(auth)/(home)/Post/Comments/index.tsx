@@ -1,4 +1,4 @@
-import { TFeedComment } from "@/stores/useFeedPosts";
+import { TFeedComment } from "@/app/(auth)/(home)/Post/store";
 import Comment from "./Comment";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 const Comments = ({ comments }: Props) => {
   return (
     <section id="post_comments" className="">
-      {comments.map((comment, i) => (
+      {comments.map((comment) => (
         <Comment key={comment.id} comment={comment} />
       ))}
     </section>

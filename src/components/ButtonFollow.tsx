@@ -19,7 +19,7 @@ const ButtonFollow = ({ userId, isFollow }: Props) => {
   const follow = async () => {
     setPending(true);
     try {
-      await fl({ followId: userId, pathname });
+      await fl.bind(null, pathname)({ followId: userId });
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");

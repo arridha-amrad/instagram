@@ -20,7 +20,7 @@ const ButtonLikeReply = ({ commentId, isLiked, replyId }: Props) => {
   const like = async () => {
     likeReply(commentId, replyId);
     try {
-      await lr({ replyId, pathname });
+      // await lr({ replyId, pathname });
     } catch (err) {
       toast.error("Something went wrong", { theme });
     }

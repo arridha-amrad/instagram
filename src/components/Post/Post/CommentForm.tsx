@@ -9,9 +9,10 @@ import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 
 type Props = {
   post: TPost;
+  ref: Ref<HTMLInputElement>;
 };
 
-const CommentForm = ({ post }: Props, ref: Ref<HTMLInputElement>) => {
+const CommentForm = ({ post, ref }: Props) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [message, setMessage] = useState("");
   const { reply, setReply } = useReplySetter();
@@ -50,45 +51,48 @@ const CommentForm = ({ post }: Props, ref: Ref<HTMLInputElement>) => {
   }, [message]);
 
   return (
-    <form
-      ref={formRef}
-      action={reply ? exeReply : exeComment}
-      className="flex h-full items-center pt-1"
-    >
-      <div className="relative flex h-full w-full items-center">
-        {(isExeComment || isExeReply) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-            <MySpinner />
-          </div>
-        )}
-        <div className="flex-1 px-2">
-          <fieldset disabled={isExeReply || isExeComment}>
+    <fieldset disabled={isExeReply || isExeComment}>
+      <form
+        ref={formRef}
+        action={reply ? exeReply : exeComment}
+        className="relative flex h-full items-center overflow-hidden"
+      >
+        <div className="relative flex h-full w-full items-center gap-2">
+          {(isExeComment || isExeReply) && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+              <MySpinner />
+            </div>
+          )}
+          <div className="flex-1">
             <input
+              autoFocus
               ref={mergeRefs(ref, inputRef)}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               name="message"
               type="text"
               placeholder="Add comment..."
-              className="h-12 w-full flex-1 rounded-md border-none bg-background px-4 text-sm focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
+              className="h-12 w-full flex-1 border-none bg-background px-4 pr-16 text-sm focus:ring-2 focus:ring-skin-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black"
             />
-          </fieldset>
+          </div>
+          <div className="absolute bottom-0 right-0 top-0">
+            <button
+              disabled={isExeReply || isExeComment || message.length === 0}
+              type="submit"
+              className={cn(
+                "h-full bg-background px-2 text-sm",
+                message.length > 0
+                  ? "font-semibold text-skin-inverted"
+                  : "text-skin-muted/50",
+              )}
+            >
+              Send
+            </button>
+          </div>
         </div>
-        <button
-          disabled={isExeReply || isExeComment || message.length === 0}
-          type="submit"
-          className={cn(
-            "h-full bg-background px-2 text-sm",
-            message.length > 0
-              ? "font-semibold text-skin-inverted"
-              : "text-skin-muted/50",
-          )}
-        >
-          Send
-        </button>
-      </div>
-    </form>
+      </form>
+    </fieldset>
   );
 };
 
-export default forwardRef(CommentForm);
+export default CommentForm;

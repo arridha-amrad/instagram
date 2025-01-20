@@ -1,6 +1,7 @@
 "use server";
 
 import { USERS } from "@/lib/cacheKeys";
+import { UserInfoTable } from "@/lib/drizzle/schema";
 import { TransactionManager } from "@/lib/drizzle/services/TransactionManager";
 import UserInfoService from "@/lib/drizzle/services/UserInfoService";
 import UserService from "@/lib/drizzle/services/UserService";
@@ -24,7 +25,7 @@ export const updateProfile = authActionClient
     const userId = session.user.id;
     const tm = new TransactionManager();
 
-    await tm.execute(async (tx) => {
+    const updateResponse = await tm.execute(async (tx) => {
       const userService = new UserService(tx);
       const userInfoService = new UserInfoService(tx);
       await userService.updateUser(userId, { name });
@@ -43,5 +44,5 @@ export const updateProfile = authActionClient
     revalidateTag(USERS.profile);
     revalidateTag(USERS.profileDetails);
 
-    return "Profile updated successfully";
+    return updateResponse;
   });

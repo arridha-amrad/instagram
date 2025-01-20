@@ -9,6 +9,9 @@ import Link from "next/link";
 import { ReactNode, useRef, useState } from "react";
 import ButtonComment from "./ButtonComment";
 import { TPost } from "@/lib/drizzle/queries/posts/fetchPost";
+import ButtonLike from "@/components/ButtonLike";
+import { likePost } from "@/lib/actions/post";
+import { usePathname } from "next/navigation";
 
 type Props = {
   post: TPost;
@@ -18,7 +21,10 @@ type Props = {
 const PostExpanded = ({ post, children }: Props) => {
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [totalLikes, setTotalLikes] = useState(post.sumLikes);
-  const likesCb = () => {
+  const pathname = usePathname();
+
+  const like = async () => {
+    await likePost.bind(null, pathname)({ postId: post.id });
     if (isLiked) {
       setTotalLikes((val) => (val -= 1));
       setIsLiked(false);
@@ -27,9 +33,10 @@ const PostExpanded = ({ post, children }: Props) => {
       setIsLiked(true);
     }
   };
+
   const commentInputRef = useRef<HTMLInputElement | null>(null);
   return (
-    <div className="flex overflow-hidden rounded-md border-[3px] border-skin">
+    <div className="flex overflow-hidden rounded-lg border border-skin">
       <section
         id="post_carousel"
         className="h-[90vh] w-max border-r border-skin bg-background"
@@ -38,9 +45,9 @@ const PostExpanded = ({ post, children }: Props) => {
       </section>
       <section
         id="post_detail"
-        className="flex w-[400px] flex-col bg-background pb-2"
+        className="flex w-[500px] flex-col bg-background"
       >
-        <section id="post_owner" className="px-4 py-2">
+        <section id="post_owner" className="p-4">
           <div className="flex items-center gap-3">
             <Avatar url={post.avatar} />
             <div>
@@ -53,10 +60,7 @@ const PostExpanded = ({ post, children }: Props) => {
             </div>
           </div>
         </section>
-        <section
-          id="post_description_and_comments"
-          className="flex flex-1 basis-0 flex-col items-start overflow-y-auto px-4 py-4"
-        >
+        <section className="flex flex-1 basis-0 flex-col items-start overflow-y-auto border-t border-skin p-4">
           {post.description && (
             <section id="post_description" className="flex gap-2">
               <div>
@@ -82,14 +86,10 @@ const PostExpanded = ({ post, children }: Props) => {
           )}
           <Comments />
         </section>
-        <section id="post_actions_and_info">
-          <div className="w-full px-4 py-2">
-            <div className="flex items-center gap-3 pt-2">
-              <ButtonLikePost
-                callback={likesCb}
-                isLiked={isLiked}
-                postId={post.id}
-              />
+        <section className="border-t border-skin">
+          <div className="w-full p-4">
+            <div className="flex items-center gap-3">
+              <ButtonLike callback={like} isLike={post.isLiked} size="normal" />
               <ButtonComment
                 focusToCommentInput={() => commentInputRef.current?.focus()}
               />
@@ -107,7 +107,7 @@ const PostExpanded = ({ post, children }: Props) => {
             </div>
           </div>
         </section>
-        <section id="comment_form">
+        <section className="border-t border-skin" id="comment_form">
           <CommentForm ref={commentInputRef} post={post} />
         </section>
       </section>

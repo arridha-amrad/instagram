@@ -1,7 +1,8 @@
-import UsersContainer from "@/components/UsersContainer";
 import { fetchUserFollowers } from "@/lib/drizzle/queries/users/fetchUserFollowers";
 import { getAuth } from "@/lib/next.auth";
 import ModalFollowers from "./ModalFollowers";
+import ModalBox from "@/components/ModalBox";
+import UserWithFollowButtonCard from "@/components/UserCardWithFollowButton";
 
 type Props = {
   params: Promise<{
@@ -18,11 +19,23 @@ const Page = async ({ params }: Props) => {
   });
   return (
     <ModalFollowers>
-      <UsersContainer
-        sessionUserId={session?.user.id ?? ""}
-        title="Followers"
-        users={data}
-      />
+      <ModalBox title="Followers">
+        <>
+          {data.length > 0 ? (
+            data.map((user) => (
+              <UserWithFollowButtonCard
+                sessionUserId={session?.user.id ?? ""}
+                key={user.id}
+                user={user}
+              />
+            ))
+          ) : (
+            <div className="flex items-center justify-center py-4">
+              <p className="text-skin-muted">You have no followers</p>
+            </div>
+          )}
+        </>
+      </ModalBox>
     </ModalFollowers>
   );
 };

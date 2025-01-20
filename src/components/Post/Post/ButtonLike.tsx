@@ -30,9 +30,6 @@ export default function ButtonLikePost({
       ) : (
         <HeartIcon className="aspect-square w-7" />
       )}
-      {total && total > 0 && (
-        <span className="text-2xl font-medium">{total} likes</span>
-      )}
     </button>
   );
 }

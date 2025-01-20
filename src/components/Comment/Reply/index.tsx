@@ -1,6 +1,6 @@
 import Avatar from "@/components/Avatar";
 
-import { cn } from "@/lib/utils";
+import { cn, showToast } from "@/lib/utils";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import ButtonLikeReply from "./ButtonLike";
@@ -8,6 +8,10 @@ import ButtonReply from "./ButtonReply";
 import { TReply } from "@/lib/drizzle/queries/replies/fetchReplies";
 import { useState } from "react";
 import FormReply from "../FormReply";
+import { likeReply as lr } from "@/lib/actions/reply";
+import { useComments } from "@/stores/useComments";
+import { usePathname } from "next/navigation";
+import ButtonLike from "@/components/ButtonLike";
 
 type Props = {
   reply: TReply;
@@ -17,6 +21,17 @@ type Props = {
 const Reply = ({ reply, showForm }: Props) => {
   const { avatar, username, sumLikes, createdAt, message, commentId } = reply;
   const [isShow, setIsShow] = useState(false);
+  const { likeReply } = useComments();
+  const pathname = usePathname();
+
+  const like = async () => {
+    likeReply(commentId, reply.id);
+    try {
+      await lr.bind(null, pathname)({ replyId: reply.id });
+    } catch (err) {
+      showToast("Something went wrong", "error");
+    }
+  };
 
   return (
     <div className="flex w-full items-start gap-2 py-2 text-sm">
@@ -64,11 +79,12 @@ const Reply = ({ reply, showForm }: Props) => {
         )}
       </div>
       <div className="pt-1">
-        <ButtonLikeReply
+        {/* <ButtonLikeReply
           commentId={reply.commentId}
           isLiked={reply.isLiked}
           replyId={reply.id}
-        />
+        /> */}
+        <ButtonLike callback={like} isLike={reply.isLiked} size="small" />
       </div>
     </div>
   );

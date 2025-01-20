@@ -21,7 +21,6 @@ const UserCard = ({ user: { name, username, avatar, id } }: Props) => {
       null,
       pathname,
     )({
-      pathname,
       followId: id,
     });
     if (result?.serverError) {

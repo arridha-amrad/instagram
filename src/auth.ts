@@ -1,10 +1,22 @@
-import NextAuth, { User } from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import UserService from "./lib/drizzle/services/UserService";
+import { JWT } from "next-auth/jwt";
 
 type Provider = "credentials" | "facebook" | "github" | "google";
+
+const createToken = (token: JWT, user: Session["user"]) => {
+  return {
+    ...token,
+    userId: user.id,
+    username: user.username,
+    email: user.email,
+    picture: user.image,
+    name: user.name,
+  };
+};
 
 const providers = [
   GitHub,
@@ -76,13 +88,12 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         return "/signin?e=invalid credentials";
       }
     },
-    async jwt({ token, user }) {
-      if (user && user.id) {
-        token.userId = user.id;
-        token.username = user.username;
-        token.email = user.email;
-        token.picture = user.image;
-        token.name = user.name;
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        token = createToken(token, user as Session["user"]);
+      }
+      if (trigger === "update" && session) {
+        token = createToken(token, session);
       }
       return token;
     },

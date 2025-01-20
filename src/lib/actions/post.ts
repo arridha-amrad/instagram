@@ -41,24 +41,30 @@ export const createPost = authActionClient
     }) => {
       const { id: userId } = session.user;
       const urls: PostContentUrl[] = [];
-      for (const image of images) {
-        const response = await CloudinaryService.upload(image);
-        urls.push({
-          publicId: response.public_id,
-          type: response.resource_type === "image" ? "image" : "video",
-          url: response.secure_url,
+      try {
+        for (const image of images) {
+          const response = await CloudinaryService.upload(image);
+          urls.push({
+            publicId: response.public_id,
+            type: response.resource_type === "image" ? "image" : "video",
+            url: response.secure_url,
+          });
+        }
+        const postService = new PostService();
+        await postService.create({
+          urls,
+          userId,
+          description,
+          location,
         });
+        revalidateTag(POST.homePosts);
+        revalidateTag(POST.userPosts);
+        return "New post added";
+      } catch (err) {
+        console.log(err);
+
+        throw err;
       }
-      const postService = new PostService();
-      await postService.create({
-        urls,
-        userId,
-        description,
-        location,
-      });
-      revalidateTag(POST.homePosts);
-      revalidateTag(POST.userPosts);
-      return "New post added";
     },
   );
 

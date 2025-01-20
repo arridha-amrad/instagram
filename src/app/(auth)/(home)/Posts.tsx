@@ -3,13 +3,13 @@
 import Spinner from "@/components/Spinner";
 import { useLastElement } from "@/hooks/useLastElement";
 import { loadMoreFeedPosts } from "@/lib/actions/post";
-import { useFeedPosts } from "@/stores/useFeedPosts";
+import { useFeedPosts } from "@/app/(auth)/(home)/Post/store";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import FeedPost from "../../app/(auth)/(home)/Post";
+import Post from "./Post";
 
 type Props = {
   sessionUserId: string;
@@ -100,7 +100,7 @@ export default function FeedPosts({ sessionUserId }: Props) {
                   <Spinner />
                 </div>
               ) : (
-                <FeedPost sessionUserId={sessionUserId} post={post} />
+                <Post sessionUserId={sessionUserId} post={post} />
               )}
             </div>
           </div>

@@ -34,10 +34,14 @@ export const updateAvatar = authActionClient
     const [result] = await userService.updateUser(id, {
       avatar: response.secure_url,
     });
+
+    revalidateTag(USERS.profile);
+    revalidateTag(USERS.profileDetails);
+
     return {
       id: result.id,
       name: result.name,
-      image: result.email,
+      image: result.avatar as string,
       username: result.username,
       email: result.email,
     };

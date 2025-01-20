@@ -1,14 +1,19 @@
+"use client";
+
 import Avatar from "@/components/Avatar";
-import { cn } from "@/lib/utils";
-import { FeedPost } from "@/stores/useFeedPosts";
+import { cn, showToast } from "@/lib/utils";
+import { FeedPost } from "@/app/(auth)/(home)/Post/store";
 import ChatBubbleOvalLeftIcon from "@heroicons/react/24/outline/ChatBubbleOvalLeftIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
-import ButtonLike from "./ButtonLike";
 import Carousel from "./Carousel";
 import Comments from "./Comments";
 import FormComment from "./FormComment";
 import ModalPostLovers from "./ModalPostLovers";
+import ButtonLike from "@/components/ButtonLike";
+import { useFeedPosts } from "./store";
+import { usePathname } from "next/navigation";
+import { likePost as lp } from "@/lib/actions/post";
 
 type Props = {
   post: FeedPost;
@@ -17,6 +22,22 @@ type Props = {
 
 const Post = ({ post, sessionUserId }: Props) => {
   const urls = post.urls.map((u) => u.url);
+
+  const { likePost } = useFeedPosts();
+
+  const pathname = usePathname();
+
+  const like = async () => {
+    likePost(post.id);
+    try {
+      await lp.bind(null, pathname)({ postId: post.id });
+    } catch (err) {
+      showToast("something went wrong", "error");
+      // to cancel prev optimistic update
+      likePost(post.id);
+    }
+  };
+
   return (
     <article className={cn("w-full space-y-2 pb-14")}>
       <section className="flex w-full items-center gap-3 text-sm">
@@ -37,7 +58,7 @@ const Post = ({ post, sessionUserId }: Props) => {
       </section>
       <Carousel urls={urls} />
       <div className="flex items-center gap-3">
-        <ButtonLike postId={post.id} isLiked={post.isLiked} />
+        <ButtonLike callback={like} isLike={post.isLiked} />
         <Link scroll={false} href={`/post/${post.id}`}>
           <ChatBubbleOvalLeftIcon className="aspect-square w-7 -scale-x-100" />
         </Link>

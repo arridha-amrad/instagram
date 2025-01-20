@@ -1,20 +1,22 @@
 import { auth } from "@/auth";
-import FeedPosts from "@/components/Post/FeedPosts";
-import FeedPostProvider from "@/components/Providers/FeedPostsProvider";
+import Posts from "./Posts";
 import { fetchFeedPosts } from "@/lib/drizzle/queries/posts/fetchFeedPosts";
 import { redirect } from "next/navigation";
+import FeedPostProvider from "./Post/PostsProvider";
 
 export default async function Page() {
   const session = await auth();
   const userId = session?.user.id;
+
   if (!userId) {
     redirect("/login");
   }
 
   const posts = await fetchFeedPosts({ page: 1, userId });
+
   return (
     <FeedPostProvider data={posts}>
-      <FeedPosts sessionUserId={session.user.id ?? ""} />
+      <Posts sessionUserId={session.user.id ?? ""} />
     </FeedPostProvider>
   );
 }

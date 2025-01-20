@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/lib/drizzle/db";
 import { TInfiniteResult } from "../type";
 import { FollowingsTable, PostLikesTable, UsersTable } from "../../schema";

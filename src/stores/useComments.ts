@@ -123,7 +123,10 @@ export const useComments = create<ActionState>()(
           state.hasMore = comments.length >= 10;
           state.comments = transform(comments);
           state.cIds = comments.map((c) => c.id);
-          state.cDate = state.comments[state.comments.length - 1].createdAt;
+          state.cDate =
+            comments.length > 0
+              ? state.comments[state.comments.length - 1].createdAt
+              : new Date();
         });
       },
       addComments(incomingComments) {
