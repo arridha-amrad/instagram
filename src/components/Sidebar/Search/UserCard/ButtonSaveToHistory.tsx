@@ -11,7 +11,17 @@ interface Props {
 export default function ButtonSaveToHistory({ userId, username }: Props) {
   const pathname = usePathname();
   const action = async () => {
-    await saveUserToSearchHistory({ searchId: userId, pathname });
+    console.log("saving...");
+
+    const result = await saveUserToSearchHistory.bind(
+      null,
+      pathname,
+    )({
+      searchId: userId,
+    });
+    console.log("saved");
+
+    console.log(result);
   };
   return (
     <Link

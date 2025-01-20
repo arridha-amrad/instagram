@@ -1,6 +1,8 @@
 import { ilike, or } from "drizzle-orm";
 import { db } from "../../db";
 import { UsersTable } from "../../schema";
+import { unstable_cache } from "next/cache";
+import { USERS } from "@/lib/cacheKeys";
 
 const query = async (searchKey: string) => {
   return db

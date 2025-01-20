@@ -1,7 +1,11 @@
+"use client";
+
 import Avatar from "@/components/Avatar";
+import { saveUserToSearchHistory } from "@/lib/actions/user";
 import { TSearchUser } from "@/lib/drizzle/queries/type";
+import { usePathname } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import ButtonRemove from "./ButtonRemove";
-import ButtonSaveToHistory from "./ButtonSaveToHistory";
 
 type Props = {
   user: TSearchUser;
@@ -12,13 +16,30 @@ const UserCard = ({
   user: { avatar, name, username, id },
   isRemovable,
 }: Props) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const navigate = async () => {
+    router.push(`/${username}`);
+    await saveUserToSearchHistory.bind(
+      null,
+      pathname,
+    )({
+      searchId: id,
+    });
+  };
+
   return (
-    <div className="flex gap-3 rounded-md px-2 py-2 hover:bg-skin-fill/20">
+    <div
+      onClick={navigate}
+      className="flex cursor-pointer gap-3 rounded-md px-2 py-2 hover:bg-skin-fill/20"
+    >
       <div className="flex-none">
         <Avatar url={avatar} />
       </div>
       <div className="flex-1 text-sm">
-        <ButtonSaveToHistory userId={id} username={username} />
+        <h1>{username}</h1>
+        {/* <ButtonSaveToHistory userId={id} username={username} /> */}
         <p className="text-skin-muted">{name}</p>
       </div>
       {isRemovable && <ButtonRemove userId={id} />}

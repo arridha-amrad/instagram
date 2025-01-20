@@ -2,6 +2,7 @@ import { db } from "@/lib/drizzle/db";
 import { eq } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { SearchUsersTable, UsersTable } from "../../schema";
+import { USERS } from "@/lib/cacheKeys";
 
 const query = async (userId: string) => {
   return db
@@ -29,8 +30,8 @@ export const fetchHistories = async ({
 
 export const fetchSearchHistories = unstable_cache(
   fetchHistories,
-  ["fetchSearchHistories"],
+  [USERS.searchHistories],
   {
-    tags: ["fetchSearchHistories"],
+    tags: [USERS.searchHistories],
   },
 );

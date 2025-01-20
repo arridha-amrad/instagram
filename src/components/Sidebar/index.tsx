@@ -10,6 +10,7 @@ import Logout from "./Modal/ModalLogout";
 import Histories from "./Search/Histories";
 import ButtonSearchUser from "./Search/ModalSearchUser";
 import SidebarBrand from "./SidebarBrand";
+import LinkSearch from "./Links/LinkSearch";
 
 export default async function Sidebar() {
   const session = await auth();
@@ -27,9 +28,10 @@ export default async function Sidebar() {
       <div className="h-4" />
       <LinkHome />
       <div className="h-2" />
-      <ButtonSearchUser>
+      <LinkSearch />
+      {/* <ButtonSearchUser>
         <Histories data={searchHistories} />
-      </ButtonSearchUser>
+      </ButtonSearchUser> */}
       <div className="h-2" />
       <CreatePostProvider>
         <NewPostModal />

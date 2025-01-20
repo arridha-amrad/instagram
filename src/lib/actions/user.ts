@@ -45,20 +45,19 @@ export const saveUserToSearchHistory = authActionClient
   .schema(
     z.object({
       searchId: z.string(),
-      pathname: z.string(),
     }),
   )
-  .action(async ({ ctx: { session }, parsedInput: { pathname, searchId } }) => {
-    if (!session) {
-      return redirect(`/login?cb_url=${pathname}`);
-    }
+  .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
+  .action(async ({ ctx: { session }, parsedInput: { searchId } }) => {
     const userService = new UserService();
-    await userService.addUserToSearchHistory({
+    const result = await userService.addUserToSearchHistory({
       userId: session.user.id,
       searchId,
     });
 
     revalidateTag(USERS.searchHistories);
+
+    return result;
   });
 
 export const removeAllSearchHistories = authActionClient
@@ -68,8 +67,11 @@ export const removeAllSearchHistories = authActionClient
       return redirect(`/login?cb_url=${pathname}`);
     }
     const userService = new UserService();
-    await userService.removeAllUserFromSearchHistory(session.user.id);
+    const result = await userService.removeAllUserFromSearchHistory(
+      session.user.id,
+    );
     revalidateTag(USERS.searchHistories);
+    return result;
   });
 
 export const removeUserFromSearchHistory = authActionClient
@@ -85,10 +87,11 @@ export const removeUserFromSearchHistory = authActionClient
         return redirect(`/login?cb_url=${pathname}`);
       }
       const userService = new UserService();
-      await userService.removeUserFromSearchHistory({
+      const result = await userService.removeUserFromSearchHistory({
         searchId,
         userId: session.user.id,
       });
       revalidateTag(USERS.searchHistories);
+      return result;
     },
   );
