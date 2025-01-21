@@ -2,6 +2,7 @@ import { db } from "@/lib/drizzle/db";
 import { unstable_cache } from "next/cache";
 import { UserInfoTable, UsersTable } from "../../schema";
 import { eq } from "drizzle-orm";
+import { USERS } from "@/lib/cacheKeys";
 
 type Params = {
   username: string;
@@ -33,8 +34,8 @@ const fetchUser = async ({ username }: Params): Promise<TProfileDetail> => {
 
 export const fetchUserProfileDetails = unstable_cache(
   fetchUser,
-  ["fetchUserProfileDetails"],
+  [USERS.profileDetails],
   {
-    tags: ["fetchUserProfileDetails"],
+    tags: [USERS.profileDetails],
   },
 );

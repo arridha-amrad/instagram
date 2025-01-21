@@ -33,9 +33,11 @@ export const changeUsername = authActionClient
       if (!isMatch) {
         throw new SafeActionError("Wrong username");
       }
-      await userService.updateUser(id, {
+      const result = await userService.updateUser(id, {
         username: newUsername,
       });
-      return "Username is updated successfully";
+      return {
+        username: result[0].username,
+      };
     },
   );

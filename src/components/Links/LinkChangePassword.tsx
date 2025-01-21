@@ -14,8 +14,8 @@ const LinkChangePassword = () => {
       style={{ width: 320 - 70 }}
       href="/settings/change-password"
       className={cn(
-        "flex h-12 items-center gap-3 rounded-md px-4 hover:bg-skin-fill/50",
-        isActive && "bg-skin-fill/50",
+        "flex h-12 items-center gap-3 rounded-md px-4 text-skin-muted hover:text-skin-base",
+        isActive && "bg-skin-fill/50 text-skin-base",
       )}
     >
       <LockClosedIcon className="square w-7" />

@@ -28,7 +28,7 @@ export const updateProfile = authActionClient
     const updateResponse = await tm.execute(async (tx) => {
       const userService = new UserService(tx);
       const userInfoService = new UserInfoService(tx);
-      await userService.updateUser(userId, { name });
+      const userUpdate = await userService.updateUser(userId, { name });
       const userInfoRow = await userInfoService.findByUserId(userId);
 
       if (userInfoRow.length === 0) {
@@ -39,10 +39,14 @@ export const updateProfile = authActionClient
       } else {
         await userInfoService.update(userInfoRow[0].id, props);
       }
+
+      return userUpdate[0].name;
     });
 
     revalidateTag(USERS.profile);
     revalidateTag(USERS.profileDetails);
 
-    return updateResponse;
+    return {
+      name: updateResponse,
+    };
   });

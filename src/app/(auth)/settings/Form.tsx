@@ -9,25 +9,27 @@ import { useAction } from "next-safe-action/hooks";
 import { usePathname } from "next/navigation";
 import { ChangeEvent, useRef, useState } from "react";
 import { updateProfile } from "./action";
+import { useUpdateSession } from "@/hooks/useUpdateSession";
 
 type Props = {
   user: TProfileDetail;
+  fullName: string;
 };
 
-const FormEditProfile = ({ user }: Props) => {
+const FormEditProfile = ({ user, fullName }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [state, setState] = useState({
-    fullName: "",
-    website: "",
-    occupation: "",
-    bio: "",
-    gender: "",
+    name: fullName,
+    website: user?.website ?? "",
+    occupation: user?.occupation ?? "",
+    bio: user?.bio ?? "",
+    gender: user?.bio ?? "",
   });
 
   const pathname = usePathname();
 
-  const { execute, isPending, result } = useAction(
+  const { execute, isPending, result, hasSucceeded } = useAction(
     updateProfile.bind(null, pathname),
     {
       async onSuccess({ data }) {
@@ -37,6 +39,8 @@ const FormEditProfile = ({ user }: Props) => {
       },
     },
   );
+
+  useUpdateSession(hasSucceeded, { name: result.data?.name });
 
   const bioError = result.validationErrors?.bio?._errors;
   const genderError = result.validationErrors?.gender?._errors;
@@ -77,7 +81,7 @@ const FormEditProfile = ({ user }: Props) => {
           <TextInput
             errorMessage={nameError && nameError[0]}
             onChange={handleChange}
-            value={state.fullName}
+            value={state.name}
             label="Fullname"
             variant="normal"
             type="text"
@@ -148,7 +152,7 @@ const FormEditProfile = ({ user }: Props) => {
             )}
           </div>
           <div className="flex items-center gap-3 self-end">
-            <Button type="submit" className="h-10 w-24" isLoading={isPending}>
+            <Button type="submit" className="w-24" isLoading={isPending}>
               Save
             </Button>
           </div>

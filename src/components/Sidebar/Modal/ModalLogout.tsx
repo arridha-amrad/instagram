@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Button from "@/components/core/Button";
 import { signOut } from "next-auth/react";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
@@ -10,19 +10,26 @@ import { className } from "../styles";
 
 const ModalLogout = () => {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const closeModal = () => {
+    if (isPending) return;
     setOpen(false);
   };
 
   const router = useRouter();
 
   const logout = async () => {
-    await signOut({ redirect: false });
+    startTransition(async () => {
+      await signOut({ redirect: false });
+    });
     router.replace("/login");
   };
   return (
     <>
-      <button onClick={() => setOpen(true)} className={className.button}>
+      <button
+        onClick={() => setOpen(true)}
+        className="inline-flex h-[50px] w-full items-center justify-center gap-4 xl:w-fit xl:justify-start xl:py-2"
+      >
         <div className={className.iconContainer}>
           <ArrowRightStartOnRectangleIcon />
         </div>
@@ -41,11 +48,15 @@ const ModalLogout = () => {
             <section className="flex justify-end gap-3 p-4">
               <button
                 onClick={closeModal}
-                className="rounded-md border border-skin px-4 py-2 text-sm"
+                className="w-24 rounded-md border border-skin px-4 py-2 text-sm"
               >
                 Cancel
               </button>
-              <Button onClick={logout} className="text-sm">
+              <Button
+                isLoading={isPending}
+                onClick={logout}
+                className="w-24 px-4 text-sm"
+              >
                 Yes
               </Button>
             </section>

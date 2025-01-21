@@ -1,17 +1,16 @@
 "use client";
 
-import { formatDistanceToNowStrict } from "date-fns";
-import ButtonLikePost from "./ButtonLike";
-import CommentForm from "./CommentForm";
-import Comments from "./Comments";
 import Avatar from "@/components/Avatar";
-import Link from "next/link";
-import { ReactNode, useRef, useState } from "react";
-import ButtonComment from "./ButtonComment";
-import { TPost } from "@/lib/drizzle/queries/posts/fetchPost";
 import ButtonLike from "@/components/ButtonLike";
 import { likePost } from "@/lib/actions/post";
+import { TPost } from "@/lib/drizzle/queries/posts/fetchPost";
+import { formatDistanceToNowStrict } from "date-fns";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ReactNode, useRef, useState } from "react";
+import ButtonComment from "./ButtonComment";
+import CommentForm from "./CommentForm";
+import Comments from "./Comments";
 
 type Props = {
   post: TPost;
@@ -62,7 +61,7 @@ const PostExpanded = ({ post, children }: Props) => {
         </section>
         <section className="flex flex-1 basis-0 flex-col items-start overflow-y-auto border-t border-skin p-4">
           {post.description && (
-            <section id="post_description" className="flex gap-2">
+            <section id="post_description" className="flex gap-4">
               <div>
                 <Avatar url={post.avatar} />
               </div>

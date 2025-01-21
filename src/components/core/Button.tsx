@@ -19,7 +19,7 @@ const Button = ({ children, isLoading = false, ...props }: Props) => {
         props.className,
       )}
     >
-      {isLoading ? <MySpinner /> : children}
+      {isLoading ? <MySpinner className="w-5" /> : children}
     </button>
   );
 };

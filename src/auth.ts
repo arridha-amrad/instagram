@@ -53,17 +53,17 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   },
   providers,
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.type === "credentials") {
+    async signIn({ user, account, credentials }) {
+      if (credentials) {
         return true;
       }
-
+      // if not using credentials provider
+      // may be creating new user is necessary if the email is not registered
       const { email, name, image } = user;
-      if (email && name && image) {
+      if (email && name && image && account?.provider) {
         const userService = new UserService();
-
-        let provider = "credentials" as Provider;
-        switch (account?.provider) {
+        let provider = "" as Provider;
+        switch (account.provider) {
           case "facebook":
             provider = "facebook";
             break;
@@ -88,15 +88,33 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         return "/signin?e=invalid credentials";
       }
     },
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
+
+    async jwt({ token, user, trigger, session, account, profile }) {
+      if (account?.type === "oidc" && profile?.email) {
+        const userService = new UserService();
+        const [storedUser] = await userService.findUserByEmail(profile.email);
+        const { avatar, email, id, name, username } = storedUser;
+        token = createToken(token, {
+          email,
+          id,
+          image: avatar,
+          name,
+          username,
+        });
+      }
+      if (account?.type === "credentials") {
+        // it will be the same as the return of provider->Credentials->authorize. see above
         token = createToken(token, user as Session["user"]);
       }
       if (trigger === "update" && session) {
-        token = createToken(token, session);
+        token = {
+          ...token,
+          ...session,
+        };
       }
       return token;
     },
+
     async session({ session, token }) {
       session.user.id = token.userId as string;
       session.user.username = token.username as string;

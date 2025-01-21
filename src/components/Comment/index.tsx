@@ -20,7 +20,7 @@ const Comment = ({ comment, showForm }: Props) => {
   const [isShow, setIsShow] = useState(false);
 
   return (
-    <article className="flex w-full items-start gap-2 py-2">
+    <article className="flex w-full items-start gap-4 py-2">
       <div>
         <Avatar url={comment.avatar} />
       </div>
