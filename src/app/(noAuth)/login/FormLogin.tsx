@@ -7,6 +7,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useSearchParams } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { login } from "./action";
+import Link from "next/link";
 
 const FormLogin = () => {
   const [isShow, setShow] = useState(false);
@@ -32,11 +33,13 @@ const FormLogin = () => {
   const identityError = result.validationErrors?.identity?._errors;
   const passwordError = result.validationErrors?.password?._errors;
   const actionError = result.serverError;
+  const message = params.get("message");
 
   return (
     <form className="space-y-3" action={execute}>
       <section className="text-center text-sm">
         {actionError && <p className="text-red-500">{actionError}</p>}
+        {message && <p className="text-green-500">{message}</p>}
       </section>
       <fieldset className="space-y-3" disabled={isPending}>
         <TextInput
@@ -61,6 +64,9 @@ const FormLogin = () => {
           label="Show password"
         />
         <div className="h-4" />
+        <div className="text-center text-sm text-skin-inverted">
+          <Link href="/forgot-password">forgot password</Link>
+        </div>
         <Button
           className="inline-flex w-full justify-center"
           isLoading={isPending}

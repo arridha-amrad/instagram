@@ -71,6 +71,13 @@
       "when": 1737522801532,
       "tag": "0009_sticky_jocasta",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1737534907423,
+      "tag": "0010_daffy_lake",
+      "breakpoints": true
     }
   ]
 }

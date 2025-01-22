@@ -1,10 +1,12 @@
 import SvgInstagram from "@/components/svg/SvgInstagram";
 import type { Metadata } from "next";
 import Form from "./Form";
+import Link from "next/link";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Instagram | Forgot Password",
-  description: "Send a request to reset your account's password",
+  title: "Instagram | Reset Password",
+  description: "Reset Password",
 };
 
 const Page = async () => {
@@ -24,11 +26,21 @@ const Page = async () => {
         </button>
         <section className="py-4 text-center">
           <h1 className="text-2xl font-semibold text-skin-muted">
-            Forgot Password
+            Reset Password
           </h1>
         </section>
         <section className="w-full max-w-sm">
-          <Form />
+          <Suspense>
+            <Form />
+          </Suspense>
+        </section>
+        <section className="pt-8">
+          <span className="text-sm">
+            Back to &nbsp;
+            <Link className="text-skin-inverted" href="/login">
+              login
+            </Link>
+          </span>
         </section>
       </main>
     </section>

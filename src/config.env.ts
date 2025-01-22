@@ -13,6 +13,7 @@ type Env = {
   DB_URL: string;
   GOOGLE_REFRESH_TOKEN: string;
   GOOGLE_USER: string;
+  TOKEN_SECRET_KEY: string;
 };
 
 const schema: JSONSchemaType<Env> = {
@@ -30,6 +31,7 @@ const schema: JSONSchemaType<Env> = {
     "DB_URL",
     "GOOGLE_REFRESH_TOKEN",
     "GOOGLE_USER",
+    "TOKEN_SECRET_KEY",
   ],
   properties: {
     AUTH_GITHUB_ID: {
@@ -66,6 +68,9 @@ const schema: JSONSchemaType<Env> = {
       type: "string",
     },
     GOOGLE_USER: {
+      type: "string",
+    },
+    TOKEN_SECRET_KEY: {
       type: "string",
     },
   },

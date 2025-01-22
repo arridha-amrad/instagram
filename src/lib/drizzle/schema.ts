@@ -38,9 +38,26 @@ export const EmailVerificationRequestTable = pgTable(
       .references(() => UsersTable.id, { onDelete: "cascade" }),
     code: text("code").notNull(),
     email: varchar("email").notNull(),
-    expiresAt: timestamp("expires_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at")
+      .$defaultFn(() => new Date(Date.now() + 1000 * 60 * 10))
+      .notNull(),
   },
   (table) => [index("user_id_index").on(table.userId)],
+);
+
+export const PasswordResetRequestTable = pgTable(
+  "password_reset_request",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id, { onDelete: "cascade" }),
+    code: text("code").notNull(),
+    expiresAt: timestamp("expires_at")
+      .$defaultFn(() => new Date(Date.now() + 1000 * 60 * 10))
+      .notNull(),
+  },
+  (table) => [index().on(table.userId)],
 );
 
 //===========================================================================
