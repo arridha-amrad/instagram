@@ -7,17 +7,9 @@ import { updateAvatar } from "@/lib/actions/user";
 import { cn, showToast } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import mergeRefs from "merge-refs";
-import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  ChangeEvent,
-  HTMLAttributes,
-  Ref,
-  forwardRef,
-  useEffect,
-  useRef,
-} from "react";
+import { usePathname } from "next/navigation";
+import { ChangeEvent, HTMLAttributes, Ref, forwardRef, useRef } from "react";
 
 type Props = {
   avatar?: string | null;

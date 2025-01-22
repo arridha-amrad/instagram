@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export const useUpdateSession = (
   trigger: boolean,
-  data: Partial<Session["user"]>,
+  data?: Partial<Session["user"]>,
 ) => {
   const { update } = useSession();
   const router = useRouter();

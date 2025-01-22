@@ -22,10 +22,10 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    userId: string;
+    id: string;
     username: string;
     name: string;
-    image: string;
+    image: string | null;
     email: string;
   }
 }

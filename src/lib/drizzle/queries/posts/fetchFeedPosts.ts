@@ -1,3 +1,4 @@
+import { POST } from "@/lib/cacheKeys";
 import { db } from "@/lib/drizzle/db";
 import { TInfiniteResult } from "@/lib/drizzle/queries/type";
 import {
@@ -8,6 +9,7 @@ import {
   UsersTable,
 } from "@/lib/drizzle/schema";
 import { desc, eq, lt, sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 
 const LIMIT = 5;
 
@@ -65,28 +67,34 @@ type Args = {
   total?: number;
 };
 
-export const fetchFeedPosts = async ({
-  page,
-  userId,
-  date = new Date(),
-  total = 0,
-}: Args): Promise<TInfiniteResult<TFeedPost>> => {
-  if (total === 0) {
-    const [result] = await db
-      .select({
-        sum: sql<number>`CAST(COUNT(${PostsTable.id}) as int)`,
-      })
-      .from(PostsTable)
-      .where(lt(PostsTable.createdAt, date));
-    total = result.sum;
-  }
-
-  const posts = await runQuery({ date, userId });
-
-  return {
-    data: posts,
-    date,
-    total,
+export const fetchFeedPosts = unstable_cache(
+  async ({
     page,
-  };
-};
+    userId,
+    date = new Date(),
+    total = 0,
+  }: Args): Promise<TInfiniteResult<TFeedPost>> => {
+    if (total === 0) {
+      const [result] = await db
+        .select({
+          sum: sql<number>`CAST(COUNT(${PostsTable.id}) as int)`,
+        })
+        .from(PostsTable)
+        .where(lt(PostsTable.createdAt, date));
+      total = result.sum;
+    }
+
+    const posts = await runQuery({ date, userId });
+
+    return {
+      data: posts,
+      date,
+      total,
+      page,
+    };
+  },
+  [POST.homePosts],
+  {
+    tags: [POST.homePosts],
+  },
+);

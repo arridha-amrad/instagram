@@ -62,7 +62,6 @@ export const createPost = authActionClient
         return "New post added";
       } catch (err) {
         console.log(err);
-
         throw err;
       }
     },

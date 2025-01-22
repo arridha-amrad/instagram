@@ -1,22 +1,10 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth, { User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import UserService from "./lib/drizzle/services/UserService";
-import { JWT } from "next-auth/jwt";
 
 type Provider = "credentials" | "facebook" | "github" | "google";
-
-const createToken = (token: JWT, user: Session["user"]) => {
-  return {
-    ...token,
-    userId: user.id,
-    username: user.username,
-    email: user.email,
-    picture: user.image,
-    name: user.name,
-  };
-};
 
 const providers = [
   GitHub,
@@ -94,17 +82,22 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         const userService = new UserService();
         const [storedUser] = await userService.findUserByEmail(profile.email);
         const { avatar, email, id, name, username } = storedUser;
-        token = createToken(token, {
-          email,
+        token = {
+          ...token,
           id,
-          image: avatar,
-          name,
           username,
-        });
+          name,
+          image: avatar,
+          email,
+        };
       }
       if (account?.type === "credentials") {
         // it will be the same as the return of provider->Credentials->authorize. see above
-        token = createToken(token, user as Session["user"]);
+        // @ts-ignore
+        token = {
+          ...token,
+          ...user,
+        };
       }
       if (trigger === "update" && session) {
         token = {
@@ -116,10 +109,10 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     },
 
     async session({ session, token }) {
-      session.user.id = token.userId as string;
+      session.user.id = token.id as string;
       session.user.username = token.username as string;
       session.user.email = token.email as string;
-      session.user.image = token.picture as string;
+      session.user.image = token.image as string;
       session.user.name = token.name as string;
       return session;
     },
