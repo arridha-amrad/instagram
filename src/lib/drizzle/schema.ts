@@ -29,6 +29,20 @@ type PostContentUrl = {
   publicId: string;
 };
 
+export const EmailVerificationRequestTable = pgTable(
+  "email_verification_request",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => UsersTable.id, { onDelete: "cascade" }),
+    code: text("code").notNull(),
+    email: varchar("email").notNull(),
+    expiresAt: timestamp("expires_at").defaultNow().notNull(),
+  },
+  (table) => [index("user_id_index").on(table.userId)],
+);
+
 //===========================================================================
 export const SearchUsersTable = pgTable(
   "search_users",
@@ -40,11 +54,11 @@ export const SearchUsersTable = pgTable(
       .references(() => UsersTable.id)
       .notNull(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.searchId, table.userId] }),
-    user: index("relations_search_users_user_idx").on(table.userId),
-    search: index("relations_search_users_search_idx").on(table.searchId),
-  }),
+  (table) => [
+    primaryKey({ name: "pk", columns: [table.searchId, table.userId] }),
+    index("relations_search_users_user_idx").on(table.userId),
+    index("relations_search_users_search_idx").on(table.searchId),
+  ],
 );
 export const SearchUsersRelation = relations(SearchUsersTable, ({ one }) => ({
   user: one(UsersTable, {
@@ -126,6 +140,7 @@ export const UsersTable = pgTable(
     avatar: text("avatar"),
     password: text("password"),
     provider: providerEnum("provider").notNull(),
+    verifiedAt: timestamp("verified_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },

@@ -57,6 +57,20 @@
       "when": 1718962840174,
       "tag": "0007_black_dakota_north",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1737517550877,
+      "tag": "0008_parallel_hellfire_club",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1737522801532,
+      "tag": "0009_sticky_jocasta",
+      "breakpoints": true
     }
   ]
 }

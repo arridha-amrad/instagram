@@ -1,3 +1,4 @@
+import config from "@/config.env";
 import {
   TransformationOptions,
   UploadApiResponse,
@@ -5,9 +6,9 @@ import {
 } from "cloudinary";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET,
+  cloud_name: config.CLOUDINARY_NAME,
+  api_key: config.CLOUDINARY_KEY,
+  api_secret: config.CLOUDINARY_SECRET,
 });
 
 const defaultTransformation: TransformationOptions = [

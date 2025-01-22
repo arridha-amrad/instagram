@@ -4,12 +4,11 @@ import Button from "@/components/core/Button";
 import CheckboxWithLabel from "@/components/core/CheckboxWithLabel";
 import TextInput from "@/components/core/TextInput";
 import { useAction } from "next-safe-action/hooks";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { signUp } from "./action";
 
 const FormRegister = () => {
   const [isShow, setShow] = useState(false);
-  const [message, setMessage] = useState("");
 
   const [state, setState] = useState({
     name: "",
@@ -25,20 +24,7 @@ const FormRegister = () => {
     });
   };
 
-  const formRef = useRef<HTMLFormElement | null>(null);
-
-  const { execute, isExecuting, result } = useAction(signUp, {
-    onSuccess: () => {
-      formRef.current?.reset();
-      setMessage("Registration is successful");
-      setState({
-        email: "",
-        name: "",
-        password: "",
-        username: "",
-      });
-    },
-  });
+  const { execute, isExecuting, result } = useAction(signUp);
 
   const nameError = result.validationErrors?.name?._errors;
   const usernameError = result.validationErrors?.username?._errors;
@@ -47,10 +33,9 @@ const FormRegister = () => {
   const actionError = result.serverError;
 
   return (
-    <form ref={formRef} className="space-y-3" action={execute}>
+    <form className="space-y-3" action={execute}>
       <section className="text-center text-sm">
         {actionError && <p className="text-red-500">{actionError}</p>}
-        {message && <p className="text-green-500">{message}</p>}
       </section>
       <fieldset className="space-y-3" disabled={isExecuting}>
         <TextInput

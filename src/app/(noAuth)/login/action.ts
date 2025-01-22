@@ -38,6 +38,10 @@ export const login = actionClient
         throw new SafeActionError("Invalid credentials");
       }
 
+      if (users[0].verifiedAt === null) {
+        throw new SafeActionError("Please verify your email");
+      }
+
       await signIn("credentials", {
         id: users[0].id,
         name: users[0].name,
