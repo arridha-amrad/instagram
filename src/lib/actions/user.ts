@@ -5,7 +5,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { USERS } from "../cacheKeys";
-import CloudinaryService from "../CloudinaryService";
+import { uploadFileToCloudinary } from "../fileUploadHandler";
 import UserService from "../drizzle/services/UserService";
 import { actionClient, authActionClient } from "../safeAction";
 
@@ -28,7 +28,7 @@ export const updateAvatar = authActionClient
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
   .action(async ({ ctx: { session }, parsedInput: { image } }) => {
-    const response = await CloudinaryService.upload(image, true);
+    const response = await uploadFileToCloudinary(image, true);
     const userService = new UserService();
     const { id } = session.user;
     const [result] = await userService.updateUser(id, {

@@ -17,6 +17,7 @@ export type FeedPost = TFeedPost & { comments: TFeedComment[] };
 interface Action {
   setPosts: (data: TInfiniteResult<TFeedPost>) => void;
   addPosts: (data: TInfiniteResult<TFeedPost>) => void;
+  addPost: (data: FeedPost) => void;
   likePost: (postId: string) => void;
   likeComment: (comment: TFeedComment) => void;
   addComment: (comment: TFeedComment) => void;
@@ -66,6 +67,11 @@ export const useFeedPosts = create<State & Action>()(
           state.page = page;
           state.total = total;
           state.seenIds = state.posts.map((p) => p.id);
+        });
+      },
+      addPost(data) {
+        set((state) => {
+          state.posts.unshift(data);
         });
       },
       addPosts({ data, page }) {

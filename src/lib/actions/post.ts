@@ -2,9 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { zfd } from "zod-form-data";
 import { POST } from "../cacheKeys";
-import CloudinaryService from "../CloudinaryService";
 import { fetchFeedPosts } from "../drizzle/queries/posts/fetchFeedPosts";
 import { fetchPostLikes } from "../drizzle/queries/posts/fetchPostLikes";
 import { fetchUserPosts } from "../drizzle/queries/posts/fetchUserPosts";
@@ -19,51 +17,29 @@ type PostContentUrl = {
 
 export const createPost = authActionClient
   .schema(
-    zfd.formData({
-      images: zfd
-        .file()
-        .or(zfd.file().array())
-        .transform(async (v) => {
-          if (v instanceof File) {
-            return [v];
-          }
-          return v;
-        }),
-      description: zfd.text(z.string().optional()),
-      location: zfd.text(z.string().optional()),
+    z.object({
+      urls: z.custom<PostContentUrl>().array(),
+      description: z.string().optional(),
+      location: z.string().optional(),
     }),
   )
   .bindArgsSchemas<[pathname: z.ZodString]>([z.string()])
   .action(
     async ({
       ctx: { session },
-      parsedInput: { description, images, location },
+      parsedInput: { description, urls, location },
     }) => {
       const { id: userId } = session.user;
-      const urls: PostContentUrl[] = [];
-      try {
-        for (const image of images) {
-          const response = await CloudinaryService.upload(image);
-          urls.push({
-            publicId: response.public_id,
-            type: response.resource_type === "image" ? "image" : "video",
-            url: response.secure_url,
-          });
-        }
-        const postService = new PostService();
-        await postService.create({
-          urls,
-          userId,
-          description,
-          location,
-        });
-        revalidateTag(POST.homePosts);
-        revalidateTag(POST.userPosts);
-        return "New post added";
-      } catch (err) {
-        console.log(err);
-        throw err;
-      }
+      const postService = new PostService();
+      await postService.create({
+        urls,
+        userId,
+        description,
+        location,
+      });
+      revalidateTag(POST.homePosts);
+      revalidateTag(POST.userPosts);
+      return "New post added";
     },
   );
 

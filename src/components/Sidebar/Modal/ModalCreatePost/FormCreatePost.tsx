@@ -1,50 +1,42 @@
 "use client";
 
+import { useFeedPosts } from "@/app/(auth)/(home)/Post/store";
 import Button from "@/components/core/Button";
-import { createPost } from "@/lib/actions/post";
 import { cn, showToast } from "@/lib/utils";
-import { useAction } from "next-safe-action/hooks";
-import { usePathname } from "next/navigation";
 import { FormEvent, useState, useTransition } from "react";
 import { useCreatePost } from "./CreatePostContext";
 
 const FormCreatePost = () => {
   const { step, files, setSubmitSuccessful } = useCreatePost();
-  const pathname = usePathname();
+  const { addPost } = useFeedPosts();
 
   const [state, setState] = useState({
     location: "",
     description: "",
   });
 
-  const { isExecuting, execute } = useAction(createPost.bind(null, pathname), {
-    onError: () => {
-      showToast("Something went wrong", "error");
-    },
-    onSuccess: ({ data }) => {
-      if (data) {
-        showToast(data, "success");
-      }
-      setSubmitSuccessful(true);
-    },
-  });
-
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, startTransition] = useTransition();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("description", state.description);
-    formData.append("location", state.location);
-    files.forEach((file) => formData.append("images", file));
     startTransition(async () => {
+      const formData = new FormData();
+      formData.append("description", state.description);
+      formData.append("location", state.location);
+      files.forEach((file) => formData.append("images", file));
       const response = await fetch("/api/post", {
         method: "POST",
         body: formData,
       });
-      if (response.ok) {
+      if (!response.ok) {
+        const data = await response.json();
+        if (data.message) {
+          showToast(data.message, "error");
+        }
+      } else {
         const data = await response.json();
         showToast(data.message, "success");
+        addPost(data.post);
         setSubmitSuccessful(true);
       }
     });
@@ -54,12 +46,8 @@ const FormCreatePost = () => {
     <form
       onSubmit={handleSubmit}
       className={cn("flex w-full max-w-sm flex-col p-2", step < 1 && "hidden")}
-      // action={(data) => {
-      //   files.map((file) => data.append("images", file));
-      //   execute(data);
-      // }}
     >
-      <fieldset disabled={isPending} className="flex-1 space-y-3">
+      <fieldset disabled={isLoading} className="flex-1 space-y-3">
         <textarea
           value={state.description}
           onChange={(e) =>
@@ -88,7 +76,7 @@ const FormCreatePost = () => {
         />
       </fieldset>
       <Button
-        isLoading={isPending}
+        isLoading={isLoading}
         className="inline-flex w-full justify-center"
         type="submit"
       >
